@@ -20,7 +20,7 @@ class SunViewModel : ViewModel() {
         )
     )
 
-    private val sunUiState: StateFlow<SunUiState> = _sunUiState.asStateFlow()
+    val sunUiState: StateFlow<SunUiState> = _sunUiState.asStateFlow()
 
     init {
         loadSunInformation()
