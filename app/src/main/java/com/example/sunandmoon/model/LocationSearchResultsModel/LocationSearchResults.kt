@@ -8,10 +8,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LocationSearchResults(
-    val place_id: Int,
+    val place_id: Long,
     val licence: String,
     val osm_type: String,
-    val osm_id: Int,
+    val osm_id: Long,
 
     val boundingbox: List<String>,
     val lat: String,

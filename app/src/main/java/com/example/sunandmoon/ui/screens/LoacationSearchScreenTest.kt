@@ -49,18 +49,13 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
             keyboardActions = KeyboardActions(
                 onSearch = {
                     // handle search button press
+                    if (searchQuery.isNotEmpty()) {
+                        sunViewModel.loadLocationSearchResults(searchQuery)
+                        isDropdownExpanded = true
+                    }
                 }
             )
         )
-
-        Button(onClick = {
-            if (searchQuery.isNotEmpty()) {
-                sunViewModel.loadLocationSearchResults(searchQuery)
-                isDropdownExpanded = true
-            }
-        }) {
-            Text(text = "search")
-        }
 
         if (isDropdownExpanded) {
             val searchResults = sunUIState.locationSearchResults
