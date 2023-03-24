@@ -86,6 +86,7 @@ fun MathScreen(modifier: Modifier = Modifier) {
     }
 }
 
+// Calculates and returns a list of sunrise and sunset and sunset (as strings)
 fun getSunRiseNoonFall(): List<String> {
     Log.i("matte", "_______________________________________________________")
     // hours from utc

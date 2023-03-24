@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.sunandmoon.ui.screens.LocationSearch
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
 import com.example.sunandmoon.viewModel.SunViewModel
 
@@ -20,12 +21,13 @@ class MainActivity : ComponentActivity() {
             SunAndMoonTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier,
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //Greeting("test")
+                    //SunViewModel()
                     //MathScreen()
-                    SunViewModel()
+                    LocationSearch()
                 }
             }
         }

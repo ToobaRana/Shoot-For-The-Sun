@@ -1,4 +1,4 @@
-package com.example.sunandmoon.model
+package com.example.sunandmoon.model.SunriseModel
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
@@ -14,5 +14,4 @@ data class Sunrise3(
     val intervalTime : When,
 
     val properties: Properties
-
 )
