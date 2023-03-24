@@ -1,11 +1,13 @@
 package com.example.sunandmoon.data
 
+import android.util.Log
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import com.example.sunandmoon.model.SunriseModel.Sunrise3
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.serialization.gson.*
 
 class DataSource() {
@@ -32,15 +34,17 @@ class DataSource() {
 
     // example: https://nominatim.openstreetmap.org/search?q=oslo&format=json&addressdetails=1&limit=10
     suspend fun fetchLocationSearchResults(query: String, limit: Int) : List<LocationSearchResults>{
-        //val endPoint = "$baseURLNominatim?q=$query&format=json&addressdetails=1&limit=$limit"
-        val endPoint = "https://nominatim.openstreetmap.org/search?q=oslo&format=json&addressdetails=1&limit=10"
+        val endPoint = "$baseURLNominatim?q=$query&format=json&addressdetails=1&limit=$limit"
+        //val endPoint = "https://nominatim.openstreetmap.org/search?q=oslo&format=json&addressdetails=1&limit=10"
 
-        val apiResults: List<LocationSearchResults> = client.get(endPoint).body()
+        val response = client.get(endPoint)
+        Log.i("aaa123", "1:" + response.body<String>().toString())
+
+        val apiResults: List<LocationSearchResults> = response.body()
+
+        Log.i("aaa123", "2:" + apiResults.toString())
 
         return apiResults
 
     }
-
-
-
 }
