@@ -16,7 +16,7 @@ class SunViewModel : ViewModel() {
      //sunDataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, "2022-12-18", "+01:00" ).properties.sunrise.time
     private val _sunUiState = MutableStateFlow(
         SunUiState(
-            sunRiseTime = "not loaded", sunSetTime = "not leaded", solarNoon = "not leaded"
+            sunRiseTime = "not loaded", sunSetTime = "not loaded", solarNoon = "not loaded", locationSearchResults = listOf()
         )
     )
 
@@ -38,13 +38,32 @@ class SunViewModel : ViewModel() {
                 _sunUiState.value = SunUiState(
                     sunRiseTime = sunRiseTime,
                     sunSetTime = sunSetTime,
-                    solarNoon = solarNoon
+                    solarNoon = solarNoon,
+                    locationSearchResults = listOf()
                 )
 
                 Log.d("test",sunUiState.value.sunRiseTime + sunUiState.value.sunSetTime + sunUiState.value.solarNoon)
             }catch (e: Throwable){
 
                 Log.d("error", "uh oh")
+            }
+        }
+    }
+
+    fun loadLocationSearchResults(query: String) {
+        viewModelScope.launch {
+            try{
+                val locationSearchResults = sunDataSource.fetchLocationSearchResults(query, 10)
+
+                _sunUiState.value = SunUiState(
+                    sunRiseTime = _sunUiState.value.sunRiseTime,
+                    sunSetTime = _sunUiState.value.sunSetTime,
+                    solarNoon = _sunUiState.value.solarNoon,
+                    locationSearchResults = locationSearchResults
+                )
+
+            }catch (e: Throwable){
+                Log.d("error", "uh oh" + e.toString())
             }
         }
     }
