@@ -35,14 +35,8 @@ class DataSource() {
     // example: https://nominatim.openstreetmap.org/search?q=oslo&format=json&addressdetails=1&limit=10
     suspend fun fetchLocationSearchResults(query: String, limit: Int) : List<LocationSearchResults>{
         val endPoint = "$baseURLNominatim?q=$query&format=json&addressdetails=1&limit=$limit"
-        //val endPoint = "https://nominatim.openstreetmap.org/search?q=oslo&format=json&addressdetails=1&limit=10"
 
-        val response = client.get(endPoint)
-        Log.i("aaa123", "1:" + response.body<String>().toString())
-
-        val apiResults: List<LocationSearchResults> = response.body()
-
-        Log.i("aaa123", "2:" + apiResults.toString())
+        val apiResults: List<LocationSearchResults> = client.get(endPoint).body()
 
         return apiResults
 
