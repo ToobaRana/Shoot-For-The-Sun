@@ -1,5 +1,6 @@
 package com.example.sunandmoon.data
 
+import android.util.Log
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import com.example.sunandmoon.model.SunriseModel.Sunrise3
 import io.ktor.client.*
@@ -35,12 +36,11 @@ class DataSource() {
         //val endPoint = "$baseURLNominatim?q=$query&format=json&addressdetails=1&limit=$limit"
         val endPoint = "https://nominatim.openstreetmap.org/search?q=oslo&format=json&addressdetails=1&limit=10"
 
+        Log.i("aaa123", client.get(endPoint).body<String>().toString())
+
         val apiResults: List<LocationSearchResults> = client.get(endPoint).body()
 
         return apiResults
 
     }
-
-
-
 }
