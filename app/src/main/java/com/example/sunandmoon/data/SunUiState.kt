@@ -9,5 +9,7 @@ data class SunUiState(
 
     val solarNoon: String,
 
-    val locationSearchResults: List<LocationSearchResults>
+    val locationSearchResults: List<LocationSearchResults>,
+    val locationEnabled: Boolean,
+    val chosenLocation: Pair<Double, Double>
 )

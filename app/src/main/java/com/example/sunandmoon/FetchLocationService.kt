@@ -15,10 +15,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sunandmoon.viewModel.SunViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LastLocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import io.ktor.client.request.*
 
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -58,24 +64,24 @@ import io.ktor.client.request.*
     }
 
 
-    @SuppressLint("MissingPermission")
-
-fun fetchLocation(fusedLocationClient: FusedLocationProviderClient) {
+@SuppressLint("MissingPermission")
+suspend fun fetchLocation(fusedLocationClient: FusedLocationProviderClient): Pair<Double, Double>? {
     var location :Pair<Double, Double>? = null
-
+    val request = LastLocationRequest.Builder().build()
     try {
-        val locationResult = fusedLocationClient.lastLocation.result
-        location = Pair(locationResult.latitude, locationResult.longitude)
-    } catch (e: Exception) {
+        val locationResult = fusedLocationClient.getLastLocation(request)
+        delay(100);
+        location = Pair(locationResult.result.latitude, locationResult.result.longitude)
+    } catch (e: java.lang.IllegalStateException){
+        println("location could not be fetched in time")
+    }
+
+
         // handle exceptions
-    }
+
+    return location
 
 
-    if (location != null) {
-       Log.v("WTF"  ,"${location!!.first}, Longitude: ${location!!.second}"    )
-    } else {
-         Log.v("WTF","Fetching location..."       )
-    }
 }
 
 
