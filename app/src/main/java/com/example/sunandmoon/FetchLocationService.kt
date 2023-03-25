@@ -1,6 +1,7 @@
 package com.example.sunandmoon
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,15 +14,15 @@ import androidx.compose.ui.platform.LocalContext
 
 import androidx.core.app.ComponentActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import io.ktor.client.request.*
-import kotlin.coroutines.coroutineContext
 
 
-class FetchLocationService() {
-    @Composable
-    fun checkPermissions(fusedLocationProviderClient: FusedLocationProviderClient) {
+
+@Composable
+    fun checkPermissions(): Boolean{
 
         val context = LocalContext.current
         val isPermissionGranted = remember { mutableStateOf(false) }
@@ -38,7 +39,9 @@ class FetchLocationService() {
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
         if (granted == PackageManager.PERMISSION_GRANTED) {
-            println("JADA");
+            println("JADA!! VI FANT DEG");
+            return true
+
         } else {
             println(granted)
             SideEffect {
@@ -47,35 +50,33 @@ class FetchLocationService() {
                 )
             }
         }
-
-    }
-
-    @Composable
-    fun fetchLocation(fusedLocationProviderClient: FusedLocationProviderClient) {
-        val result = remember { mutableStateOf<Bitmap?>(null) }
-
-/*
-    var location by remember{ mutableStateOf<Pair<Double, Double>?>(null)}
-
-    val fusedLocationClient =
-        LocationServices.getFusedLocationProviderClient(LocalContext.current)
-
-
-
-        try {
-            val locationResult = fusedLocationClient.lastLocation.await()
-            location = Pair(locationResult.latitude, locationResult.longitude)
-        } catch (e: Exception) {
-            // handle exceptions
+        if (granted == PackageManager.PERMISSION_GRANTED){
+            return true
         }
+        return false
+
     }
+
+
+    @SuppressLint("MissingPermission")
+
+fun fetchLocation(fusedLocationClient: FusedLocationProviderClient) {
+    var location :Pair<Double, Double>? = null
+
+    try {
+        val locationResult = fusedLocationClient.lastLocation.result
+        location = Pair(locationResult.latitude, locationResult.longitude)
+    } catch (e: Exception) {
+        // handle exceptions
+    }
+
 
     if (location != null) {
-        Text("Latitude: ${location!!.first}, Longitude: ${location!!.second}")
+       Log.v("WTF"  ,"${location!!.first}, Longitude: ${location!!.second}"    )
     } else {
-        Text("Fetching location...")
-    }
-}*/
+         Log.v("WTF","Fetching location..."       )
     }
 }
+
+
 

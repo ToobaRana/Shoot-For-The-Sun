@@ -1,14 +1,24 @@
 package com.example.sunandmoon.viewModel
 
+import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sunandmoon.checkPermissions
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.SunUiState
+import com.example.sunandmoon.fetchLocation
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SunViewModel : ViewModel() {
 
@@ -67,4 +77,11 @@ class SunViewModel : ViewModel() {
             }
         }
     }
-}
+
+
+    fun getCurrentPosition(fusedLocationProviderClient: FusedLocationProviderClient){
+        viewModelScope.launch() {
+            fetchLocation(fusedLocationProviderClient)
+        }
+    }
+    }
