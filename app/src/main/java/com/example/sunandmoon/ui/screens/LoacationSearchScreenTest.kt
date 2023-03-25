@@ -2,6 +2,9 @@ package com.example.sunandmoon.ui.screens
 
 import android.content.Context
 import android.location.Geocoder
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +16,8 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.input.ImeAction
@@ -49,18 +54,13 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
             keyboardActions = KeyboardActions(
                 onSearch = {
                     // handle search button press
+                    if (searchQuery.isNotEmpty()) {
+                        sunViewModel.loadLocationSearchResults(searchQuery)
+                        isDropdownExpanded = true
+                    }
                 }
             )
         )
-
-        Button(onClick = {
-            if (searchQuery.isNotEmpty()) {
-                sunViewModel.loadLocationSearchResults(searchQuery)
-                isDropdownExpanded = true
-            }
-        }) {
-            Text(text = "search")
-        }
 
         if (isDropdownExpanded) {
             val searchResults = sunUIState.locationSearchResults
@@ -69,12 +69,21 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
                 onDismissRequest = { isDropdownExpanded = false },
                 modifier = Modifier.width(IntrinsicSize.Max)
             ) {
-                searchResults.forEach { result ->
-                    DropdownMenuItem(onClick = {
-                        searchQuery = result.display_name
-                        isDropdownExpanded = false
+                searchResults.forEachIndexed { index, item ->
+                    Text(
+                        text = item.display_name,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                isDropdownExpanded = false
+                                // Perform action when item is clicked
+                            }
+                            .padding(vertical = 8.dp, horizontal = 16.dp)
 
-                    }, text = {Text(result.display_name)})
+                    )
+                    if (index < searchResults.lastIndex) {
+                        Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
+                    }
                 }
             }
         }
