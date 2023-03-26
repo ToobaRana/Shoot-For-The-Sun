@@ -11,5 +11,6 @@ data class SunUiState(
 
     val locationSearchResults: List<LocationSearchResults>,
     val locationEnabled: Boolean,
-    val chosenLocation: Pair<Double, Double>
+    val longitude: Double,
+    val latitude: Double
 )
