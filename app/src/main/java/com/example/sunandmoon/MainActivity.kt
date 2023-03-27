@@ -1,6 +1,7 @@
 package com.example.sunandmoon
 
 import android.os.Bundle
+import android.telephony.TelephonyCallback.DataActivityListener
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.sunandmoon.data.DataSource
+import com.example.sunandmoon.ui.screens.TableScreen
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
 import com.example.sunandmoon.viewModel.SunViewModel
 
@@ -25,7 +28,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     //Greeting("test")
                     //MathScreen()
-                    SunViewModel()
+                    //SunViewModel()
+
+
+                    TableScreen()
                 }
             }
         }

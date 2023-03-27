@@ -10,3 +10,7 @@ data class Properties(
     val solarnoon: SolarPoles,
     val solarmidnight: SolarPoles
 )
+
+
+
+
