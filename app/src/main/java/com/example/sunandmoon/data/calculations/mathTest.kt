@@ -48,22 +48,7 @@ fun MathScreen(modifier: Modifier = Modifier) {
 
 
         Column() {
-            Text(text = "Position:", fontSize = 18.sp)
-            Text(text = "Latitude:")
-            TextField(value = "0", onValueChange = {})
-            Text(text = "Longitude:")
-            TextField(value = "0", onValueChange = {})
-            Button(onClick = { /*TODO*/ }, shape = RectangleShape) {
-                Text(text = "Get current position")
-            }
-
-            Text(text = "time:")
-            TextField(value = "0", onValueChange = {})
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "Current Time")
-            }
-
-            Button(onClick = { solarTimes = getSunRiseNoonFall() }) {
+            Button(onClick = { solarTimes = getSunRiseNoonFall(Instant.now().toString(), 10.7175147, 59.943621) }) {
                 Text(text = "Calculate")
             }
         }
@@ -74,8 +59,8 @@ fun MathScreen(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.size(40.dp))
 
-            /*Text(text = "Solar noon time:", fontSize = 25.sp)
-            Text(text = solarTimes[1], fontSize = 25.sp)*/
+            Text(text = "Solar noon time:", fontSize = 25.sp)
+            Text(text = solarTimes[1], fontSize = 25.sp)
 
             Spacer(modifier = Modifier.size(40.dp))
 
@@ -89,86 +74,79 @@ fun MathScreen(modifier: Modifier = Modifier) {
 }
 
 // Calculates and returns a list of sunrise and sunset and sunset (as strings)
-fun getSunRiseNoonFall(): List<String> {
-    Log.i("matte", "_______________________________________________________")
+// longitude is in degrees (positive to the east of the Prime Meridian)
+fun getSunRiseNoonFall(timestampString: String, longitude: Degree, latitude: Degree): List<String> {
     // hours from utc
-    val timeZoneOffset: Double = 1.0
+    val timeZoneOffset: Double = 2.0
 
-    val timeString: String = Instant.now().toString().split("T")[1]
-    Log.i("matte", "timeString: $timeString")
+    val timeString: String = timestampString.split("T")[1]
     val hour: Double = timeString.split(":")[0].toDouble()
     val minutes: Double = timeString.split(":")[1].toDouble()
     val seconds: Double = timeString.split(":")[2].dropLast(1).toDouble()
 
-    // longitude is in degrees (positive to the east of the Prime Meridian)
-    val longitude: Degree = 10.7175147
-    val latitude: Degree = 59.943621
-
-    val dayOfYear: Double = LocalDate.now().dayOfYear.toDouble() + 31
+    val dateString: List<String> = timestampString.split("T")[0].split("-")
+    val dayOfYear: Double = LocalDate.of(dateString[0].toInt(), dateString[1].toInt(), dateString[2].toInt()).dayOfYear.toDouble()
     val hourDecimal: Double = hour + minutes / 60 + seconds / 60 / 60 + timeZoneOffset
     val isLeapYear: Boolean = false
-    Log.i("matte", "dayOfYear: $dayOfYear")
-    Log.i("matte", "hourDecimal: $hourDecimal")
 
     val daysInYear: Double = if(isLeapYear) 366.0 else 365.0
-    Log.i("matte", "daysInYear: $daysInYear")
 
     // this is the fraction of the year. radians
     val y: Radian = (2 * Math.PI / daysInYear) * (dayOfYear - 1 + ((hourDecimal - 12) / 24))
-    Log.i("matte", "y: $y")
 
     // in minutes
     //val eqtime: Double = 229.18 * (0.000075 + 0.001868 * cos(y) + 0.032077 * sin(y) - 0.014615 * cos(2 * y) - 0.040849 * sin(2 * y))
     //val n = 2 * PI / 365 * (day - 1)
     val eqtime = 229.18*(0.000075 + 0.001868* cos(y) - 0.032077*sin(y) -0.014615*cos(2*y) - 0.040849*sin(2* y) )
-    Log.i("matte", "eqtime: $eqtime")
 
     // radians
     //val decl: Radian = 0.006918 - 0.399912 * cos(y) + 0.070257 * sin(y) - 0.006758 * cos(2 * y) + 0.000907 * sin(2 * y) - 0.002697 * cos(3 * y) + 0.00148 * sin(3 * y)
-    val decl = 11.55.toRadian()//(90-(Math.toDegrees(acos(sin(Math.toRadians(-23.44)* Math.cos(Math.toRadians((360/365.24)*(dayOfYear+10)+360/Math.PI*0.0167*sin(Math.toRadians((360/365.24)*(dayOfYear-2)))))))))).toRadian()
-    Log.i("matte", "decl radian: $decl, decl degrees: ${decl.toDegree()}")
+    val decl = (90-(Math.toDegrees(acos(sin(Math.toRadians(-23.44)* Math.cos(Math.toRadians((360/365.24)*(dayOfYear+10)+360/Math.PI*0.0167*sin(Math.toRadians((360/365.24)*(dayOfYear-2)))))))))).toRadian()
 
     val timeOffset: Double = eqtime + 4 * longitude - 60 * timeZoneOffset
-    Log.i("matte", "timeOffset: $timeOffset")
 
     val tst: Double = hour*60 + minutes + seconds/60 + timeOffset
-    Log.i("matte", "tst: $tst")
 
     // the solar hour angle in degrees is:
     val ha: Degree = tst / 4 - 180
-    Log.i("matte", "ha: $ha")
 
     // THE FORMULA IN THE PAPER SAYS cost AND NOT cos. IS THIS A SPELLING MISTAKE?
     val zenithAngle: Radian = acos(sin(latitude.toRadian()) * sin(decl) + cos(latitude.toRadian()) * cos(decl) * cos(ha.toRadian()))
-    Log.i("matte", "zenithAngle: $zenithAngle")
 
     val haSunrise: Radian = acos(cos(90.833.toRadian())/(cos(latitude.toRadian())*cos(decl)) - tan(latitude.toRadian()) * tan(decl))
     val haSunset: Radian = -haSunrise
-    Log.i("matte", "haSunrise: $haSunrise")
-    Log.i("matte", "haSunset: $haSunset")
 
     val sunriseTime = 720 - 4 * (longitude + haSunrise.toDegree()) - eqtime
     val sunsetTime = 720 - 4 * (longitude + haSunset.toDegree()) - eqtime
+    val solarNoonTime = 720 - 4 * longitude - eqtime
 
 
     val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-
     val sunriseTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((sunriseTime) * 60 + 3600 * timeZoneOffset).toLong())
-    System.out.println("sunriseTimeLocalTime: " + sunriseTimeLocalTime.format(formatter));
-
     val sunsetTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((sunsetTime) * 60 + 3600 * timeZoneOffset).toLong())
-    System.out.println("sunriseTimeLocalTime: " + sunsetTimeLocalTime.format(formatter))
+    val solarNoonTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((solarNoonTime) * 60 + 3600 * timeZoneOffset).toLong())
 
-    return listOf(sunriseTimeLocalTime.format(formatter), sunsetTimeLocalTime.format(formatter), sunsetTimeLocalTime.format(formatter))
+
+    Log.i("matte", "_______________________________________________________")
+    Log.i("matte", timestampString)
+    Log.i("matte", "timeString: $timeString")
+    Log.i("matte", "dayOfYear: $dayOfYear")
+    Log.i("matte", "hourDecimal: $hourDecimal")
+    Log.i("matte", "daysInYear: $daysInYear")
+    Log.i("matte", "y: $y")
+    Log.i("matte", "eqtime: $eqtime")
+    Log.i("matte", "decl radian: $decl, decl degrees: ${decl.toDegree()}")
+    Log.i("matte", "timeOffset: $timeOffset")
+    Log.i("matte", "tst: $tst")
+    Log.i("matte", "ha: $ha")
+    Log.i("matte", "zenithAngle: $zenithAngle")
+    Log.i("matte", "haSunrise: $haSunrise")
+    Log.i("matte", "haSunset: $haSunset")
+    Log.i("matte", "sunriseTimeLocalTime: " + sunriseTimeLocalTime.format(formatter))
+    Log.i("matte", "solarNoonTimeLocalTime: " + solarNoonTimeLocalTime.format(formatter))
+    Log.i("matte", "sunriseTimeLocalTime: " + sunsetTimeLocalTime.format(formatter))
+    Log.i("matte", "_______________________________________________________")
+
+
+    return listOf(sunriseTimeLocalTime.format(formatter), solarNoonTimeLocalTime.format(formatter), sunsetTimeLocalTime.format(formatter))
 }
-
-
-
-/*fun getHourDecimal(timestamp: String, timeZoneOffset: Double): Double {
-    val time: String = timestamp.split("T")[1]
-    val hour: Double = time.split(":")[0].toDouble()
-    val minutes: Double = time.split(":")[1].toDouble()
-    val seconds: Double = time.split(":")[2].dropLast(1).toDouble()
-
-    return hour + minutes / 60 + seconds / 60 / 60 + timeZoneOffset
-}*/
