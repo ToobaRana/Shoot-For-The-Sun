@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.sunandmoon.ui.screens.HomeScreen
 import com.example.sunandmoon.ui.screens.currentLocationTest
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -29,15 +30,13 @@ class MainActivity : ComponentActivity() {
                     //
 
 
-
+                    HomeScreen()
 
                     
-                    //Greeting("test")
-
                     //SunViewModel()
                     //MathScreen()
                     //LocationSearch()
-                    currentLocationTest(fusedLocationClient)
+                    //currentLocationTest(fusedLocationClient)
 
                 }
             }
