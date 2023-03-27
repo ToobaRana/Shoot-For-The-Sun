@@ -30,13 +30,13 @@ class MainActivity : ComponentActivity() {
                     //
 
 
-                    HomeScreen()
+                    //HomeScreen()
 
                     
                     //SunViewModel()
                     //MathScreen()
                     //LocationSearch()
-                    //currentLocationTest(fusedLocationClient)
+                    currentLocationTest(fusedLocationClient)
 
                 }
             }
