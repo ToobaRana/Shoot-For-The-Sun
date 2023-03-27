@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.data.SunUiState
-import com.example.sunandmoon.model.SunState
 import java.text.DateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
