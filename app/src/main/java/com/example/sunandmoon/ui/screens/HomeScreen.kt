@@ -14,7 +14,7 @@ import com.example.sunandmoon.viewModel.SunViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(sunViewModel: SunViewModel = viewModel()){
+fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: SunViewModel = viewModel()){
 
 
     val sunUiState by sunViewModel.sunUiState.collectAsState()
