@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
                     
                     //SunViewModel()
-                    //MathScreen()
+                    MathScreen()
                     //LocationSearch()
                     //currentLocationTest(fusedLocationClient)
 
