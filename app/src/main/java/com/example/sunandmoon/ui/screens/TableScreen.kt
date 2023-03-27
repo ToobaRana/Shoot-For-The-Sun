@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.SunUiState
+import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.model.SunState
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.SunViewModel
@@ -35,7 +36,7 @@ import kotlin.math.max
 
 @Composable
 fun TableScreen(tableViewModel: TableViewModel = viewModel()){
-    val table by tableViewModel.tableUiState.collectAsState()
+    val table by tableViewModel.sunUiState.collectAsState()
 
     Log.d("sunset", table.sunSetTime)
     Log.d("sunrise", table.sunRiseTime)
@@ -43,10 +44,10 @@ fun TableScreen(tableViewModel: TableViewModel = viewModel()){
 
     TableView(table, tableViewModel)
 
+    //Log.d("List: ", tableUIState.dateTableList.toString())
+
 
 }
-
-
 
 
 
@@ -136,7 +137,8 @@ fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(dayInMonthList) { day ->
-                    tableViewModel.loadSunInformation(day)
+                    //tableViewModel.loadDateTableList()
+                    //tableViewModel.loadSunInformation(day)
 
                     //tableViewModel.loadSunInformation2(day, dataSource)
                     TableCard(
