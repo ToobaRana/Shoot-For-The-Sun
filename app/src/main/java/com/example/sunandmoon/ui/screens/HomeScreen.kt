@@ -30,7 +30,7 @@ fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: Sun
         modifier = Modifier.fillMaxSize(),
         topBar = {
 
-
+            LocationSearch()
 
         },
 
