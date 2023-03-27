@@ -22,6 +22,7 @@ class TableViewModel : ViewModel() {
             sunRiseTime = "not loaded", sunSetTime = "not leaded", solarNoon = "not leaded"
         )
     )
+    var sunTimeList = mutableListOf<String>()
 
 
     private val _tableUiState = MutableStateFlow(
@@ -33,13 +34,15 @@ class TableViewModel : ViewModel() {
     val sunUiState: StateFlow<SunUiState> = _sunUiState.asStateFlow()
     val tableUiState: StateFlow<TableUIState> = _tableUiState.asStateFlow()
 
-    var date = ""
+
+
+    //var date = ""
 
 
     init {
         //loadSunInformation(date)
         //loadSunInformation2(date, dataSource)
-        loadDateTableList()
+        loadDateTableList(sunType = "Sunrise")
     }
 
     fun loadSunInformation(date : String, sunType: String){
@@ -50,16 +53,21 @@ class TableViewModel : ViewModel() {
                 var solarNoon = "not loaded"
 
 
+
                 if (sunType == "Sunrise"){
                     sunRiseTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.sunrise.time
+                    sunTimeList.add(sunRiseTime)
                 }
 
                 if (sunType == "Sunset"){
                     sunSetTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.sunset.time
+                    sunTimeList.add(sunSetTime)
+
                 }
 
                 if (sunType == "SolarNoon"){
                     solarNoon = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.solarnoon.time
+                    sunTimeList.add(solarNoon)
                 }
 
                 _sunUiState.value = SunUiState(
@@ -68,9 +76,11 @@ class TableViewModel : ViewModel() {
                     solarNoon = solarNoon
                 )
 
+                _tableUiState.value = TableUIState(sunTimeList)
 
+                //Log.d("sunListe", _tableUiState.value.dateTableList.toString())
 
-                Log.d("test",sunUiState.value.sunRiseTime + sunUiState.value.sunSetTime + sunUiState.value.solarNoon)
+                //Log.d("test",sunUiState.value.sunRiseTime + sunUiState.value.sunSetTime + sunUiState.value.solarNoon)
             }catch (e: Throwable){
 
                 Log.d("error", "uh oh")
@@ -79,14 +89,15 @@ class TableViewModel : ViewModel() {
     }
 
 
-    fun loadDateTableList(date : String = "2022-03-10", sunType: String = "Sunrise"){
+
+        fun loadDateTableList(date : String = LocalDate.now().toString(), sunType: String){
         viewModelScope.launch {
             try {
                 val sameDays = getSameDaysInYear(date)
 
 
-
-                for (element in sameDays){
+                for (element in sameDays.sorted()){
+                    println(element)
                     loadSunInformation(element.toString(), sunType)
 
                 }
@@ -125,7 +136,9 @@ class TableViewModel : ViewModel() {
                 }
 
             }
-            return sameDays
+            println(sameDays.sorted())
+
+            return sameDays.sorted()
         }
 
 

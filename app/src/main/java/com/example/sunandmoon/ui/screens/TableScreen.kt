@@ -37,12 +37,13 @@ import kotlin.math.max
 @Composable
 fun TableScreen(tableViewModel: TableViewModel = viewModel()){
     val table by tableViewModel.sunUiState.collectAsState()
+    val tableSet by tableViewModel.tableUiState.collectAsState()
 
     Log.d("sunset", table.sunSetTime)
     Log.d("sunrise", table.sunRiseTime)
     Log.d("solarNoon", table.solarNoon)
 
-    TableView(table, tableViewModel)
+    TableView(table, tableViewModel, tableSet)
 
     //Log.d("List: ", tableUIState.dateTableList.toString())
 
@@ -54,14 +55,14 @@ fun TableScreen(tableViewModel: TableViewModel = viewModel()){
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel) {
+fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel, tableUIState: TableUIState) {
 
     val monthList = listOf(
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     )
 
-    val dayInMonthList = mutableListOf<String>()
+    //val dayInMonthList = mutableListOf<String>()
 
     Column(Modifier.fillMaxSize()) {
 
@@ -72,7 +73,7 @@ fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel) {
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Spacer(modifier = Modifier.width(10.dp))
-            chosenMonth = dropdownMenuMonth(monthList = monthList)
+            //chosenMonth = dropdownMenuMonth(monthList = monthList)
             Spacer(modifier = Modifier.width(10.dp))
             chosenSunType = dropdownMenuSunType()
             Spacer(modifier = Modifier.width(10.dp))
@@ -80,24 +81,6 @@ fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        dayInMonthList.clear()
-
-        val cal = Calendar.getInstance()
-        cal.set(Calendar.MONTH, Month.valueOf(chosenMonth.uppercase(Locale.ROOT)).value - 1)
-
-        val maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-        val df = SimpleDateFormat("yyyy-MM-dd")
-
-        for (i in 0 until maxDay) {
-            cal.set(Calendar.DAY_OF_MONTH, i + 1)
-            dayInMonthList.add(df.format(cal.time))
-        }
-
-        /*
-        trenger en uistate i en ny nywiewmodel som lagrer på alle sunset datoene i en liste
-
-         */
 
         Column(modifier = Modifier.fillMaxWidth()) {
             // Render the header row
@@ -131,26 +114,34 @@ fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel) {
                     fontWeight = FontWeight.Bold
                 )
             }
-
+            var liste = tableUIState.dateTableList
             // Render the table rows
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(dayInMonthList) { day ->
-                    //tableViewModel.loadDateTableList()
+
+                items(liste) { day ->
+                    //tableViewModel.loadDateTableList(sunType = "Sunrise")
                     //tableViewModel.loadSunInformation(day)
 
-                    //tableViewModel.loadSunInformation2(day, dataSource)
+
+                    var elementInTableUiStateList = day.split("T")
+
+                    var sunriseTime = elementInTableUiStateList[1]
+                    var day = elementInTableUiStateList[0]
+
+
                     TableCard(
+                        sunTime = sunriseTime,
                         day = day,
                         chosenSunType = chosenSunType,
                         sunUiState = sunUiState,
                         modifier = Modifier
-                            .background(if (dayInMonthList.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
+                            .background(if (liste.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
                             .padding(8.dp)
                     )
                 }
-                //dayInMonthList.clear()
+
             }
         }
     }
@@ -166,8 +157,6 @@ fun dropdownMenuMonth(monthList: List<String>): String{
     val options = monthList
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(monthList[0]) }
-
-
 
 
 
@@ -222,9 +211,6 @@ fun dropdownMenuSunType(): String{
     val options = stringArrayResource(com.example.sunandmoon.R.array.suntype)
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf("Sunrise") }
-
-
-
 
 
     //Dropdown menu setup
