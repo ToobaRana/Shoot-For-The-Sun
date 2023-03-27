@@ -15,7 +15,13 @@ class TableViewModel : ViewModel() {
     private val dataSource = DataSource()
     private val _tableUiState = MutableStateFlow(
         SunUiState(
-            sunRiseTime = "not loaded", sunSetTime = "not leaded", solarNoon = "not leaded"
+            sunRiseTime = "not loaded",
+            sunSetTime = "not leaded",
+            solarNoon = "not leaded",
+            locationEnabled = false,
+            locationSearchResults = listOf(),
+            latitude = 0.0,
+            longitude = 0.0
         )
     )
 
@@ -42,7 +48,11 @@ class TableViewModel : ViewModel() {
                 _tableUiState.value = SunUiState(
                     sunRiseTime = sunRiseTime,
                     sunSetTime = sunSetTime,
-                    solarNoon = solarNoon
+                    solarNoon = solarNoon,
+                    locationEnabled = false,
+                    locationSearchResults = listOf(),
+                    latitude = 0.0,
+                    longitude = 0.0
                 )
 
                 Log.d("test",tableUiState.value.sunRiseTime + tableUiState.value.sunSetTime + tableUiState.value.solarNoon)

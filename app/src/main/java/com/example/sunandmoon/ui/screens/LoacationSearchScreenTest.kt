@@ -28,6 +28,7 @@ import java.util.*
 
 //https://nominatim.openstreetmap.org/ui/search.html
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
 
