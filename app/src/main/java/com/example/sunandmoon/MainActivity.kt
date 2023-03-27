@@ -20,10 +20,12 @@ import com.example.sunandmoon.ui.screens.TableView
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
 import com.example.sunandmoon.viewModel.SunViewModel
 import com.example.sunandmoon.viewModel.TableViewModel
+import com.google.android.gms.location.LocationServices
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         setContent {
             SunAndMoonTheme {
                 // A surface container using the 'background' color from the theme
