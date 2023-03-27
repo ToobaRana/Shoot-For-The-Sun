@@ -57,8 +57,8 @@ fun MathScreen(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.size(40.dp))
 
-            /*Text(text = "Solar noon time:", fontSize = 25.sp)
-            Text(text = solarTimes[1], fontSize = 25.sp)*/
+            Text(text = "Solar noon time:", fontSize = 25.sp)
+            Text(text = solarTimes[1], fontSize = 25.sp)
 
             Spacer(modifier = Modifier.size(40.dp))
 
@@ -116,12 +116,13 @@ fun getSunRiseNoonFall(timestampString: String, longitude: Degree, latitude: Deg
 
     val sunriseTime = 720 - 4 * (longitude + haSunrise.toDegree()) - eqtime
     val sunsetTime = 720 - 4 * (longitude + haSunset.toDegree()) - eqtime
-    val sunNoon = 20
+    val solarNoonTime = 720 - 4 * longitude - eqtime
 
 
     val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
     val sunriseTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((sunriseTime) * 60 + 3600 * timeZoneOffset).toLong())
     val sunsetTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((sunsetTime) * 60 + 3600 * timeZoneOffset).toLong())
+    val solarNoonTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((solarNoonTime) * 60 + 3600 * timeZoneOffset).toLong())
 
 
     Log.i("matte", "_______________________________________________________")
@@ -140,20 +141,10 @@ fun getSunRiseNoonFall(timestampString: String, longitude: Degree, latitude: Deg
     Log.i("matte", "haSunrise: $haSunrise")
     Log.i("matte", "haSunset: $haSunset")
     Log.i("matte", "sunriseTimeLocalTime: " + sunriseTimeLocalTime.format(formatter))
+    Log.i("matte", "solarNoonTimeLocalTime: " + solarNoonTimeLocalTime.format(formatter))
     Log.i("matte", "sunriseTimeLocalTime: " + sunsetTimeLocalTime.format(formatter))
     Log.i("matte", "_______________________________________________________")
 
 
-    return listOf(sunriseTimeLocalTime.format(formatter), sunsetTimeLocalTime.format(formatter), sunsetTimeLocalTime.format(formatter))
+    return listOf(sunriseTimeLocalTime.format(formatter), solarNoonTimeLocalTime.format(formatter), sunsetTimeLocalTime.format(formatter))
 }
-
-
-
-/*fun getHourDecimal(timestamp: String, timeZoneOffset: Double): Double {
-    val time: String = timestamp.split("T")[1]
-    val hour: Double = time.split(":")[0].toDouble()
-    val minutes: Double = time.split(":")[1].toDouble()
-    val seconds: Double = time.split(":")[2].dropLast(1).toDouble()
-
-    return hour + minutes / 60 + seconds / 60 / 60 + timeZoneOffset
-}*/
