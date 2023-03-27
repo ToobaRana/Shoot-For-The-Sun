@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">SunAndMoon</string>
+
+    <string name="Sunset">Sunset</string>
+    <string name="Sunrise">Sunrise</string>
+    <string name="SolarNoon">SolarNoon</string>
+
+
+
+    <string-array name="suntype">
+        <item>@string/Sunrise</item>
+        <item>@string/Sunset</item>
+        <item>@string/SolarNoon</item>
+    </string-array>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </resources>
+
+
