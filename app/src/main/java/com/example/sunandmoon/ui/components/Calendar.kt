@@ -16,12 +16,17 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sunandmoon.data.SunUiState
+import com.example.sunandmoon.viewModel.SunViewModel
+import kotlinx.coroutines.flow.StateFlow
 import java.time.DayOfWeek
 
-class Calendar(private val modifier: Modifier) {
+class Calendar(private val modifier: Modifier, uiState: SunUiState) {
     val calenderDayHeight = 5
     val numWeekdays = 6
     val sumMonths = 12
+    val uiState = uiState
     val months = listOf<String>(
         "January",
         "February",
@@ -55,7 +60,7 @@ class Calendar(private val modifier: Modifier) {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun CalendarComponent(){
+    fun CalendarComponent(viewModel: SunViewModel = viewModel()){
         Card(modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(0.4f)){
 
             Column(modifier = Modifier.fillMaxSize()){
@@ -78,7 +83,7 @@ class Calendar(private val modifier: Modifier) {
                                     modifier = Modifier
                                         .size(50.dp)
                                         .padding(1.dp)
-                                        .clickable { },
+                                        .clickable { viewModel.setNewDate(y + (i  * 7) + 1)},
                                     text = (y + (i  * 7) + 1).toString(),
                                     fontSize = 20.sp,
                                     textAlign = TextAlign.Center,

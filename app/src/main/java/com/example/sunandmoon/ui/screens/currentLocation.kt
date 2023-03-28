@@ -24,7 +24,8 @@ fun currentLocationTest(
     var showCalendar by remember { mutableStateOf(false)}
     val sunUiState by viewModel.sunUiState.collectAsState()
     //checks permissions to see if button can be enabled
-    //put denne før selve greia
+    //put denne før selve funksjonen så den slipper å gjøre konstante permission-kall
+    //kan gjøres i viewmodel sin init
     viewModel.updateLocation(checkPermissions())
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
@@ -40,13 +41,14 @@ fun currentLocationTest(
         }
 
         Text("current location is\n latitude: ${sunUiState.latitude}, \nlongitude:${sunUiState.longitude}")
-        val calendar = Calendar(Modifier.fillMaxSize(0.5f))
+        val calendar = Calendar(Modifier.fillMaxSize(0.5f), sunUiState)
         Button(onClick = {showCalendar = !showCalendar}){
             Text(text = "Show Calendar")
         }
         if (showCalendar){
             calendar.CalendarComponent()
         }
+        Text(text = sunUiState.currentDate.toString())
 
     }
 }

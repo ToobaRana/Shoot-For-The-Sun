@@ -12,5 +12,6 @@ data class SunUiState(
     val locationSearchResults: List<LocationSearchResults>,
     val locationEnabled: Boolean,
     val longitude: Double,
-    val latitude: Double
+    val latitude: Double,
+    var currentDate: Int
 )
