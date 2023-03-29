@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
@@ -16,21 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sunandmoon.data.DataSource
-import com.example.sunandmoon.data.SunUiState
 import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.ui.components.TableCard
-import com.example.sunandmoon.viewModel.SunViewModel
 import com.example.sunandmoon.viewModel.TableViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.time.Month
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
-
-import kotlin.math.max
 
 
 @Composable
@@ -40,9 +28,9 @@ fun TableScreen(modifier: Modifier, tableViewModel: TableViewModel = viewModel()
 
 
 
-    Log.d("sunset", sunUiState.sunSetTime)
-    Log.d("sunrise", sunUiState.sunRiseTime)
-    Log.d("solarNoon", sunUiState.solarNoon)
+    Log.d("sunset", sunUiState.sunsetTime)
+    Log.d("sunrise", sunUiState.sunriseTime)
+    Log.d("solarNoon", sunUiState.solarNoonTime)
 
     TableView(tableViewModel, tableUiState)
 

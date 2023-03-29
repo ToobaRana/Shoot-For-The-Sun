@@ -20,9 +20,9 @@ class SunViewModel : ViewModel() {
     //sunDataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, "2022-12-18", "+01:00" ).properties.sunrise.time
     private val _sunUiState = MutableStateFlow(
         SunUiState(
-            sunRiseTime = "not loaded",
-            sunSetTime = "not loaded",
-            solarNoon = "not loaded",
+            sunriseTime = "not loaded",
+            sunsetTime = "not loaded",
+            solarNoonTime = "not loaded",
             locationSearchResults = listOf(),
             locationEnabled = true,
             latitude = 0.0,
@@ -68,16 +68,16 @@ class SunViewModel : ViewModel() {
 
                 _sunUiState.update { currentState ->
                     currentState.copy(
-                        sunRiseTime = sunRiseTime,
-                        sunSetTime = sunSetTime,
-                        solarNoon = solarNoon,
+                        sunriseTime = sunRiseTime,
+                        sunsetTime = sunSetTime,
+                        solarNoonTime = solarNoon,
                         locationSearchResults = listOf(),
                     )
                 }
 
                 Log.d(
                     "test",
-                    sunUiState.value.sunRiseTime + sunUiState.value.sunSetTime + sunUiState.value.solarNoon
+                    sunUiState.value.sunriseTime + sunUiState.value.sunsetTime + sunUiState.value.solarNoonTime
                 )
             } catch (e: Throwable) {
 
@@ -93,9 +93,6 @@ class SunViewModel : ViewModel() {
 
                 _sunUiState.update { currentState ->
                     currentState.copy(
-                        sunRiseTime = _sunUiState.value.sunRiseTime,
-                        sunSetTime = _sunUiState.value.sunSetTime,
-                        solarNoon = _sunUiState.value.solarNoon,
                         locationSearchResults = locationSearchResults
                     )
                 }
@@ -114,17 +111,21 @@ class SunViewModel : ViewModel() {
         }
     }
 
+    fun setCoordinates(latitude: Double, longitude: Double) {
+        _sunUiState.update { currentState ->
+            currentState.copy(
+                latitude = latitude,
+                longitude = longitude
+            )
+        }
+    }
+
     //calls fetchLocation method with provider client, then updates latitude and longitude in uiState with return value
     fun getCurrentPosition(fusedLocationProviderClient: FusedLocationProviderClient) {
         viewModelScope.launch() {
             val location = fetchLocation(fusedLocationProviderClient)
             if (location != null) {
-                _sunUiState.update { currentState ->
-                    currentState.copy(
-                        latitude = location.first,
-                        longitude = location.second
-                    )
-                }
+                setCoordinates(location.first, location.second)
             }
 
         }
@@ -140,6 +141,16 @@ class SunViewModel : ViewModel() {
         _sunUiState.update { currentState ->
             currentState.copy(
                 currentMonth = newMonth
+            )
+        }
+    }
+
+    fun setSolarTimes(sunriseTime: String, sunsetTime: String, solarNoonTime: String) {
+        _sunUiState.update { currentState ->
+            currentState.copy(
+                sunriseTime = sunriseTime,
+                solarNoonTime = solarNoonTime,
+                sunsetTime = sunsetTime
             )
         }
     }

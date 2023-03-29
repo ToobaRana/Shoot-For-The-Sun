@@ -26,21 +26,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 
 import com.example.sunandmoon.R
-
+import com.example.sunandmoon.ui.components.CalendarComponent
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: SunViewModel = viewModel()){
 
-
     val sunUiState by sunViewModel.sunUiState.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-
-            LocationSearch()
+            Column() {
+                LocationSearch()
+                CalendarComponent(modifier)
+            }
 
         },
 
@@ -56,16 +57,12 @@ fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: Sun
             {
 
                 item {
-                    SunCard("Sunrise", painterResource(id = R.drawable.sunrise), "05:31")
-                    SunCard("Solar noon", painterResource(id = R.drawable.solarnoon), "13:43")
-                    SunCard("Sunset", painterResource(id = R.drawable.sunset), "19:51")
+                    SunCard("Sunrise", painterResource(id = R.drawable.sunrise), sunUiState.sunriseTime)
+                    SunCard("Solar noon", painterResource(id = R.drawable.solarnoon), sunUiState.solarNoonTime)
+                    SunCard("Sunset", painterResource(id = R.drawable.sunset), sunUiState.sunsetTime)
 
                 }
             }
-
-
-
-
 
         },
         bottomBar = {

@@ -10,7 +10,9 @@ import androidx.compose.ui.*
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.viewModel.SunViewModel
+import java.time.Instant
 
 //https://nominatim.openstreetmap.org/ui/search.html
 
@@ -63,10 +65,11 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
                             .fillMaxWidth()
                             .clickable {
                                 isDropdownExpanded = false
-                                // Perform action when item is clicked
+                                sunViewModel.setCoordinates(item.lat.toDouble(), item.lon.toDouble())
+                                val sunTimes = getSunRiseNoonFall(Instant.now().toString(), item.lat.toDouble(), item.lon.toDouble())
+                                sunViewModel.setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)
-
                     )
                     if (index < searchResults.lastIndex) {
                         Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))

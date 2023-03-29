@@ -21,9 +21,9 @@ class TableViewModel : ViewModel() {
 
     private val _sunUiState = MutableStateFlow(
         SunUiState(
-            sunRiseTime = "not loaded",
-            sunSetTime = "not leaded",
-            solarNoon = "not leaded",
+            sunriseTime = "not loaded",
+            sunsetTime = "not leaded",
+            solarNoonTime = "not leaded",
             locationEnabled = false,
             locationSearchResults = listOf(),
             latitude = 0.0,
@@ -71,9 +71,9 @@ class TableViewModel : ViewModel() {
 
                 _sunUiState.update{currentState ->
                     currentState.copy(
-                        sunRiseTime = sunRiseTime,
-                        sunSetTime = sunSetTime,
-                        solarNoon = solarNoon,
+                        sunriseTime = sunRiseTime,
+                        sunsetTime = sunSetTime,
+                        solarNoonTime = solarNoon,
                     )
 
                 }

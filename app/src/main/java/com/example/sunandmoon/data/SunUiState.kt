@@ -4,10 +4,10 @@ import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchRes
 
 data class SunUiState(
 
-    val sunRiseTime: String,
-    val sunSetTime: String,
+    val sunriseTime: String,
+    val sunsetTime: String,
 
-    val solarNoon: String,
+    val solarNoonTime: String,
 
     val locationSearchResults: List<LocationSearchResults>,
     val locationEnabled: Boolean,
