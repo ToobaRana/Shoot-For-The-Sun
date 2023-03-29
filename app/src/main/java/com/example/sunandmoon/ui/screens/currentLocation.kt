@@ -49,6 +49,7 @@ fun currentLocationTest(
             calendar.CalendarComponent()
         }
         Text(text = sunUiState.currentDate.toString())
+        Text(text = "month ${calendar.months[sunUiState.currentMonth]}")
 
     }
 }
