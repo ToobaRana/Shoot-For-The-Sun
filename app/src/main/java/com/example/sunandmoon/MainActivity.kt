@@ -19,7 +19,6 @@ import com.example.sunandmoon.ui.screens.TableScreen
 import com.example.sunandmoon.ui.screens.TableView
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
 import com.example.sunandmoon.viewModel.SunViewModel
-import com.example.sunandmoon.viewModel.TableViewModel
 import com.google.android.gms.location.LocationServices
 
 class MainActivity : ComponentActivity() {
@@ -33,10 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val sunViewModel = SunViewModel()
-                    val tableViewModel = TableViewModel()
-
-                    MultipleScreenNavigator(sunViewModel, tableViewModel)
+                    MultipleScreenNavigator()
                 }
             }
         }
@@ -44,11 +40,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MultipleScreenNavigator(sunViewModel : SunViewModel, tableViewModel: TableViewModel) {
+fun MultipleScreenNavigator() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "homescreen") {
-        composable("homescreen") { HomeScreen(modifier = Modifier.fillMaxSize(), navigateToNext = {navController.navigate("tablescreen")}, sunViewModel)}
-        composable("tablescreen"){ TableScreen(modifier = Modifier.fillMaxSize(), tableViewModel)}
+        composable("homescreen") { HomeScreen(modifier = Modifier.fillMaxSize(), navigateToNext = {navController.navigate("tablescreen")})}
+        composable("tablescreen"){ TableScreen(modifier = Modifier.fillMaxSize())}
     }
 }

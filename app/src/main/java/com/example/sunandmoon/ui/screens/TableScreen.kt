@@ -19,7 +19,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.SunUiState
 import com.example.sunandmoon.data.TableUIState
-import com.example.sunandmoon.model.SunState
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.SunViewModel
 import com.example.sunandmoon.viewModel.TableViewModel
@@ -35,9 +34,11 @@ import kotlin.math.max
 
 
 @Composable
-fun TableScreen(tableViewModel: TableViewModel = viewModel()){
+fun TableScreen(modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
     val sunUiState by tableViewModel.sunUiState.collectAsState()
     val tableUiState by tableViewModel.tableUiState.collectAsState()
+
+
 
     Log.d("sunset", sunUiState.sunSetTime)
     Log.d("sunrise", sunUiState.sunRiseTime)
@@ -54,7 +55,7 @@ fun TableScreen(tableViewModel: TableViewModel = viewModel()){
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableView(tableViewModel: TableViewModel, tableUIState: TableUIState) {
+fun TableView(tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState) {
 
 
     //tableViewModel.loadDateTableList(sunType = "Sunrise")
@@ -203,7 +204,7 @@ fun dropdownMenuMonth(monthList: List<String>): String{
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun dropdownMenuSunType(tableViewModel: TableViewModel): String{
+fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
     //Dropdown
     val options = stringArrayResource(com.example.sunandmoon.R.array.suntype)
     var expanded by remember { mutableStateOf(false) }

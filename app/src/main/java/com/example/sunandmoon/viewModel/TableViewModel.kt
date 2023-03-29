@@ -87,7 +87,7 @@ class TableViewModel : ViewModel() {
     }
 
 
-        fun loadDateTableList(date : String = "2022-12-18", sunType: String){
+    fun loadDateTableList(date : String = "2022-12-18", sunType: String){
 
         viewModelScope.launch {
             try {
@@ -100,7 +100,7 @@ class TableViewModel : ViewModel() {
                 for (date in sameDays.sorted()){
 
 
-                        loadSunInformation(date.toString(), sunType)
+                    loadSunInformation(date.toString(), sunType)
 
 
 
@@ -115,30 +115,30 @@ class TableViewModel : ViewModel() {
 
     fun getSameDaysInYear(dateString: String): List<LocalDate> {
 
-            val date = LocalDate.parse(dateString)
-            val year = date.year
-            val sameDays = mutableListOf<LocalDate>()
+        val date = LocalDate.parse(dateString)
+        val year = date.year
+        val sameDays = mutableListOf<LocalDate>()
 
-            for (month in 1..12) {
-                if (month < date.month.value){
-                    val nextYear = year+1
+        for (month in 1..12) {
+            if (month < date.month.value){
+                val nextYear = year+1
 
-                    val sameDayOfMonth = LocalDate.of(nextYear, month, date.dayOfMonth)
-                    sameDays.add(sameDayOfMonth)
-
-                }
-                else{
-
-                    val sameDayOfMonth = LocalDate.of(year, month, date.dayOfMonth)
-                    sameDays.add(sameDayOfMonth)
-
-                }
+                val sameDayOfMonth = LocalDate.of(nextYear, month, date.dayOfMonth)
+                sameDays.add(sameDayOfMonth)
 
             }
-            //println(sameDays.sorted())
+            else{
 
-            return sameDays.sorted()
+                val sameDayOfMonth = LocalDate.of(year, month, date.dayOfMonth)
+                sameDays.add(sameDayOfMonth)
+
+            }
+
         }
+        //println(sameDays.sorted())
+
+        return sameDays.sorted()
+    }
 
 
 
