@@ -20,22 +20,28 @@ import com.example.sunandmoon.ui.screens.TableView
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
 import com.example.sunandmoon.viewModel.SunViewModel
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.FusedLocationProviderClient
 
 class MainActivity : ComponentActivity() {
+    //initializing here to get context of activity (this) before setcontent
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         setContent {
+
             SunAndMoonTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier,
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MultipleScreenNavigator()
                 }
             }
         }
+
     }
 }
 

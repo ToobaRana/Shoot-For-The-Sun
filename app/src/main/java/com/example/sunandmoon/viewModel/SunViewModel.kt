@@ -26,7 +26,9 @@ class SunViewModel : ViewModel() {
             locationSearchResults = listOf(),
             locationEnabled = true,
             latitude = 0.0,
-            longitude = 0.0
+            longitude = 0.0,
+            currentDate = 0,
+            currentMonth = 0
         )
     )
 
@@ -127,4 +129,19 @@ class SunViewModel : ViewModel() {
 
         }
     }
+    fun setNewDate(newDate: Int){
+        _sunUiState.update { currentState ->
+            currentState.copy(
+                currentDate = newDate
+            )
+        }
+    }
+    fun updateMonth(newMonth: Int){
+        _sunUiState.update { currentState ->
+            currentState.copy(
+                currentMonth = newMonth
+            )
+        }
+    }
+
 }
