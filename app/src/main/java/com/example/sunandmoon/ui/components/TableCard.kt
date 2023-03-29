@@ -22,7 +22,7 @@ import java.text.DateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableCard(sunTime: String, day: String, chosenSunType: String, sunUiState: SunUiState, modifier: Modifier) {
+fun TableCard(sunTime: String, day: String, chosenSunType: String, modifier: Modifier) {
     Surface(
         modifier = modifier
             .fillMaxWidth()

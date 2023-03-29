@@ -36,17 +36,16 @@ import kotlin.math.max
 
 @Composable
 fun TableScreen(tableViewModel: TableViewModel = viewModel()){
-    val table by tableViewModel.sunUiState.collectAsState()
-    val tableSet by tableViewModel.tableUiState.collectAsState()
+    val sunUiState by tableViewModel.sunUiState.collectAsState()
+    val tableUiState by tableViewModel.tableUiState.collectAsState()
 
-    Log.d("sunset", table.sunSetTime)
-    Log.d("sunrise", table.sunRiseTime)
-    Log.d("solarNoon", table.solarNoon)
+    Log.d("sunset", sunUiState.sunSetTime)
+    Log.d("sunrise", sunUiState.sunRiseTime)
+    Log.d("solarNoon", sunUiState.solarNoon)
 
-    TableView(table, tableViewModel, tableSet)
+    TableView(tableViewModel, tableUiState)
 
     //Log.d("List: ", tableUIState.dateTableList.toString())
-
 
 }
 
@@ -55,27 +54,29 @@ fun TableScreen(tableViewModel: TableViewModel = viewModel()){
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel, tableUIState: TableUIState) {
+fun TableView(tableViewModel: TableViewModel, tableUIState: TableUIState) {
 
-    val monthList = listOf(
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    )
 
-    //val dayInMonthList = mutableListOf<String>()
+    //tableViewModel.loadDateTableList(sunType = "Sunrise")
+    //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
 
     Column(Modifier.fillMaxSize()) {
 
-        var chosenMonth = ""
         var chosenSunType = ""
 
         Spacer(modifier = Modifier.height(40.dp))
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+
             Spacer(modifier = Modifier.width(10.dp))
-            //chosenMonth = dropdownMenuMonth(monthList = monthList)
-            Spacer(modifier = Modifier.width(10.dp))
-            chosenSunType = dropdownMenuSunType()
+            chosenSunType = dropdownMenuSunType(tableViewModel)
+            tableUIState.chosenSunType = chosenSunType
+            Log.d("tableUiStateUnit", tableUIState.chosenSunType)
+            Log.d("chosenUnitDropDown", chosenSunType)
+
+
+
+            //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
             Spacer(modifier = Modifier.width(10.dp))
         }
 
@@ -114,18 +115,20 @@ fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel, tableUISta
                     fontWeight = FontWeight.Bold
                 )
             }
-            var liste = tableUIState.dateTableList
+            var dateTableList = tableUIState.dateTableList
+            println(dateTableList)
+
+
+
             // Render the table rows
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
 
-                items(liste) { day ->
-                    //tableViewModel.loadDateTableList(sunType = "Sunrise")
-                    //tableViewModel.loadSunInformation(day)
+                items(dateTableList) { date ->
 
 
-                    var elementInTableUiStateList = day.split("T")
+                    var elementInTableUiStateList = date.split("T")
 
                     var sunriseTime = elementInTableUiStateList[1]
                     var day = elementInTableUiStateList[0]
@@ -135,9 +138,8 @@ fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel, tableUISta
                         sunTime = sunriseTime,
                         day = day,
                         chosenSunType = chosenSunType,
-                        sunUiState = sunUiState,
                         modifier = Modifier
-                            .background(if (liste.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
+                            .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
                             .padding(8.dp)
                     )
                 }
@@ -149,7 +151,7 @@ fun TableView(sunUiState: SunUiState, tableViewModel: TableViewModel, tableUISta
 
 
 
-
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun dropdownMenuMonth(monthList: List<String>): String{
@@ -195,18 +197,13 @@ fun dropdownMenuMonth(monthList: List<String>): String{
 
     }
 
-
-
-
-
-
-    //AlpacaScreen()
     return selectedOptionText
 }
 
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun dropdownMenuSunType(): String{
+fun dropdownMenuSunType(tableViewModel: TableViewModel): String{
     //Dropdown
     val options = stringArrayResource(com.example.sunandmoon.R.array.suntype)
     var expanded by remember { mutableStateOf(false) }
@@ -240,6 +237,8 @@ fun dropdownMenuSunType(): String{
                     onClick = {
                         selectedOptionText = selectionOption
                         expanded = false
+                        tableViewModel.loadDateTableList(sunType = selectedOptionText)
+
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
@@ -247,8 +246,8 @@ fun dropdownMenuSunType(): String{
         }
 
     }
+    Log.d("dropdownSelectedOptionText", selectedOptionText)
 
-    //AlpacaScreen()
     return selectedOptionText                                                                                            
 }
 

@@ -15,6 +15,7 @@ import java.time.LocalDate
 class TableViewModel : ViewModel() {
 
     private val dataSource = DataSource()
+    private var sunTimeList = mutableListOf<String>()
 
 
     private val _sunUiState = MutableStateFlow(
@@ -22,37 +23,27 @@ class TableViewModel : ViewModel() {
             sunRiseTime = "not loaded", sunSetTime = "not leaded", solarNoon = "not leaded"
         )
     )
-    var sunTimeList = mutableListOf<String>()
-
-
     private val _tableUiState = MutableStateFlow(
+
         TableUIState(
-            dateTableList = mutableListOf()
+            dateTableList = mutableListOf(), chosenSunType = "not loaded"
         )
     )
 
-    val sunUiState: StateFlow<SunUiState> = _sunUiState.asStateFlow()
     val tableUiState: StateFlow<TableUIState> = _tableUiState.asStateFlow()
-
-
-
-    //var date = ""
-
+    val sunUiState: StateFlow<SunUiState> = _sunUiState.asStateFlow()
 
     init {
-        //loadSunInformation(date)
-        //loadSunInformation2(date, dataSource)
         loadDateTableList(sunType = "Sunrise")
     }
 
     fun loadSunInformation(date : String, sunType: String){
         viewModelScope.launch {
             try{
+
                 var sunRiseTime = "not loaded"
                 var sunSetTime = "not loaded"
                 var solarNoon = "not loaded"
-
-
 
                 if (sunType == "Sunrise"){
                     sunRiseTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.sunrise.time
@@ -62,7 +53,6 @@ class TableViewModel : ViewModel() {
                 if (sunType == "Sunset"){
                     sunSetTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.sunset.time
                     sunTimeList.add(sunSetTime)
-
                 }
 
                 if (sunType == "SolarNoon"){
@@ -76,11 +66,9 @@ class TableViewModel : ViewModel() {
                     solarNoon = solarNoon
                 )
 
-                _tableUiState.value = TableUIState(sunTimeList)
+                _tableUiState.value = TableUIState(sunTimeList,tableUiState.value.chosenSunType)
 
-                //Log.d("sunListe", _tableUiState.value.dateTableList.toString())
-
-                //Log.d("test",sunUiState.value.sunRiseTime + sunUiState.value.sunSetTime + sunUiState.value.solarNoon)
+                Log.d("size: sunList", sunTimeList.size.toString())
             }catch (e: Throwable){
 
                 Log.d("error", "uh oh")
@@ -89,22 +77,24 @@ class TableViewModel : ViewModel() {
     }
 
 
+        fun loadDateTableList(date : String = "2022-12-18", sunType: String){
 
-        fun loadDateTableList(date : String = LocalDate.now().toString(), sunType: String){
         viewModelScope.launch {
             try {
+                Log.d("sunType", sunType.toString())
                 val sameDays = getSameDaysInYear(date)
 
 
-                for (element in sameDays.sorted()){
-                    println(element)
-                    loadSunInformation(element.toString(), sunType)
+                Log.d("size: sameDays", sameDays.size.toString())
+                sunTimeList.clear()
+                for (date in sameDays.sorted()){
+
+
+                        loadSunInformation(date.toString(), sunType)
+
+
 
                 }
-
-                //Log.d("test", sameDays.toString())
-
-
 
             }catch (e : Throwable)
             {
@@ -119,7 +109,6 @@ class TableViewModel : ViewModel() {
             val year = date.year
             val sameDays = mutableListOf<LocalDate>()
 
-            //print(date.month.value)
             for (month in 1..12) {
                 if (month < date.month.value){
                     val nextYear = year+1
@@ -136,25 +125,10 @@ class TableViewModel : ViewModel() {
                 }
 
             }
-            println(sameDays.sorted())
+            //println(sameDays.sorted())
 
             return sameDays.sorted()
         }
-
-
-
-
-
-
-
-
-
-
-
-/*
-val date = LocalDate.now().withDayOfMonth(i)
-                    val dateString = date.format(formatter)
- */
 
 
 

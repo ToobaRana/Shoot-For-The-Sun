@@ -1,3 +1,3 @@
 package com.example.sunandmoon.data
 
-class TableUIState(val dateTableList: MutableList<String>)
+class TableUIState(var dateTableList: MutableList<String>, var chosenSunType: String)
