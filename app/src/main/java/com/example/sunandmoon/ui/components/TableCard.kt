@@ -21,7 +21,7 @@ import java.text.DateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableCard(day: String, chosenSunType: String, sunUiState: SunUiState, modifier: Modifier) {
+fun TableCard(sunTime: String, day: String, chosenSunType: String, modifier: Modifier) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -45,49 +45,43 @@ fun TableCard(day: String, chosenSunType: String, sunUiState: SunUiState, modifi
 
             if (chosenSunType == "Sunrise"){
 
-                var sunriseTimeListe = sunUiState.sunRiseTime.split("T")
-                if (sunriseTimeListe.size >1){
-                    var sunriseTime = sunriseTimeListe[1]
+
                     Text(
-                        text = sunriseTime,
+                        text = sunTime,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(8.dp)
                     )
 
-                }
+
 
 
             }
 
             if (chosenSunType == "Sunset"){
-                var sunsetTimeListe = sunUiState.sunSetTime.split("T")
-                if (sunsetTimeListe.size >1){
-                    var sunsetTime = sunsetTimeListe[1]
+
                     Text(
-                        text = sunsetTime,
+                        text = sunTime,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(8.dp)
                     )
 
-                }
+
 
             }
             if (chosenSunType == "SolarNoon"){
-                var solarNoonTimeListe = sunUiState.solarNoon.split("T")
-                if (solarNoonTimeListe.size >1){
-                    var solarNoon = solarNoonTimeListe[1]
+
                     Text(
-                        text = solarNoon,
+                        text = sunTime,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(8.dp)
                     )
-                }
+
             }
 
             Text(

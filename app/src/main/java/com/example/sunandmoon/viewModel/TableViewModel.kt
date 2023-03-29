@@ -5,15 +5,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.SunUiState
+import com.example.sunandmoon.data.TableUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class TableViewModel : ViewModel() {
 
     private val dataSource = DataSource()
-    private val _tableUiState = MutableStateFlow(
+    private var sunTimeList = mutableListOf<String>()
+
+
+    private val _sunUiState = MutableStateFlow(
         SunUiState(
             sunRiseTime = "not loaded",
             sunSetTime = "not leaded",
@@ -24,28 +29,44 @@ class TableViewModel : ViewModel() {
             longitude = 0.0
         )
     )
+    private val _tableUiState = MutableStateFlow(
 
+        TableUIState(
+            dateTableList = mutableListOf(), chosenSunType = "not loaded"
+        )
+    )
 
-    val tableUiState: StateFlow<SunUiState> = _tableUiState.asStateFlow()
-
-    var date = ""
-
+    val tableUiState: StateFlow<TableUIState> = _tableUiState.asStateFlow()
+    val sunUiState: StateFlow<SunUiState> = _sunUiState.asStateFlow()
 
     init {
-        //loadSunInformation(date)
-        //loadSunInformation2(date, dataSource)
+        loadDateTableList(sunType = "Sunrise")
     }
 
-    fun loadSunInformation(date : String ){
+    fun loadSunInformation(date : String, sunType: String){
         viewModelScope.launch {
             try{
-                val sunRiseTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.sunrise.time
 
-                val sunSetTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.sunset.time
+                var sunRiseTime = "not loaded"
+                var sunSetTime = "not loaded"
+                var solarNoon = "not loaded"
 
-                val solarNoon = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.solarnoon.time
+                if (sunType == "Sunrise"){
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.sunrise.time
+                    sunTimeList.add(sunRiseTime)
+                }
 
-                _tableUiState.value = SunUiState(
+                if (sunType == "Sunset"){
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.sunset.time
+                    sunTimeList.add(sunSetTime)
+                }
+
+                if (sunType == "SolarNoon"){
+                    solarNoon = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date, "+01:00" ).properties.solarnoon.time
+                    sunTimeList.add(solarNoon)
+                }
+
+                _sunUiState.value = SunUiState(
                     sunRiseTime = sunRiseTime,
                     sunSetTime = sunSetTime,
                     solarNoon = solarNoon,
@@ -55,7 +76,9 @@ class TableViewModel : ViewModel() {
                     longitude = 0.0
                 )
 
-                Log.d("test",tableUiState.value.sunRiseTime + tableUiState.value.sunSetTime + tableUiState.value.solarNoon)
+                _tableUiState.value = TableUIState(sunTimeList,tableUiState.value.chosenSunType)
+
+                Log.d("size: sunList", sunTimeList.size.toString())
             }catch (e: Throwable){
 
                 Log.d("error", "uh oh")
@@ -63,10 +86,59 @@ class TableViewModel : ViewModel() {
         }
     }
 
-/*
-val date = LocalDate.now().withDayOfMonth(i)
-                    val dateString = date.format(formatter)
- */
+
+        fun loadDateTableList(date : String = "2022-12-18", sunType: String){
+
+        viewModelScope.launch {
+            try {
+                Log.d("sunType", sunType.toString())
+                val sameDays = getSameDaysInYear(date)
+
+
+                Log.d("size: sameDays", sameDays.size.toString())
+                sunTimeList.clear()
+                for (date in sameDays.sorted()){
+
+
+                        loadSunInformation(date.toString(), sunType)
+
+
+
+                }
+
+            }catch (e : Throwable)
+            {
+                Log.d("error", "Couldnt load date table list")
+            }
+        }
+    }
+
+    fun getSameDaysInYear(dateString: String): List<LocalDate> {
+
+            val date = LocalDate.parse(dateString)
+            val year = date.year
+            val sameDays = mutableListOf<LocalDate>()
+
+            for (month in 1..12) {
+                if (month < date.month.value){
+                    val nextYear = year+1
+
+                    val sameDayOfMonth = LocalDate.of(nextYear, month, date.dayOfMonth)
+                    sameDays.add(sameDayOfMonth)
+
+                }
+                else{
+
+                    val sameDayOfMonth = LocalDate.of(year, month, date.dayOfMonth)
+                    sameDays.add(sameDayOfMonth)
+
+                }
+
+            }
+            //println(sameDays.sorted())
+
+            return sameDays.sorted()
+        }
 
 
 
