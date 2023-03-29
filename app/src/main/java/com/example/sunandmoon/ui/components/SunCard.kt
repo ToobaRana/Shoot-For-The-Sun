@@ -22,7 +22,6 @@ fun SunCard(displayElement : String, sunImage: Painter, sunTime: String){
         //colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
 
     ){
-
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
