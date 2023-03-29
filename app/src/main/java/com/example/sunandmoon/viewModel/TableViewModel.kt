@@ -9,6 +9,7 @@ import com.example.sunandmoon.data.TableUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -26,7 +27,9 @@ class TableViewModel : ViewModel() {
             locationEnabled = false,
             locationSearchResults = listOf(),
             latitude = 0.0,
-            longitude = 0.0
+            longitude = 0.0,
+            currentDate = 0,
+            currentMonth = 0
         )
     )
     private val _tableUiState = MutableStateFlow(
@@ -66,15 +69,14 @@ class TableViewModel : ViewModel() {
                     sunTimeList.add(solarNoon)
                 }
 
-                _sunUiState.value = SunUiState(
-                    sunRiseTime = sunRiseTime,
-                    sunSetTime = sunSetTime,
-                    solarNoon = solarNoon,
-                    locationEnabled = false,
-                    locationSearchResults = listOf(),
-                    latitude = 0.0,
-                    longitude = 0.0
-                )
+                _sunUiState.update{currentState ->
+                    currentState.copy(
+                        sunRiseTime = sunRiseTime,
+                        sunSetTime = sunSetTime,
+                        solarNoon = solarNoon,
+                    )
+
+                }
 
                 _tableUiState.value = TableUIState(sunTimeList,tableUiState.value.chosenSunType)
 
