@@ -27,6 +27,7 @@ import androidx.compose.runtime.*
 
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.CalendarComponent
+import com.example.sunandmoon.ui.components.NavigationComposable
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +67,8 @@ fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: Sun
 
         },
         bottomBar = {
-
+            NavigationComposable(page = 0, navigateToNext)
+            /*
             var selectedItem by remember { mutableStateOf(0) }
             val items = listOf("Home", "Table")
             val icons = listOf(Icons.Filled.Star, Icons.Filled.Menu)
@@ -85,6 +87,8 @@ fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: Sun
                     )
                 }
             }
+
+             */
 
 
 

@@ -51,6 +51,6 @@ fun MultipleScreenNavigator() {
 
     NavHost(navController = navController, startDestination = "homescreen") {
         composable("homescreen") { HomeScreen(modifier = Modifier.fillMaxSize(), navigateToNext = {navController.navigate("tablescreen")})}
-        composable("tablescreen"){ TableScreen(modifier = Modifier.fillMaxSize())}
+        composable("tablescreen"){ TableScreen(modifier = Modifier.fillMaxSize(), navigateToNext = {navController.popBackStack("homescreen", false) })}
     }
 }

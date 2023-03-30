@@ -16,13 +16,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.TableUIState
+import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.TableViewModel
+import kotlinx.serialization.json.JsonNull.content
 import java.util.*
 
 
 @Composable
-fun TableScreen(modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
+fun TableScreen(navigateToNext: () -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
     val sunUiState by tableViewModel.sunUiState.collectAsState()
     val tableUiState by tableViewModel.tableUiState.collectAsState()
 
@@ -32,7 +34,7 @@ fun TableScreen(modifier: Modifier, tableViewModel: TableViewModel = viewModel()
     Log.d("sunrise", sunUiState.sunriseTime)
     Log.d("solarNoon", sunUiState.solarNoonTime)
 
-    TableView(tableViewModel, tableUiState)
+    TableView(tableViewModel, tableUiState, navigateToNext)
 
     //Log.d("List: ", tableUIState.dateTableList.toString())
 
@@ -43,99 +45,109 @@ fun TableScreen(modifier: Modifier, tableViewModel: TableViewModel = viewModel()
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableView(tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState) {
+fun TableView(tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNext: () -> Unit) {
 
 
     //tableViewModel.loadDateTableList(sunType = "Sunrise")
     //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
+    Scaffold(modifier = Modifier.fillMaxSize(),
+        content = { innerPadding ->
+            val padding = innerPadding
+            Column(Modifier.fillMaxSize()) {
 
-    Column(Modifier.fillMaxSize()) {
+                var chosenSunType = ""
 
-        var chosenSunType = ""
+                Spacer(modifier = Modifier.height(40.dp))
 
-        Spacer(modifier = Modifier.height(40.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
 
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-
-            Spacer(modifier = Modifier.width(10.dp))
-            chosenSunType = dropdownMenuSunType(tableViewModel)
-            tableUIState.chosenSunType = chosenSunType
-            Log.d("tableUiStateUnit", tableUIState.chosenSunType)
-            Log.d("chosenUnitDropDown", chosenSunType)
-
-
-
-            //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
-            Spacer(modifier = Modifier.width(10.dp))
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
+                    chosenSunType = dropdownMenuSunType(tableViewModel)
+                    tableUIState.chosenSunType = chosenSunType
+                    Log.d("tableUiStateUnit", tableUIState.chosenSunType)
+                    Log.d("chosenUnitDropDown", chosenSunType)
 
 
-        Column(modifier = Modifier.fillMaxWidth()) {
-            // Render the header row
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.LightGray)
-            ) {
-                Text(
-                    text = "Day",
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(8.dp),
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = chosenSunType,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(8.dp),
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Our $chosenSunType",
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(8.dp),
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            var dateTableList = tableUIState.dateTableList
-            println(dateTableList)
+                    //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
+                    Spacer(modifier = Modifier.width(10.dp))
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
 
 
-
-            // Render the table rows
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-
-                items(dateTableList) { date ->
-
-
-                    var elementInTableUiStateList = date.split("T")
-
-                    var sunriseTime = elementInTableUiStateList[1]
-                    var day = elementInTableUiStateList[0]
-
-
-                    TableCard(
-                        sunTime = sunriseTime,
-                        day = day,
-                        chosenSunType = chosenSunType,
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    // Render the header row
+                    Row(
                         modifier = Modifier
-                            .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
-                            .padding(8.dp)
-                    )
+                            .fillMaxWidth()
+                            .background(Color.LightGray)
+                    ) {
+                        Text(
+                            text = "Day",
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = chosenSunType,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Our $chosenSunType",
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    var dateTableList = tableUIState.dateTableList
+                    println(dateTableList)
+
+
+                    // Render the table rows
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+
+                        items(dateTableList) { date ->
+
+
+                            var elementInTableUiStateList = date.split("T")
+
+                            var sunriseTime = elementInTableUiStateList[1]
+                            var day = elementInTableUiStateList[0]
+
+
+                            TableCard(
+                                sunTime = sunriseTime,
+                                day = day,
+                                chosenSunType = chosenSunType,
+                                modifier = Modifier
+                                    .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
+                                    .padding(8.dp)
+                            )
+                        }
+
+                    }
                 }
 
             }
+        },
+        bottomBar = {
+            NavigationComposable(page = 1, navigateToNext)
         }
-    }
+
+
+
+    )
+
 }
 
 
