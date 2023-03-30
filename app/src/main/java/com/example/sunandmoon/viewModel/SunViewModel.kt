@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.SunUiState
 import com.example.sunandmoon.fetchLocation
+import com.example.sunandmoon.getSunRiseNoonFall
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 class SunViewModel : ViewModel() {
 
@@ -20,13 +22,14 @@ class SunViewModel : ViewModel() {
     //sunDataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, "2022-12-18", "+01:00" ).properties.sunrise.time
     private val _sunUiState = MutableStateFlow(
         SunUiState(
-            sunriseTime = "not loaded",
-            sunsetTime = "not loaded",
-            solarNoonTime = "not loaded",
+            sunriseTime = "not calculated",
+            solarNoonTime = "not calculated",
+            sunsetTime = "not calculated",
+            locationSearchQuery = "UiO",
             locationSearchResults = listOf(),
             locationEnabled = true,
-            latitude = 0.0,
-            longitude = 0.0,
+            latitude = 59.943965,
+            longitude = 10.7178129,
             currentDate = 0,
             currentMonth = 0
         )
@@ -35,9 +38,11 @@ class SunViewModel : ViewModel() {
     val sunUiState: StateFlow<SunUiState> = _sunUiState.asStateFlow()
 
     init {
-        loadSunInformation()
+        //loadSunInformation()
+        //setCoordinates(item.lat.toDouble(), item.lon.toDouble())
+        val sunTimes = getSunRiseNoonFall(Instant.now().toString(), sunUiState.value.latitude, sunUiState.value.longitude)
+        setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
-
 
     private fun loadSunInformation() {
         viewModelScope.launch {
@@ -80,9 +85,16 @@ class SunViewModel : ViewModel() {
                     sunUiState.value.sunriseTime + sunUiState.value.sunsetTime + sunUiState.value.solarNoonTime
                 )
             } catch (e: Throwable) {
-
-                Log.d("error", "uh oh")
+                Log.d("error", "uh oh" + e.toString())
             }
+        }
+    }
+
+    fun setLocationSearchQuery(inputQuery: String) {
+        _sunUiState.update { currentState ->
+            currentState.copy(
+                locationSearchQuery = inputQuery
+            )
         }
     }
 
@@ -127,7 +139,6 @@ class SunViewModel : ViewModel() {
             if (location != null) {
                 setCoordinates(location.first, location.second)
             }
-
         }
     }
     fun setNewDate(newDate: Int){
@@ -145,7 +156,7 @@ class SunViewModel : ViewModel() {
         }
     }
 
-    fun setSolarTimes(sunriseTime: String, sunsetTime: String, solarNoonTime: String) {
+    fun setSolarTimes(sunriseTime: String, solarNoonTime: String, sunsetTime: String) {
         _sunUiState.update { currentState ->
             currentState.copy(
                 sunriseTime = sunriseTime,

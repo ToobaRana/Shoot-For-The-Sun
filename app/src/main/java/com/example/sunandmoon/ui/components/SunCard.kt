@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SunCard(displayElement : String, sunImage: Painter, sunTime: String){
 

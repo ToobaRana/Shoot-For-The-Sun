@@ -22,7 +22,7 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
 
     val sunUIState by sunViewModel.sunUiState.collectAsState()
 
-    var searchQuery by remember { mutableStateOf("") }
+    var searchQuery = sunUIState.locationSearchQuery
 
     //var searchResults by remember { mutableStateOf<List<String>>(emptyList()) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
@@ -31,7 +31,7 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { query ->
-                searchQuery = query
+                sunViewModel.setLocationSearchQuery(query)
             },
             label = { Text("Search for a location") },
             placeholder = { Text("Enter a location") },

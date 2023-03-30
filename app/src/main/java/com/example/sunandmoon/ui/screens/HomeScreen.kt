@@ -43,7 +43,6 @@ fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: Sun
                 LocationSearch()
                 CalendarComponent(modifier)
             }
-
         },
 
 

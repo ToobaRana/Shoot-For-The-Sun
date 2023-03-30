@@ -25,6 +25,7 @@ class TableViewModel : ViewModel() {
             sunsetTime = "not leaded",
             solarNoonTime = "not leaded",
             locationEnabled = false,
+            locationSearchQuery = "Forskningsparken",
             locationSearchResults = listOf(),
             latitude = 0.0,
             longitude = 0.0,

@@ -15,13 +15,10 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import kotlin.math.acos
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.tan
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import kotlin.math.*
 
 //https://gml.noaa.gov/grad/solcalc/solareqns.PDF
 //https://thesolarlabs.com/ros/solar-angles/
@@ -70,7 +67,7 @@ fun MathScreen(modifier: Modifier = Modifier) {
 
 // Calculates and returns a list of sunrise and sunset and sunset (as strings)
 // longitude is in degrees (positive to the east of the Prime Meridian)
-fun getSunRiseNoonFall(timestampString: String, longitude: Degree, latitude: Degree): List<String> {
+fun getSunRiseNoonFall(timestampString: String, latitude: Degree, longitude: Degree): List<String> {
     // hours from utc
     val timeZoneOffset: Double = 2.0
 
@@ -121,9 +118,14 @@ fun getSunRiseNoonFall(timestampString: String, longitude: Degree, latitude: Deg
     val sunsetTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((sunsetTime) * 60 + 3600 * timeZoneOffset).toLong())
     val solarNoonTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((solarNoonTime) * 60 + 3600 * timeZoneOffset).toLong())
 
+    val sunriseTimeLocalTimeRounded = roundToNearestMinute(sunriseTimeLocalTime.format(formatter))
+    val sunsetTimeLocalTimeRounded = roundToNearestMinute(solarNoonTimeLocalTime.format(formatter))
+    val solarNoonTimeLocalTimeRounded = roundToNearestMinute(sunsetTimeLocalTime.format(formatter))
 
     Log.i("matte", "_______________________________________________________")
     Log.i("matte", timestampString)
+    Log.i("matte", "latitude: $latitude")
+    Log.i("matte", "longitude: $longitude")
     Log.i("matte", "timeString: $timeString")
     Log.i("matte", "dayOfYear: $dayOfYear")
     Log.i("matte", "hourDecimal: $hourDecimal")
@@ -143,5 +145,15 @@ fun getSunRiseNoonFall(timestampString: String, longitude: Degree, latitude: Deg
     Log.i("matte", "_______________________________________________________")
 
 
-    return listOf(sunriseTimeLocalTime.format(formatter), solarNoonTimeLocalTime.format(formatter), sunsetTimeLocalTime.format(formatter))
+    return listOf(sunriseTimeLocalTimeRounded, sunsetTimeLocalTimeRounded, solarNoonTimeLocalTimeRounded)
+}
+
+fun roundToNearestMinute(timeStringHHmmss: String): String {
+    val hoursString: String = timeStringHHmmss.split(":")[0]
+    val minutes: Int = timeStringHHmmss.split(":")[1].toInt()
+    val seconds: Double = timeStringHHmmss.split(":")[2].toDouble()
+
+    val minutesString: String = (minutes + round(seconds/60)).toInt().toString()
+
+    return "$hoursString:$minutesString"
 }
