@@ -14,5 +14,6 @@ data class SunUiState(
     val longitude: Double,
     val latitude: Double,
     var currentDate: Int,
-    val currentMonth: Int
+    val currentMonth: Int,
+    val timeZoneOffset: Double
 )
