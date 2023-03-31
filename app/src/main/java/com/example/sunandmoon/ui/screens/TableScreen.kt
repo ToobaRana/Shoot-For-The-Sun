@@ -16,23 +16,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.TableUIState
+import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.TableViewModel
+import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.JsonNull.content
 import java.util.*
 
 
 @Composable
 fun TableScreen(navigateToNext: () -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
-    val sunUiState by tableViewModel.sunUiState.collectAsState()
+
     val tableUiState by tableViewModel.tableUiState.collectAsState()
-
-
-
-    Log.d("sunset", sunUiState.sunsetTime)
-    Log.d("sunrise", sunUiState.sunriseTime)
-    Log.d("solarNoon", sunUiState.solarNoonTime)
 
     TableView(tableViewModel, tableUiState, navigateToNext)
 
@@ -63,7 +59,8 @@ fun TableView(tableViewModel: TableViewModel = viewModel(), tableUIState: TableU
 
                     Spacer(modifier = Modifier.width(10.dp))
                     chosenSunType = dropdownMenuSunType(tableViewModel)
-                    tableUIState.chosenSunType = chosenSunType
+
+
                     Log.d("tableUiStateUnit", tableUIState.chosenSunType)
                     Log.d("chosenUnitDropDown", chosenSunType)
 
@@ -107,35 +104,40 @@ fun TableView(tableViewModel: TableViewModel = viewModel(), tableUIState: TableU
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    var dateTableList = tableUIState.dateTableList
-                    println(dateTableList)
+                    var apiDateTableList = tableUIState.apiDateTableList
+                    println("api:" + apiDateTableList)
+                    println("calculations:" + tableUIState.calculationsDateTableList)
 
 
                     // Render the table rows
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
+                        var i = 0
+                        items(apiDateTableList) { date ->
+                            //println(date)
 
-                        items(dateTableList) { date ->
-
-
+                            println(apiDateTableList.size)
                             var elementInTableUiStateList = date.split("T")
 
                             var sunriseTime = elementInTableUiStateList[1]
                             var day = elementInTableUiStateList[0]
-
+                            var monthInt = day.split("-")[1].toInt()
 
                             TableCard(
-                                sunTime = sunriseTime,
+                                apiSunTime = sunriseTime,
                                 day = day,
-                                chosenSunType = chosenSunType,
+                                calculationSunTime = tableUIState.calculationsDateTableList[monthInt-1],
                                 modifier = Modifier
                                     .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
                                     .padding(8.dp)
                             )
+
+                            i+=1
                         }
 
                     }
+                    Spacer(modifier = Modifier.height(200.dp))
                 }
 
             }
@@ -150,58 +152,6 @@ fun TableView(tableViewModel: TableViewModel = viewModel(), tableUIState: TableU
 
 }
 
-
-
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun dropdownMenuMonth(monthList: List<String>): String{
-    //Dropdown
-    val options = monthList
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(monthList[0]) }
-
-
-
-    //Dropdown menu setup
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }, modifier = Modifier.width(200.dp)
-    ) {
-        TextField(
-            modifier = Modifier.menuAnchor(),
-            // The `menuAnchor` modifier must be passed to the text field for correctness.
-
-            readOnly = true,
-            value = selectedOptionText,
-            onValueChange = {},
-            label = { Text("Month")},
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-
-            )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-        ) {
-            options.forEach { selectionOption ->
-                DropdownMenuItem(
-                    text = { Text(selectionOption) },
-                    onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
-                    },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                )
-            }
-        }
-
-    }
-
-    return selectedOptionText
-}
-
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
@@ -238,7 +188,9 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
                     onClick = {
                         selectedOptionText = selectionOption
                         expanded = false
-                        tableViewModel.loadDateTableList(sunType = selectedOptionText)
+                        tableViewModel.setSunType(selectedOptionText)
+                        tableViewModel.loadSunInformation()
+
 
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding

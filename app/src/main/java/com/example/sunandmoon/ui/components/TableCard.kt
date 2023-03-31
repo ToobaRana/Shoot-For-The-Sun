@@ -21,7 +21,7 @@ import java.text.DateFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableCard(sunTime: String, day: String, chosenSunType: String, modifier: Modifier) {
+fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, modifier: Modifier) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -35,57 +35,24 @@ fun TableCard(sunTime: String, day: String, chosenSunType: String, modifier: Mod
 
         ) {
 
-                Text(
-                    text = day,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    modifier = Modifier.padding(8.dp)
-                )
-
-            if (chosenSunType == "Sunrise"){
-
-
-                    Text(
-                        text = sunTime,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(8.dp)
-                    )
-
-
-
-
-            }
-
-            if (chosenSunType == "Sunset"){
-
-                    Text(
-                        text = sunTime,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(8.dp)
-                    )
-
-
-
-            }
-            if (chosenSunType == "SolarNoon"){
-
-                    Text(
-                        text = sunTime,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(8.dp)
-                    )
-
-            }
+            Text(
+                text = day,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = Color.Black,
+                modifier = Modifier.padding(8.dp)
+            )
 
             Text(
-                text = "Our result ",
+                text = apiSunTime,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = Color.Black,
+                modifier = Modifier.padding(8.dp)
+            )
+
+            Text(
+                text = calculationSunTime,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 color = Color.Black,
