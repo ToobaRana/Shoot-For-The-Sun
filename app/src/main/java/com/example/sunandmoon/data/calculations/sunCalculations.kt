@@ -31,45 +31,9 @@ typealias Radian = Double
 fun Degree.toRadian(): Radian = this / 180 * Math.PI
 fun Radian.toDegree(): Degree = this * 180 / Math.PI
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MathScreen(modifier: Modifier = Modifier) {
-    var solarTimes by remember { mutableStateOf(listOf("")) }
-
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-
-        Column() {
-            Button(onClick = { solarTimes = getSunRiseNoonFall(Instant.now().toString(), 10.7175147, 59.943621) }) {
-                Text(text = "Calculate")
-            }
-        }
-
-        if(solarTimes.size >= 3) {
-            Text(text = "Sunrise time:", fontSize = 25.sp)
-            Text(text = solarTimes[0], fontSize = 25.sp)
-
-            Spacer(modifier = Modifier.size(40.dp))
-
-            Text(text = "Solar noon time:", fontSize = 25.sp)
-            Text(text = solarTimes[1], fontSize = 25.sp)
-
-            Spacer(modifier = Modifier.size(40.dp))
-
-            Text(text = "Sunset time:", fontSize = 25.sp)
-            Text(text = solarTimes[2], fontSize = 25.sp)
-        }
-
-
-        Spacer(modifier = Modifier.size(40.dp))
-    }
-}
-
 // Calculates and returns a list of sunrise and sunset and sunset (as strings)
 // longitude is in degrees (positive to the east of the Prime Meridian)
-fun getSunRiseNoonFall(timestampString: String, latitude: Degree, longitude: Degree): List<String> {
-    // hours from utc
-    val timeZoneOffset: Double = 2.0
+fun getSunRiseNoonFall(timestampString: String, timeZoneOffset: Double, latitude: Degree, longitude: Degree): List<String> {
 
     val timeString: String = timestampString.split("T")[1]
     val hour: Double = timeString.split(":")[0].toDouble()
@@ -89,11 +53,11 @@ fun getSunRiseNoonFall(timestampString: String, latitude: Degree, longitude: Deg
     // in minutes
     //val eqtime: Double = 229.18 * (0.000075 + 0.001868 * cos(y) + 0.032077 * sin(y) - 0.014615 * cos(2 * y) - 0.040849 * sin(2 * y))
     //val n = 2 * PI / 365 * (day - 1)
-    val eqtime = 229.18*(0.000075 + 0.001868* cos(y) - 0.032077*sin(y) -0.014615*cos(2*y) - 0.040849*sin(2* y) )
+    val eqtime: Double = 229.18*(0.000075 + 0.001868* cos(y) - 0.032077*sin(y) -0.014615*cos(2*y) - 0.040849*sin(2* y) )
 
     // radians
     //val decl: Radian = 0.006918 - 0.399912 * cos(y) + 0.070257 * sin(y) - 0.006758 * cos(2 * y) + 0.000907 * sin(2 * y) - 0.002697 * cos(3 * y) + 0.00148 * sin(3 * y)
-    val decl = (90-(Math.toDegrees(acos(sin(Math.toRadians(-23.44)* Math.cos(Math.toRadians((360/365.24)*(dayOfYear+10)+360/Math.PI*0.0167*sin(Math.toRadians((360/365.24)*(dayOfYear-2)))))))))).toRadian()
+    val decl: Radian = (90-(Math.toDegrees(acos(sin(Math.toRadians(-23.44)* Math.cos(Math.toRadians((360/365.24)*(dayOfYear+10)+360/Math.PI*0.0167*sin(Math.toRadians((360/365.24)*(dayOfYear-2)))))))))).toRadian()
 
     val timeOffset: Double = eqtime + 4 * longitude - 60 * timeZoneOffset
 
@@ -124,6 +88,7 @@ fun getSunRiseNoonFall(timestampString: String, latitude: Degree, longitude: Deg
 
     Log.i("matte", "_______________________________________________________")
     Log.i("matte", timestampString)
+    Log.i("matte", "timeZoneOffset $timeZoneOffset")
     Log.i("matte", "latitude: $latitude")
     Log.i("matte", "longitude: $longitude")
     Log.i("matte", "timeString: $timeString")
@@ -153,7 +118,10 @@ fun roundToNearestMinute(timeStringHHmmss: String): String {
     val minutes: Int = timeStringHHmmss.split(":")[1].toInt()
     val seconds: Double = timeStringHHmmss.split(":")[2].toDouble()
 
-    val minutesString: String = (minutes + round(seconds/60)).toInt().toString()
+    var minutesString: String = (minutes + round(seconds/60)).toInt().toString()
+    if(minutesString.length == 1) {
+        minutesString = "0" + minutesString
+    }
 
     return "$hoursString:$minutesString"
 }

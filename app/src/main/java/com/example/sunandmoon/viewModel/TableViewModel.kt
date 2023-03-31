@@ -25,12 +25,13 @@ class TableViewModel : ViewModel() {
             sunsetTime = "not leaded",
             solarNoonTime = "not leaded",
             locationEnabled = false,
-            locationSearchQuery = "Forskningsparken",
+            locationSearchQuery = "UiO",
             locationSearchResults = listOf(),
             latitude = 0.0,
             longitude = 0.0,
             currentDate = 0,
-            currentMonth = 0
+            currentMonth = 0,
+            timeZoneOffset = 2.0
         )
     )
     private val _tableUiState = MutableStateFlow(

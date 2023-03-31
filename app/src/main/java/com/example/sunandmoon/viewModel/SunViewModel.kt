@@ -31,7 +31,8 @@ class SunViewModel : ViewModel() {
             latitude = 59.943965,
             longitude = 10.7178129,
             currentDate = 0,
-            currentMonth = 0
+            currentMonth = 0,
+            timeZoneOffset = 2.0
         )
     )
 
@@ -40,7 +41,7 @@ class SunViewModel : ViewModel() {
     init {
         //loadSunInformation()
         //setCoordinates(item.lat.toDouble(), item.lon.toDouble())
-        val sunTimes = getSunRiseNoonFall(Instant.now().toString(), sunUiState.value.latitude, sunUiState.value.longitude)
+        val sunTimes = getSunRiseNoonFall(Instant.now().toString(), sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
         setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
 
@@ -49,7 +50,7 @@ class SunViewModel : ViewModel() {
             try {
                 val sunRiseTime = sunDataSource.fetchSunrise3Data(
                     "sun",
-                    59.933333,
+                    59.943965,
                     10.716667,
                     "2022-12-18",
                     "+01:00"
@@ -123,12 +124,21 @@ class SunViewModel : ViewModel() {
         }
     }
 
-    fun setCoordinates(latitude: Double, longitude: Double) {
-        _sunUiState.update { currentState ->
-            currentState.copy(
-                latitude = latitude,
-                longitude = longitude
-            )
+    fun setCoordinates(latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) {
+        viewModelScope.launch {
+            if(setTimeZoneOffset) {
+                val locationTimeZoneOffsetResult = sunDataSource.fetchLocationTimezoneOffset(latitude, longitude)
+                setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
+            }
+            _sunUiState.update { currentState ->
+                currentState.copy(
+                    latitude = latitude,
+                    longitude = longitude
+                )
+            }
+
+            val sunTimes = getSunRiseNoonFall(Instant.now().toString(), sunUiState.value.timeZoneOffset, latitude, longitude)
+            setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
         }
     }
 
@@ -137,10 +147,11 @@ class SunViewModel : ViewModel() {
         viewModelScope.launch() {
             val location = fetchLocation(fusedLocationProviderClient)
             if (location != null) {
-                setCoordinates(location.first, location.second)
+                setCoordinates(location.first, location.second, true)
             }
         }
     }
+
     fun setNewDate(newDate: Int){
         _sunUiState.update { currentState ->
             currentState.copy(
@@ -162,6 +173,27 @@ class SunViewModel : ViewModel() {
                 sunriseTime = sunriseTime,
                 solarNoonTime = solarNoonTime,
                 sunsetTime = sunsetTime
+            )
+        }
+    }
+
+    fun loadTimeZoneOffset(latitude: Double, longitude: Double) {
+        viewModelScope.launch {
+            try {
+                val locationTimeZoneOffsetResult = sunDataSource.fetchLocationTimezoneOffset(latitude, longitude)
+
+                setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
+
+            } catch (e: Throwable) {
+                Log.d("error", "uh oh" + e.toString())
+            }
+        }
+    }
+
+    fun setTimeZoneOffset(timeZoneOffset: Double) {
+        _sunUiState.update { currentState ->
+            currentState.copy(
+                timeZoneOffset = timeZoneOffset
             )
         }
     }

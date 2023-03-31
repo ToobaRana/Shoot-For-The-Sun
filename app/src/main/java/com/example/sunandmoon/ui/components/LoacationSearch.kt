@@ -65,9 +65,7 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
                             .fillMaxWidth()
                             .clickable {
                                 isDropdownExpanded = false
-                                sunViewModel.setCoordinates(item.lat.toDouble(), item.lon.toDouble())
-                                val sunTimes = getSunRiseNoonFall(Instant.now().toString(), item.lat.toDouble(), item.lon.toDouble())
-                                sunViewModel.setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
+                                sunViewModel.setCoordinates(item.lat.toDouble(), item.lon.toDouble(), true)
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                     )
