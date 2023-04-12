@@ -17,6 +17,7 @@ class DataSource() {
     val baseURLNominatim: String = "https://nominatim.openstreetmap.org/search"
     val baseURLWheretheiss: String = "https://api.wheretheiss.at/v1/coordinates/"
 
+
     private val client = HttpClient() {
 
     install(ContentNegotiation)
@@ -25,10 +26,16 @@ class DataSource() {
         }
     }
 
+
     suspend fun fetchSunrise3Data(sunOrMoon: String, lat: Double, lon: Double, date: String, offset: String): Sunrise3 {
         val endPoint = "$baseURLMet$sunOrMoon?lat=$lat&lon=$lon&date=$date&offset=$offset"
 
-        val apiResults: Sunrise3 = client.get(endPoint).body()
+        val apiResults: Sunrise3 = client.get(endPoint) {
+            headers {
+                header("X-Gravitee-API-Key", "8cd39d98-b237-4a76-9e5e-40eb381b354b")
+            }
+        }
+            .body()
 
         return apiResults
 
