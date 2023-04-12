@@ -37,7 +37,7 @@ fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: Sun
     val sunUiState by sunViewModel.sunUiState.collectAsState()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             Column() {
                 LocationSearch()

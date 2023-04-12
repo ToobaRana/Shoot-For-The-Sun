@@ -50,7 +50,7 @@ fun MultipleScreenNavigator() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "homescreen") {
-        composable("homescreen") { HomeScreen(modifier = Modifier.fillMaxSize(), navigateToNext = {navController.navigate("tablescreen")})}
-        composable("tablescreen"){ TableScreen(modifier = Modifier.fillMaxSize(), navigateToNext = {navController.popBackStack("homescreen", false) })}
+        composable("homescreen") { HomeScreen(modifier = Modifier, navigateToNext = {navController.navigate("tablescreen")})}
+        composable("tablescreen"){ TableScreen(modifier = Modifier, navigateToNext = {navController.popBackStack("homescreen", false) })}
     }
 }

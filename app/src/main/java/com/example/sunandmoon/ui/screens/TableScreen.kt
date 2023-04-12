@@ -30,7 +30,7 @@ fun TableScreen(navigateToNext: () -> Unit, modifier: Modifier, tableViewModel: 
 
     val tableUiState by tableViewModel.tableUiState.collectAsState()
 
-    TableView(tableViewModel, tableUiState, navigateToNext)
+    TableView(modifier,tableViewModel, tableUiState, navigateToNext)
 
     //Log.d("List: ", tableUIState.dateTableList.toString())
 
@@ -41,12 +41,12 @@ fun TableScreen(navigateToNext: () -> Unit, modifier: Modifier, tableViewModel: 
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableView(tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNext: () -> Unit) {
+fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNext: () -> Unit) {
 
 
     //tableViewModel.loadDateTableList(sunType = "Sunrise")
     //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
-    Scaffold(modifier = Modifier.fillMaxSize(),
+    Scaffold(modifier = modifier.fillMaxSize(),
         content = { innerPadding ->
             val padding = innerPadding
             Column(Modifier.fillMaxSize()) {

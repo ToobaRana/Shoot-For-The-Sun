@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.checkPermissions
-import com.example.sunandmoon.ui.components.CalendarComponenDisplay
+import com.example.sunandmoon.ui.components.CalendarComponentDisplay
 import com.example.sunandmoon.viewModel.SunViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import java.time.YearMonth
@@ -46,7 +46,7 @@ fun currentLocationTest(
             Text(text = "Show Calendar")
         }
         if (showCalendar){
-            CalendarComponenDisplay(Modifier, viewModel)
+            CalendarComponentDisplay(Modifier, viewModel)
         }
         Text(text = sunUiState.currentDate.toString())
         //Text(text = "month ${calendar.months[sunUiState.currentMonth]}")
