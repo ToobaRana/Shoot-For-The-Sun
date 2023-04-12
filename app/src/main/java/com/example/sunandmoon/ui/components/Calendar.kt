@@ -1,14 +1,15 @@
 package com.example.sunandmoon.ui.components
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,7 +24,7 @@ import java.util.*
 val calenderDayHeight = 5
 val numWeekdays = 7
 val sumMonths = 12
-var currentYear = "2023"
+
 val months = listOf<String>(
     "January",
     "February",
@@ -53,30 +54,33 @@ val amountDays: HashMap<String, Int> = hashMapOf<String, Int>(
     "November" to 30,
     "December" to 31
 )
-val weekdays = listOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+val weekdays =
+    listOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
 
 @Composable
 fun CalendarComponent(modifier: Modifier, sunViewModel: SunViewModel = viewModel()) {
     var showCalendar by remember { mutableStateOf(false) }
-    Button(onClick = {showCalendar = !showCalendar}){
+    Button(onClick = { showCalendar = !showCalendar }) {
         Text(text = "Show Calendar")
     }
-    if (showCalendar){
-        CalendarComponenDisplay(modifier, sunViewModel)
+    if (showCalendar) {
+        CalendarComponentDisplay(modifier, sunViewModel)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarComponenDisplay(modifier: Modifier, sunViewModel: SunViewModel = viewModel()) {
+fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = viewModel()) {
 
     val sunUIState by sunViewModel.sunUiState.collectAsState()
 
-    var word by remember { mutableStateOf("") }
-    Card(modifier = Modifier
-        .fillMaxWidth(0.9f)
-        .fillMaxHeight(0.6f)) {
+    var currentYear by remember { mutableStateOf("2023") }
+    Card(
+        modifier = modifier
+            .fillMaxWidth(0.9f)
+            .fillMaxHeight(0.6f)
+    ) {
 
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -93,13 +97,19 @@ fun CalendarComponenDisplay(modifier: Modifier, sunViewModel: SunViewModel = vie
 
                 TextField(
                     modifier = Modifier.fillMaxSize(0.7f),
-                    value = word,
+                    value = currentYear,
                     onValueChange = { year ->
-                        if (year[year.length -1].isDigit() &&year.length<=4) {
-                            currentYear = year
-                            Log.v("ÅR", currentYear);
-                            word = year
+                        if(year.isNotEmpty()){
+                            if (year[year.length - 1].isDigit() && year.length <= 4) {
+                                currentYear = year
+                                Log.v("ÅR", currentYear);
+
+                            }
                         }
+                        else{
+                            currentYear = ""
+                        }
+
 
                         Log.v("ÅR", year);
                     },
@@ -113,11 +123,16 @@ fun CalendarComponenDisplay(modifier: Modifier, sunViewModel: SunViewModel = vie
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 drawWeekdays(numWeekdays)
 
-
             }
-            val daysBeforeFirst = weekdays.indexOf(getDayOfFirst(month = (sunUIState.currentMonth+1).toString(), year = currentYear))
+            val daysBeforeFirst = weekdays.indexOf(
+                getDayOfFirst(
+                    month = (sunUIState.currentMonth + 1).toString(),
+                    year = currentYear
+                )
+            )
 
 
 
@@ -127,20 +142,23 @@ fun CalendarComponenDisplay(modifier: Modifier, sunViewModel: SunViewModel = vie
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (i == 0){
-                        for (y in 0 until daysBeforeFirst){
-                            Spacer(modifier = Modifier
-                                .size(50.dp)
-                                .padding(1.dp))
+                    if (i == 0) {
+                        for (y in 0 until daysBeforeFirst) {
+                            Spacer(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .padding(1.dp)
+                            )
                         }
-                        for (y in daysBeforeFirst until numWeekdays){
-                            val date = (y + 1-daysBeforeFirst)
+                        for (y in daysBeforeFirst until numWeekdays) {
+                            val date = (y + 1 - daysBeforeFirst)
                             val selected = false
                             Box(modifier = Modifier
                                 .size(50.dp)
                                 .padding(1.dp)
-                                .clickable { sunViewModel.setNewDate(date) }
-                                ,
+                                .clickable { sunViewModel.setNewDate(date); },
+
+                                //bruk en array med farger/tall for å endre. Ha referanser til farger slik at det er mulig å endre på de
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -152,32 +170,36 @@ fun CalendarComponenDisplay(modifier: Modifier, sunViewModel: SunViewModel = vie
                                     )
                             }
                         }
-                    } else{
-                    for (y in 0 until numWeekdays) {
-                        val date = (y + (i * 7) + 1) - daysBeforeFirst
+                    } else {
+                        for (y in 0 until numWeekdays) {
+                            val date = (y + (i * 7) + 1) - daysBeforeFirst
 
-                        if (date > amountDays[months[sunUIState.currentMonth]]!!) {
-                            Spacer(modifier = Modifier
-                                .size(50.dp)
-                                .padding(1.dp))
-                        } else {
-                            Box(modifier = Modifier
-                                .size(50.dp)
-                                .padding(1.dp)
-                                .clickable { sunViewModel.setNewDate(date) },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
+                            if (date > amountDays[months[sunUIState.currentMonth]]!!) {
+                                Spacer(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .padding(1.dp)
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .padding(1.dp)
+                                        .clickable { sunViewModel.setNewDate(date) },
 
-                                    text = date.toString(),
-                                    fontSize = 20.sp,
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+
+                                        text = date.toString(),
+                                        fontSize = 20.sp,
 
 
-                                    )
+                                        )
+                                }
                             }
-                        }
 
-                    }
+                        }
                     }
 
 
@@ -187,15 +209,18 @@ fun CalendarComponenDisplay(modifier: Modifier, sunViewModel: SunViewModel = vie
 
     }
 }
+
 @Composable
-fun drawWeekdays(numDays: Int){
+fun drawWeekdays(numDays: Int) {
     for (y in 0 until numWeekdays) {
-        Text(text = weekdays[y].subSequence(0,3).toString())
+        Text(text = weekdays[y].subSequence(0, 3).toString())
     }
 }
+
+//dropdown-menu for choosing month
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun monthDropDown(currentMonth:Int,sunViewModel: SunViewModel = viewModel()){
+fun monthDropDown(currentMonth: Int, sunViewModel: SunViewModel = viewModel()) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -239,29 +264,31 @@ fun monthDropDown(currentMonth:Int,sunViewModel: SunViewModel = viewModel()){
     }
 
 }
-fun getDayOfFirst(month: String, year: String): String{
 
+//returns which day the first of any month or year falls on
+fun getDayOfFirst(month: String, year: String): String {
 
-    val maskedYear = mask(year, "year")
-    val maskedMonth = mask(month, "month")
+    val maskedYear = mask(value = year, type = "year")
+    val maskedMonth = mask(value = month, type = "month")
 
-    val dateString = "${maskedYear }-$maskedMonth-01"
+    val dateString = "${maskedYear}-$maskedMonth-01"
     val formatter = DateTimeFormatter.ISO_LOCAL_DATE
     val date = LocalDate.parse(dateString, formatter)
     return date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
 
 }
 
-fun mask(value: String, type: String):String{
-    when(type) {
-        "year" ->  {
+//masking dates for getDayOfFirst-call
+fun mask(value: String, type: String): String {
+    when (type) {
+        "year" -> {
             val yearMask = "0000"
-            return yearMask.substring(0, yearMask.length-value.length) + value
+            return yearMask.substring(0, yearMask.length - value.length) + value
 
         }
-        "month" ->{
+        "month" -> {
             val monthMask = "00"
-            return monthMask.substring(0, monthMask.length-value.length) + value
+            return monthMask.substring(0, monthMask.length - value.length) + value
         }
 
     }
