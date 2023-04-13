@@ -14,11 +14,19 @@ android {
         versionCode 1
         versionName "1.0"
 
+        def apikeyPropertiesFile = rootProject.file("apikey.properties")
+        def apikeyProperties = new Properties()
+        apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+        buildConfigField("String", "API_KEY", apikeyProperties["API_KEY"])
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
     }
+
+
+
 
     buildTypes {
         release {
@@ -103,3 +111,5 @@ dependencies {
 
 
 }
+
+
