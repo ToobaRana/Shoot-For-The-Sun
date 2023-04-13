@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Instant
+import java.time.LocalDate
 
 class SunViewModel : ViewModel() {
 
@@ -30,8 +31,7 @@ class SunViewModel : ViewModel() {
             locationEnabled = true,
             latitude = 59.943965,
             longitude = 10.7178129,
-            currentDate = 0,
-            currentMonth = 0,
+            chosenDate = LocalDate.now(),
             timeZoneOffset = 2.0
         )
     )
@@ -152,20 +152,15 @@ class SunViewModel : ViewModel() {
         }
     }
 
-    fun setNewDate(newDate: Int){
+    fun setNewDate(year: Int, month: Int, day: Int){
         _sunUiState.update { currentState ->
             currentState.copy(
-                currentDate = newDate
+                chosenDate = LocalDate.of(year, month, day)
             )
         }
+        Log.i("maksDate:", LocalDate.MAX.toString())
     }
-    fun updateMonth(newMonth: Int){
-        _sunUiState.update { currentState ->
-            currentState.copy(
-                currentMonth = newMonth
-            )
-        }
-    }
+
 
     fun setSolarTimes(sunriseTime: String, solarNoonTime: String, sunsetTime: String) {
         _sunUiState.update { currentState ->
@@ -197,5 +192,17 @@ class SunViewModel : ViewModel() {
             )
         }
     }
+    fun updateDay(day: Int){
+        setNewDate(_sunUiState.value.chosenDate.year, _sunUiState.value.chosenDate.monthValue, day)
+    }
+
+    fun updateMonth(month: Int){
+        setNewDate(_sunUiState.value.chosenDate.year, month, _sunUiState.value.chosenDate.dayOfMonth)
+    }
+
+    fun updateYear(year: Int){
+        setNewDate(year, _sunUiState.value.chosenDate.monthValue, _sunUiState.value.chosenDate.dayOfMonth)
+    }
 
 }
+

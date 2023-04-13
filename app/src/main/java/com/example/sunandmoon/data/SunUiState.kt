@@ -1,6 +1,7 @@
 package com.example.sunandmoon.data
 
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
+import java.time.LocalDate
 
 data class SunUiState(
 
@@ -13,7 +14,6 @@ data class SunUiState(
     val locationEnabled: Boolean,
     val longitude: Double,
     val latitude: Double,
-    var currentDate: Int,
-    val currentMonth: Int,
+    var chosenDate: LocalDate,
     val timeZoneOffset: Double
 )

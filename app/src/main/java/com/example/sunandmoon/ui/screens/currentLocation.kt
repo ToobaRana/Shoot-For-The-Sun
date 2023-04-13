@@ -48,7 +48,7 @@ fun currentLocationTest(
         if (showCalendar){
             CalendarComponentDisplay(Modifier, viewModel)
         }
-        Text(text = sunUiState.currentDate.toString())
+        Text(text = sunUiState.chosenDate.toString())
         //Text(text = "month ${calendar.months[sunUiState.currentMonth]}")
 
     }
