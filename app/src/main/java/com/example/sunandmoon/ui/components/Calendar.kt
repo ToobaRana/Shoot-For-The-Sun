@@ -79,6 +79,11 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
 
     // vi har lyst til å prøve å la deg ha en blank tekstfelt for år
     val currentYear: Int = sunUIState.chosenDate.year
+    var currentYearText: String = currentYear.toString()
+    if (currentYear == 0){
+        currentYearText = ""
+    }
+
 
 
     Card(
@@ -102,11 +107,11 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
 
                 TextField(
                     modifier = Modifier.fillMaxSize(0.7f),
-                    value = currentYear.toString(),
+                    value = currentYearText,
                     onValueChange = { year: String ->
                         if(year.isNotEmpty()){
-                            if (year[year.length - 1].isDigit() && year.length <= 4) {
-                                sunViewModel.updateYear(year.trim().toInt())
+                            if (year[year.length - 1].isDigit() && year.length <= 4 ) {
+                                sunViewModel.updateYear(year.replace("\\D".toRegex(), "").toInt())
 
                                 Log.v("ÅR", year);
 
@@ -119,6 +124,7 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
 
                         Log.v("ÅR", year);
                     },
+                    placeholder = { Text(text = "0")},
 
                     label = { Text("Year") },
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
