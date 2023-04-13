@@ -11,7 +11,7 @@ import androidx.compose.runtime.*
 
 @Composable
 fun NavigationComposable(page: Int, navigateToNext: () -> Unit){
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableStateOf(page) }
     val items = listOf("Home", "Table")
     val icons = listOf(Icons.Filled.Star, Icons.Filled.Menu)
 
