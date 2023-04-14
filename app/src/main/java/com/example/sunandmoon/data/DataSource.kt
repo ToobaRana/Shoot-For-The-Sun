@@ -16,6 +16,7 @@ import io.ktor.client.statement.*
 import io.ktor.serialization.gson.*
 
 
+
 class DataSource() {
 
     val baseURLMet: String = "https://api.met.no/weatherapi/sunrise/3.0/"
