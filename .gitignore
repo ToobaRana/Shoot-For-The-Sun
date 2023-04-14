@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+secrets.properties
+apikey.properties
+echo "**/*/res/values/secrets.xml" > .gitignore
