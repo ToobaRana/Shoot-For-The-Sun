@@ -41,7 +41,8 @@ class SunViewModel : ViewModel() {
     init {
         //loadSunInformation()
         //setCoordinates(item.lat.toDouble(), item.lon.toDouble())
-        val sunTimes = getSunRiseNoonFall(Instant.now().toString(), sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
+        //Instant.now().toString()
+        val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate.toString()+"T12:00:00.000Z", sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
         setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
 
@@ -137,7 +138,7 @@ class SunViewModel : ViewModel() {
                 )
             }
 
-            val sunTimes = getSunRiseNoonFall(Instant.now().toString(), sunUiState.value.timeZoneOffset, latitude, longitude)
+            val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate.toString()+"T12:00:00.000Z", sunUiState.value.timeZoneOffset, latitude, longitude)
             setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
         }
     }
@@ -158,7 +159,9 @@ class SunViewModel : ViewModel() {
                 chosenDate = LocalDate.of(year, month, day)
             )
         }
-        Log.i("maksDate:", LocalDate.MAX.toString())
+
+        val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate.toString()+"T12:00:00.000Z", sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
+        setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
 
 

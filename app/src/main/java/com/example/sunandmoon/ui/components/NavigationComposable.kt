@@ -11,7 +11,6 @@ import androidx.compose.runtime.*
 
 @Composable
 fun NavigationComposable(page: Int, navigateToNext: () -> Unit){
-    var selectedItem by remember { mutableStateOf(page) }
     val items = listOf("Home", "Table")
     val icons = listOf(Icons.Filled.Star, Icons.Filled.Menu)
 
@@ -20,13 +19,11 @@ fun NavigationComposable(page: Int, navigateToNext: () -> Unit){
             NavigationBarItem(
                 icon = { Icon(icons[index], contentDescription = item) },
                 label = { Text(item) },
-                selected = selectedItem == index,
+                selected = page == index,
                 onClick = {
-                    selectedItem = index
-                    if(selectedItem != page){
+                    if(index != page){
                         navigateToNext()
                     }
-
                 }
             )
         }
