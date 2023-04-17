@@ -1,6 +1,7 @@
 package com.example.sunandmoon.ui.screens
 
 import android.annotation.SuppressLint
+import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,17 +17,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.TableUIState
-import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.data.util.LocationAndDateTime
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.TableViewModel
-import kotlinx.coroutines.flow.update
-import kotlinx.serialization.json.JsonNull.content
+import java.time.LocalDateTime
 import java.util.*
 
 
 @Composable
-fun TableScreen(navigateToNext: () -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
+fun TableScreen(navigateToNext: (localDateTime: LocalDateTime, location: Location) -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel(), locationAndDateTime: LocationAndDateTime) {
 
     val tableUiState by tableViewModel.tableUiState.collectAsState()
 
@@ -34,6 +34,7 @@ fun TableScreen(navigateToNext: () -> Unit, modifier: Modifier, tableViewModel: 
 
     //Log.d("List: ", tableUIState.dateTableList.toString())
 
+    Log.i("aaa123", "ehmmm" + locationAndDateTime.dateTime.toString())
 }
 
 
@@ -41,7 +42,7 @@ fun TableScreen(navigateToNext: () -> Unit, modifier: Modifier, tableViewModel: 
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNext: () -> Unit) {
+fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNext: (localDateTime: LocalDateTime, location: Location) -> Unit) {
 
 
     //tableViewModel.loadDateTableList(sunType = "Sunrise")
@@ -203,11 +204,3 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
 
     return selectedOptionText                                                                                            
 }
-
-
-
-
-
-
-
-

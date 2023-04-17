@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
-import com.example.sunandmoon.data.SunUiState
+import com.example.sunandmoon.data.SunUIState
 import com.example.sunandmoon.fetchLocation
 import com.example.sunandmoon.getSunRiseNoonFall
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -13,8 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class SunViewModel : ViewModel() {
 
@@ -22,7 +21,7 @@ class SunViewModel : ViewModel() {
 
     //sunDataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, "2022-12-18", "+01:00" ).properties.sunrise.time
     private val _sunUiState = MutableStateFlow(
-        SunUiState(
+        SunUIState(
             sunriseTime = "not calculated",
             solarNoonTime = "not calculated",
             sunsetTime = "not calculated",
@@ -31,18 +30,18 @@ class SunViewModel : ViewModel() {
             locationEnabled = true,
             latitude = 59.943965,
             longitude = 10.7178129,
-            chosenDate = LocalDate.now(),
+            chosenDate = LocalDateTime.now(),
             timeZoneOffset = 2.0
         )
     )
 
-    val sunUiState: StateFlow<SunUiState> = _sunUiState.asStateFlow()
+    val sunUiState: StateFlow<SunUIState> = _sunUiState.asStateFlow()
 
     init {
         //loadSunInformation()
         //setCoordinates(item.lat.toDouble(), item.lon.toDouble())
         //Instant.now().toString()
-        val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate.toString()+"T12:00:00.000Z", sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
+        val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate, sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
         setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
 
@@ -138,7 +137,7 @@ class SunViewModel : ViewModel() {
                 )
             }
 
-            val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate.toString()+"T12:00:00.000Z", sunUiState.value.timeZoneOffset, latitude, longitude)
+            val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate, sunUiState.value.timeZoneOffset, latitude, longitude)
             setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
         }
     }
@@ -156,11 +155,11 @@ class SunViewModel : ViewModel() {
     fun setNewDate(year: Int, month: Int, day: Int){
         _sunUiState.update { currentState ->
             currentState.copy(
-                chosenDate = LocalDate.of(year, month, day)
+                chosenDate = LocalDateTime.of(year, month, day, 12, 0, 0)
             )
         }
 
-        val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate.toString()+"T12:00:00.000Z", sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
+        val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate, sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
         setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
 

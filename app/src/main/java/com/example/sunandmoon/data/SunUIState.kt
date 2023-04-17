@@ -1,9 +1,9 @@
 package com.example.sunandmoon.data
 
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
-import java.time.LocalDate
+import java.time.LocalDateTime
 
-data class SunUiState(
+data class SunUIState(
 
     val sunriseTime: String,
     val solarNoonTime: String,
@@ -14,6 +14,6 @@ data class SunUiState(
     val locationEnabled: Boolean,
     val longitude: Double,
     val latitude: Double,
-    var chosenDate: LocalDate,
+    var chosenDate: LocalDateTime,
     val timeZoneOffset: Double
 )
