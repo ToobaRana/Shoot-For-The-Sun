@@ -6,11 +6,17 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -80,7 +86,9 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
 
     // vi har lyst til å prøve å la deg ha en blank tekstfelt for år
     val currentYear: Int = sunUIState.chosenDate.year
-    var currentYearText: String = currentYear.toString()
+    var currentYearText: String by remember {
+        mutableStateOf(currentYear.toString())
+    }
     if (currentYear == 0) {
         currentYearText = ""
     }
@@ -89,16 +97,15 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
 
     Card(
         shape = RoundedCornerShape(20.dp),
-        modifier = modifier
-
-            .wrapContentSize(Alignment.Center, false)
+        modifier = modifier,
 
 
-    ) {
+        ) {
 
-        Column(modifier = modifier
-            .wrapContentSize(Alignment.Center, false)
-            .fillMaxWidth(0.95f)
+        Column(
+            modifier = modifier
+                .wrapContentSize(Alignment.Center, false)
+                .fillMaxWidth(0.95f)
         ) {
             Row(
                 modifier = modifier
@@ -112,30 +119,45 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                     monthDropDown(modifier, sunUIState.chosenDate.monthValue)
                 }
                 Spacer(modifier.size(30.dp))
-                TextField(
-                    modifier = modifier.fillMaxSize(0.7f),
-                    value = currentYearText,
-                    onValueChange = { year: String ->
-                        if (year.isNotEmpty()) {
-                            if (year[year.length - 1].isDigit() && year.length <= 4) {
-                                sunViewModel.updateYear(year.replace("\\D".toRegex(), "").toInt())
+                Box(modifier = modifier.wrapContentSize(Alignment.Center, false)) {
+                    val focusManager = LocalFocusManager.current
+                    TextField(
+                        modifier = modifier.fillMaxSize(0.7f)/*.onKeyEvent { type -> if(type.type == KeyEventType.KeyUp) }*/,
+                        value = currentYearText,
+                        onValueChange = { year: String ->
+                            if (year.isNotEmpty()) {
+                                if (year[year.length - 1].isDigit() && year.length <= 4) {
 
-                                Log.v("ÅR", year);
+                                    currentYearText = year.replace("\\D".toRegex(), "")
 
+
+                                    Log.v("ÅR", year);
+
+                                }
+                            } else {
+                                currentYearText = ""
                             }
-                        } else {
-                            sunViewModel.updateYear(0)
-                        }
 
 
-                        Log.v("ÅR", year);
-                    },
-                    placeholder = { Text(text = "0") },
+                            Log.v("ÅR", year);
+                        },
 
-                    label = { Text("Year") },
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
-                )
-                Spacer(modifier.size(30.dp))
+                        placeholder = { Text(text = "0") },
+
+                        label = { Text("Year") },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                sunViewModel.updateYear(currentYearText.toInt())
+                                focusManager.clearFocus()
+                            })
+
+                    )
+                    Spacer(modifier.size(30.dp))
+                }
             }
             Row(
                 modifier = modifier.fillMaxWidth(),
