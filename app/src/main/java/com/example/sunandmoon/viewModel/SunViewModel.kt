@@ -196,11 +196,16 @@ class SunViewModel : ViewModel() {
         }
     }
     fun updateDay(day: Int){
+
         setNewDate(_sunUiState.value.chosenDate.year, _sunUiState.value.chosenDate.monthValue, day)
     }
 
-    fun updateMonth(month: Int){
-        setNewDate(_sunUiState.value.chosenDate.year, month, _sunUiState.value.chosenDate.dayOfMonth)
+    fun updateMonth(month: Int, maxDate: Int){
+        var day = _sunUiState.value.chosenDate.dayOfMonth
+        if (maxDate < day){
+            day = maxDate
+        }
+        setNewDate(_sunUiState.value.chosenDate.year, month, day)
     }
 
     fun updateYear(year: Int){

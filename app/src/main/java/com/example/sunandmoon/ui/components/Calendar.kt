@@ -1,9 +1,12 @@
 package com.example.sunandmoon.ui.components
 
-import android.graphics.Paint.Align
+
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -12,9 +15,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -93,14 +97,19 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
         currentYearText = ""
     }
 
-
+    val focusManager = LocalFocusManager.current
 
     Card(
         shape = RoundedCornerShape(20.dp),
-        modifier = modifier,
+        modifier = modifier
+        .pointerInput(Unit) {
+        detectTapGestures(onTap = {
+                focusManager.clearFocus()
+            })
+        }
 
 
-        ) {
+    ) {
 
         Column(
             modifier = modifier
@@ -120,9 +129,10 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                 }
                 Spacer(modifier.size(30.dp))
                 Box(modifier = modifier.wrapContentSize(Alignment.Center, false)) {
-                    val focusManager = LocalFocusManager.current
+
+
                     TextField(
-                        modifier = modifier.fillMaxSize(0.7f)/*.onKeyEvent { type -> if(type.type == KeyEventType.KeyUp) }*/,
+                        modifier = modifier.fillMaxSize(0.7f),
                         value = currentYearText,
                         onValueChange = { year: String ->
                             if (year.isNotEmpty()) {
@@ -130,15 +140,12 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
 
                                     currentYearText = year.replace("\\D".toRegex(), "")
 
-
                                     Log.v("ÅR", year);
 
                                 }
                             } else {
                                 currentYearText = ""
                             }
-
-
                             Log.v("ÅR", year);
                         },
 
@@ -151,8 +158,15 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                sunViewModel.updateYear(currentYearText.toInt())
-                                focusManager.clearFocus()
+                                if (currentYearText.isEmpty()){
+                                    sunViewModel.updateYear(0)
+                                }
+                                else{
+                                    sunViewModel.updateYear(currentYearText.toInt())
+                                    focusManager.clearFocus()
+                                }
+
+
                             })
 
                     )
@@ -164,9 +178,7 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 drawWeekdays(numWeekdays)
-
             }
             val daysBeforeFirst = weekdays.indexOf(
                 getDayOfFirst(
@@ -176,7 +188,6 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
             )
             val calenderDayHeight =
                 (amountDays[months[sunUIState.chosenDate.monthValue - 1]]!! + daysBeforeFirst - 1) / 7
-
 
 
             for (i in 0..calenderDayHeight) {
@@ -195,24 +206,7 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                         }
                         for (y in daysBeforeFirst until numWeekdays) {
                             val day = (y + 1 - daysBeforeFirst)
-                            val selected = false
-                            Box(
-                                modifier = modifier
-                                    .size(50.dp)
-                                    .padding(1.dp)
-                                    .clickable { sunViewModel.updateDay(day); },
-
-                                //bruk en array med farger/tall for å endre. Ha referanser til farger slik at det er mulig å endre på de
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-
-                                    text = day.toString(),
-                                    fontSize = 20.sp,
-
-
-                                    )
-                            }
+                            DrawDayBox(modifier,day, sunUIState.chosenDate.dayOfMonth) { sunViewModel.updateDay(day) }
                         }
                     } else {
                         for (y in 0 until numWeekdays) {
@@ -226,23 +220,7 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                                 )
 
                             } else {
-                                Box(
-                                    modifier = modifier
-                                        .size(50.dp)
-                                        .padding(1.dp)
-                                        .clickable { sunViewModel.updateDay(day) },
-
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-
-                                        text = day.toString(),
-                                        fontSize = 20.sp,
-
-
-                                        )
-
-                                }
+                               DrawDayBox(modifier,day, sunUIState.chosenDate.dayOfMonth) { sunViewModel.updateDay(day) }
 
 
                             }
@@ -285,7 +263,7 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, sunViewModel: SunViewMo
             value = months[currentMonth - 1],
             onValueChange = { expanded = !expanded },
             label = { Text("Month") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = true) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
         )
         ExposedDropdownMenu(
@@ -299,7 +277,7 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, sunViewModel: SunViewMo
                     onClick = {
 
 
-                        sunViewModel.updateMonth(months.indexOf(selectionOption) + 1)
+                        sunViewModel.updateMonth(months.indexOf(selectionOption) + 1, amountDays[selectionOption]!!)
                         //fetch date, update month in uistate
 
 
@@ -325,3 +303,26 @@ fun getDayOfFirst(month: Int, year: Int): String {
 }
 
 //masking dates for getDayOfFirst-call
+
+@Composable
+fun DrawDayBox(modifier: Modifier, day: Int, chosenDay: Int, updateDay: () -> Unit){
+    val brush = Brush.horizontalGradient(listOf(Color.Gray, Color.Black))
+
+    var usedModifier = modifier
+    if (day == chosenDay){
+        usedModifier = modifier.border(BorderStroke(2.dp,brush), RoundedCornerShape(5.dp))
+    }
+    Box(
+        modifier = usedModifier
+            .size(50.dp)
+            .padding(1.dp)
+            .clickable() { updateDay(); }
+            ,
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = day.toString(),
+            fontSize = 20.sp,
+            )
+    }
+}
