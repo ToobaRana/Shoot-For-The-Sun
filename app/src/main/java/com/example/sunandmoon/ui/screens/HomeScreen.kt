@@ -1,5 +1,6 @@
 package com.example.sunandmoon.ui.screens
 
+import android.location.Location
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,11 +29,12 @@ import androidx.compose.runtime.*
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
+import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: SunViewModel = viewModel()){
+fun HomeScreen(modifier: Modifier, navigateToNext: (localDateTime: LocalDateTime, location: Location) -> Unit, sunViewModel: SunViewModel = viewModel()){
 
     val sunUiState by sunViewModel.sunUiState.collectAsState()
 
@@ -60,37 +62,12 @@ fun HomeScreen(modifier: Modifier, navigateToNext: () -> Unit, sunViewModel: Sun
                     SunCard("Sunrise", painterResource(id = R.drawable.sunrise), sunUiState.sunriseTime)
                     SunCard("Solar noon", painterResource(id = R.drawable.solarnoon), sunUiState.solarNoonTime)
                     SunCard("Sunset", painterResource(id = R.drawable.sunset), sunUiState.sunsetTime)
-
                 }
             }
 
         },
         bottomBar = {
             NavigationComposable(page = 0, navigateToNext)
-            /*
-            var selectedItem by remember { mutableStateOf(0) }
-            val items = listOf("Home", "Table")
-            val icons = listOf(Icons.Filled.Star, Icons.Filled.Menu)
-
-            NavigationBar {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        icon = { Icon(icons[index], contentDescription = item) },
-                        label = { Text(item) },
-                        selected = selectedItem == index,
-                        onClick = {
-                            selectedItem = index
-                            if (index == 1){navigateToNext()}
-
-                        }
-                    )
-                }
-            }
-
-             */
-
-
-
         }
     )
 

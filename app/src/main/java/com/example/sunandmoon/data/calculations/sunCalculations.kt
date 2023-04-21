@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import java.time.LocalDateTime
 import kotlin.math.*
 
 //https://gml.noaa.gov/grad/solcalc/solareqns.PDF
@@ -33,15 +34,14 @@ fun Radian.toDegree(): Degree = this * 180 / Math.PI
 
 // Calculates and returns a list of sunrise and sunset and sunset (as strings)
 // longitude is in degrees (positive to the east of the Prime Meridian)
-fun getSunRiseNoonFall(timestampString: String, timeZoneOffset: Double, latitude: Degree, longitude: Degree): List<String> {
+fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, latitude: Degree, longitude: Degree): List<String> {
 
-    val timeString: String = timestampString.split("T")[1]
-    val hour: Double = timeString.split(":")[0].toDouble()
-    val minutes: Double = timeString.split(":")[1].toDouble()
-    val seconds: Double = timeString.split(":")[2].dropLast(1).toDouble()
+    //val timeString: String = timestampString.split("T")[1]
+    val hour: Double = localDateTime.hour.toDouble()
+    val minutes: Double = localDateTime.minute.toDouble()
+    val seconds: Double = localDateTime.second.toDouble()
 
-    val dateString: List<String> = timestampString.split("T")[0].split("-")
-    val dayOfYear: Double = LocalDate.of(dateString[0].toInt(), dateString[1].toInt(), dateString[2].toInt()).dayOfYear.toDouble()
+    val dayOfYear: Double = localDateTime.toLocalDate().dayOfYear.toDouble()
     val hourDecimal: Double = hour + minutes / 60 + seconds / 60 / 60 + timeZoneOffset
     val isLeapYear: Boolean = false
 
@@ -87,11 +87,10 @@ fun getSunRiseNoonFall(timestampString: String, timeZoneOffset: Double, latitude
     val solarNoonTimeLocalTimeRounded = roundToNearestMinute(sunsetTimeLocalTime.format(formatter))
 
     Log.i("matte", "_______________________________________________________")
-    Log.i("matte", timestampString)
+    Log.i("matte", localDateTime.toString())
     Log.i("matte", "timeZoneOffset $timeZoneOffset")
     Log.i("matte", "latitude: $latitude")
     Log.i("matte", "longitude: $longitude")
-    Log.i("matte", "timeString: $timeString")
     Log.i("matte", "dayOfYear: $dayOfYear")
     Log.i("matte", "hourDecimal: $hourDecimal")
     Log.i("matte", "daysInYear: $daysInYear")
