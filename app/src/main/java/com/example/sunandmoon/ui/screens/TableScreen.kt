@@ -176,9 +176,13 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
             onValueChange = {},
             label = { Text("Type")},
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-
-            )
+            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                //cursorColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor =  MaterialTheme.colorScheme.primary,
+                focusedLabelColor = MaterialTheme.colorScheme.onPrimary
+            ),
+        )
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },

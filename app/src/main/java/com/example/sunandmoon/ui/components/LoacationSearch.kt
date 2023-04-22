@@ -48,7 +48,13 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel(), modifier: Modifier)
                         isDropdownExpanded = true
                     }
                 }
-            )
+            ),
+            /*colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.42f),
+                cursorColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.onSurface,
+            )*/
         )
 
         if (isDropdownExpanded) {
