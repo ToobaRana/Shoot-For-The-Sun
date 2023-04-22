@@ -50,16 +50,16 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
     Scaffold(modifier = modifier.fillMaxSize(),
         content = { innerPadding ->
             val padding = innerPadding
-            Column(Modifier.fillMaxSize()) {
+            Column(modifier.fillMaxSize()) {
 
                 var chosenSunType = ""
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = modifier.height(40.dp))
 
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
 
-                    Spacer(modifier = Modifier.width(10.dp))
-                    chosenSunType = dropdownMenuSunType(tableViewModel)
+                    Spacer(modifier = modifier.width(10.dp))
+                    chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
 
 
                     Log.d("tableUiStateUnit", tableUIState.chosenSunType)
@@ -67,22 +67,22 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
 
                     //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
-                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = modifier.width(10.dp))
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = modifier.height(20.dp))
 
 
-                Column(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = modifier.fillMaxWidth()) {
                     // Render the header row
                     Row(
-                        modifier = Modifier
+                        modifier = modifier
                             .fillMaxWidth()
                             .background(Color.LightGray)
                     ) {
                         Text(
                             text = "Day",
-                            modifier = Modifier
+                            modifier = modifier
                                 .weight(1f)
                                 .padding(8.dp),
                             textAlign = TextAlign.Center,
@@ -90,7 +90,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                         )
                         Text(
                             text = chosenSunType,
-                            modifier = Modifier
+                            modifier = modifier
                                 .weight(1f)
                                 .padding(8.dp),
                             textAlign = TextAlign.Center,
@@ -98,7 +98,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                         )
                         Text(
                             text = "Our $chosenSunType",
-                            modifier = Modifier
+                            modifier = modifier
                                 .weight(1f)
                                 .padding(8.dp),
                             textAlign = TextAlign.Center,
@@ -112,7 +112,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
                     // Render the table rows
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = modifier.fillMaxSize()
                     ) {
                         var i = 0
                         items(apiDateTableList) { date ->
@@ -129,7 +129,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                                 apiSunTime = sunriseTime,
                                 day = day,
                                 calculationSunTime = tableUIState.calculationsDateTableList[monthInt-1],
-                                modifier = Modifier
+                                modifier = modifier
                                     .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
                                     .padding(8.dp)
                             )
@@ -138,7 +138,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                         }
 
                     }
-                    Spacer(modifier = Modifier.height(200.dp))
+                    Spacer(modifier = modifier.height(200.dp))
                 }
 
             }
@@ -155,7 +155,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
+fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: Modifier): String{
     //Dropdown
     val options = stringArrayResource(com.example.sunandmoon.R.array.suntype)
     var expanded by remember { mutableStateOf(false) }
@@ -165,10 +165,10 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
     //Dropdown menu setup
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }, modifier = Modifier.width(350.dp)
+        onExpandedChange = { expanded = !expanded }, modifier = modifier.width(350.dp)
     ) {
         TextField(
-            modifier = Modifier.menuAnchor(),
+            modifier = modifier.menuAnchor(),
             // The `menuAnchor` modifier must be passed to the text field for correctness.
 
             readOnly = true,

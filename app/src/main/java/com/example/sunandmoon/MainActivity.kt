@@ -2,27 +2,20 @@ package com.example.sunandmoon
 
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.sunandmoon.data.util.LocationAndDateTime
-import com.example.sunandmoon.ui.screens.HomeScreen
+import com.example.sunandmoon.ui.screens.ShootInfoScreen
 import com.example.sunandmoon.ui.screens.TableScreen
-import com.example.sunandmoon.ui.screens.TableView
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
-import com.example.sunandmoon.viewModel.SunViewModel
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.FusedLocationProviderClient
 import java.time.LocalDateTime
@@ -36,14 +29,14 @@ class MainActivity : ComponentActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setContent {
-
+            val modifier = Modifier
             SunAndMoonTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier,
+                    modifier = modifier,
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MultipleScreenNavigator()
+                    MultipleScreenNavigator(modifier)
                 }
             }
         }
@@ -52,20 +45,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MultipleScreenNavigator() {
+fun MultipleScreenNavigator(modifier: Modifier) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "homescreen/{localDateTime}/{latitude}/{longitude}") {
-        composable("homescreen/{localDateTime}/{latitude}/{longitude}") {
-            HomeScreen(
-                modifier = Modifier,
-                navigateToNext = { localDateTime: LocalDateTime, location: Location -> navController.navigate("tablescreen/${localDateTime}/${location.latitude}/${location.longitude}")}
+    NavHost(navController = navController, startDestination = "shootInfoScreen/{localDateTime}/{latitude}/{longitude}") {
+        composable("shootInfoScreen/{localDateTime}/{latitude}/{longitude}") {
+            ShootInfoScreen(
+                modifier = modifier,
+                navigateToNext = { localDateTime: LocalDateTime, location: Location -> navController.navigate("tableScreen/${localDateTime}/${location.latitude}/${location.longitude}")}
             )
         }
-        composable("tablescreen/{localDateTime}/{latitude}/{longitude}"){ backStackEntry ->
+        composable("tableScreen/{localDateTime}/{latitude}/{longitude}"){ backStackEntry ->
             TableScreen(
-                modifier = Modifier,
-                navigateToNext = {localDateTime: LocalDateTime, location: Location -> navController.popBackStack("homescreen/{localDateTime}/{latitude}/{longitude}", false) },
+                modifier = modifier,
+                navigateToNext = {localDateTime: LocalDateTime, location: Location -> navController.popBackStack("shootInfoScreen/{localDateTime}/{latitude}/{longitude}", false) },
                 locationAndDateTime = readArgsAndGetDataToTransfer(backStackEntry)
             )
         }

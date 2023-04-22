@@ -18,7 +18,7 @@ import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
+fun LocationSearch(sunViewModel: SunViewModel = viewModel(), modifier: Modifier) {
 
     val sunUIState by sunViewModel.sunUiState.collectAsState()
 
@@ -36,7 +36,7 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
             label = { Text("Search for a location") },
             placeholder = { Text("Enter a location") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search
             ),
@@ -56,12 +56,12 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel()) {
             DropdownMenu(
                 expanded = isDropdownExpanded,
                 onDismissRequest = { isDropdownExpanded = false },
-                modifier = Modifier.width(IntrinsicSize.Max)
+                modifier = modifier.width(IntrinsicSize.Max)
             ) {
                 searchResults.forEachIndexed { index, item ->
                     Text(
                         text = item.display_name,
-                        modifier = Modifier
+                        modifier = modifier
                             .fillMaxWidth()
                             .clickable {
                                 isDropdownExpanded = false
