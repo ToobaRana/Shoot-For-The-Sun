@@ -24,14 +24,14 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFFD9D9D9),
-    secondary = Color(0xFF142FC4),
-    tertiary = Color(0xFF4CAF50),
+    secondary = Color(0xFF00FA1A),
+    tertiary = Color(0xFF211F1F),
 
     background = Color(0xFF3D3E3F),
     surface = Color(0xFF262727),
     onPrimary = Color(0xFF3D3E3F),
     onSecondary = Color(0xFF3D3E3F),
-    onTertiary = Color(0xFF3D3E3F),
+    onTertiary = Color(0xFFD9D9D9),
     onBackground = Color(0xFF3D3E3F),
     onSurface = Color(0xFFD9D9D9),
 )
@@ -54,7 +54,7 @@ fun SunAndMoonTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
+            (view.context as Activity).window.statusBarColor = colorScheme.background.toArgb()
             ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
         }
     }
@@ -62,6 +62,6 @@ fun SunAndMoonTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = content,
     )
 }

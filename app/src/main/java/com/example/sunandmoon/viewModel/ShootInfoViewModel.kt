@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
-import com.example.sunandmoon.data.SunUIState
+import com.example.sunandmoon.data.ShootInfoUIState
 import com.example.sunandmoon.fetchLocation
 import com.example.sunandmoon.getSunRiseNoonFall
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class SunViewModel : ViewModel() {
+class ShootInfoViewModel : ViewModel() {
 
     private val sunDataSource = DataSource()
 
     //sunDataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, "2022-12-18", "+01:00" ).properties.sunrise.time
-    private val _sunUiState = MutableStateFlow(
-        SunUIState(
+    private val _shootInfoUIState = MutableStateFlow(
+        ShootInfoUIState(
             sunriseTime = "not calculated",
             solarNoonTime = "not calculated",
             sunsetTime = "not calculated",
@@ -35,13 +35,13 @@ class SunViewModel : ViewModel() {
         )
     )
 
-    val sunUiState: StateFlow<SunUIState> = _sunUiState.asStateFlow()
+    val shootInfoUIState: StateFlow<ShootInfoUIState> = _shootInfoUIState.asStateFlow()
 
     init {
         //loadSunInformation()
         //setCoordinates(item.lat.toDouble(), item.lon.toDouble())
         //Instant.now().toString()
-        val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate, sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
+        val sunTimes = getSunRiseNoonFall(shootInfoUIState.value.chosenDate, shootInfoUIState.value.timeZoneOffset, shootInfoUIState.value.latitude, shootInfoUIState.value.longitude)
         setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
 
@@ -72,7 +72,7 @@ class SunViewModel : ViewModel() {
                     "+01:00"
                 ).properties.solarnoon.time
 
-                _sunUiState.update { currentState ->
+                _shootInfoUIState.update { currentState ->
                     currentState.copy(
                         sunriseTime = sunRiseTime,
                         sunsetTime = sunSetTime,
@@ -83,7 +83,7 @@ class SunViewModel : ViewModel() {
 
                 Log.d(
                     "test",
-                    sunUiState.value.sunriseTime + sunUiState.value.sunsetTime + sunUiState.value.solarNoonTime
+                    shootInfoUIState.value.sunriseTime + shootInfoUIState.value.sunsetTime + shootInfoUIState.value.solarNoonTime
                 )
             } catch (e: Throwable) {
                 Log.d("error", "uh oh" + e.toString())
@@ -92,7 +92,7 @@ class SunViewModel : ViewModel() {
     }
 
     fun setLocationSearchQuery(inputQuery: String) {
-        _sunUiState.update { currentState ->
+        _shootInfoUIState.update { currentState ->
             currentState.copy(
                 locationSearchQuery = inputQuery
             )
@@ -104,7 +104,7 @@ class SunViewModel : ViewModel() {
             try {
                 val locationSearchResults = sunDataSource.fetchLocationSearchResults(query, 10)
 
-                _sunUiState.update { currentState ->
+                _shootInfoUIState.update { currentState ->
                     currentState.copy(
                         locationSearchResults = locationSearchResults
                     )
@@ -117,7 +117,7 @@ class SunViewModel : ViewModel() {
     }
 
     fun updateLocation(newValue: Boolean) {
-        _sunUiState.update { currentState ->
+        _shootInfoUIState.update { currentState ->
             currentState.copy(
                 locationEnabled = newValue
             )
@@ -130,14 +130,14 @@ class SunViewModel : ViewModel() {
                 val locationTimeZoneOffsetResult = sunDataSource.fetchLocationTimezoneOffset(latitude, longitude)
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
             }
-            _sunUiState.update { currentState ->
+            _shootInfoUIState.update { currentState ->
                 currentState.copy(
                     latitude = latitude,
                     longitude = longitude
                 )
             }
 
-            val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate, sunUiState.value.timeZoneOffset, latitude, longitude)
+            val sunTimes = getSunRiseNoonFall(shootInfoUIState.value.chosenDate, shootInfoUIState.value.timeZoneOffset, latitude, longitude)
             setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
         }
     }
@@ -153,19 +153,19 @@ class SunViewModel : ViewModel() {
     }
 
     fun setNewDate(year: Int, month: Int, day: Int){
-        _sunUiState.update { currentState ->
+        _shootInfoUIState.update { currentState ->
             currentState.copy(
                 chosenDate = LocalDateTime.of(year, month, day, 12, 0, 0)
             )
         }
 
-        val sunTimes = getSunRiseNoonFall(sunUiState.value.chosenDate, sunUiState.value.timeZoneOffset, sunUiState.value.latitude, sunUiState.value.longitude)
+        val sunTimes = getSunRiseNoonFall(shootInfoUIState.value.chosenDate, shootInfoUIState.value.timeZoneOffset, shootInfoUIState.value.latitude, shootInfoUIState.value.longitude)
         setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
 
 
     fun setSolarTimes(sunriseTime: String, solarNoonTime: String, sunsetTime: String) {
-        _sunUiState.update { currentState ->
+        _shootInfoUIState.update { currentState ->
             currentState.copy(
                 sunriseTime = sunriseTime,
                 solarNoonTime = solarNoonTime,
@@ -188,7 +188,7 @@ class SunViewModel : ViewModel() {
     }
 
     fun setTimeZoneOffset(timeZoneOffset: Double) {
-        _sunUiState.update { currentState ->
+        _shootInfoUIState.update { currentState ->
             currentState.copy(
                 timeZoneOffset = timeZoneOffset
             )
@@ -196,19 +196,19 @@ class SunViewModel : ViewModel() {
     }
     fun updateDay(day: Int){
 
-        setNewDate(_sunUiState.value.chosenDate.year, _sunUiState.value.chosenDate.monthValue, day)
+        setNewDate(_shootInfoUIState.value.chosenDate.year, _shootInfoUIState.value.chosenDate.monthValue, day)
     }
 
     fun updateMonth(month: Int, maxDate: Int){
-        var day = _sunUiState.value.chosenDate.dayOfMonth
+        var day = _shootInfoUIState.value.chosenDate.dayOfMonth
         if (maxDate < day){
             day = maxDate
         }
-        setNewDate(_sunUiState.value.chosenDate.year, month, day)
+        setNewDate(_shootInfoUIState.value.chosenDate.year, month, day)
     }
 
     fun updateYear(year: Int){
-        setNewDate(year, _sunUiState.value.chosenDate.monthValue, _sunUiState.value.chosenDate.dayOfMonth)
+        setNewDate(year, _shootInfoUIState.value.chosenDate.monthValue, _shootInfoUIState.value.chosenDate.dayOfMonth)
     }
 
 }

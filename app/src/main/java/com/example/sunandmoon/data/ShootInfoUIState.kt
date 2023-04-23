@@ -3,7 +3,7 @@ package com.example.sunandmoon.data
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import java.time.LocalDateTime
 
-data class SunUIState(
+data class ShootInfoUIState(
 
     val sunriseTime: String,
     val solarNoonTime: String,

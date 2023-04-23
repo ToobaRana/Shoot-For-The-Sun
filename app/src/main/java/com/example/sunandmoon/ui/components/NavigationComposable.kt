@@ -17,7 +17,7 @@ fun NavigationComposable(page: Int, navigateToNext: (localDateTime: LocalDateTim
     val icons = listOf(R.drawable.home_icon, R.drawable.find_shoot_icon, R.drawable.table_icon)
     val iconsContentDescriptions = listOf("home button", "find shoot button", "table button")
 
-    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+    NavigationBar(containerColor = MaterialTheme.colorScheme.tertiary) {
         icons.forEachIndexed { index, icon ->
             val iconColor = if (page == index)  MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
             NavigationBarItem(

@@ -7,36 +7,36 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sunandmoon.getSunRiseNoonFall
-import com.example.sunandmoon.viewModel.SunViewModel
-import java.time.Instant
+import com.example.sunandmoon.R
+import com.example.sunandmoon.viewModel.ShootInfoViewModel
 
 //https://nominatim.openstreetmap.org/ui/search.html
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LocationSearch(sunViewModel: SunViewModel = viewModel(), modifier: Modifier) {
+fun LocationSearch(shootInfoViewModel: ShootInfoViewModel = viewModel(), modifier: Modifier) {
 
-    val sunUIState by sunViewModel.sunUiState.collectAsState()
+    val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
 
-    var searchQuery = sunUIState.locationSearchQuery
+    var searchQuery = shootInfoUIState.locationSearchQuery
 
     //var searchResults by remember { mutableStateOf<List<String>>(emptyList()) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
 
-    Column() {
-        OutlinedTextField(
+    Column(modifier = modifier.fillMaxWidth()) {
+        TextField(
             value = searchQuery,
             onValueChange = { query ->
-                sunViewModel.setLocationSearchQuery(query)
+                shootInfoViewModel.setLocationSearchQuery(query)
             },
             label = { Text("Search for a location") },
             placeholder = { Text("Enter a location") },
             singleLine = true,
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search
             ),
@@ -44,21 +44,25 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel(), modifier: Modifier)
                 onSearch = {
                     // handle search button press
                     if (searchQuery.isNotEmpty()) {
-                        sunViewModel.loadLocationSearchResults(searchQuery)
+                        shootInfoViewModel.loadLocationSearchResults(searchQuery)
                         isDropdownExpanded = true
                     }
                 }
             ),
-            /*colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.42f),
-                cursorColor = MaterialTheme.colorScheme.primary,
+            leadingIcon = {
+                Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                //cursorColor = MaterialTheme.colorScheme.primary,
                 textColor = MaterialTheme.colorScheme.onSurface,
-            )*/
+                containerColor = MaterialTheme.colorScheme.background,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
+            )
         )
 
         if (isDropdownExpanded) {
-            val searchResults = sunUIState.locationSearchResults
+            val searchResults = shootInfoUIState.locationSearchResults
             DropdownMenu(
                 expanded = isDropdownExpanded,
                 onDismissRequest = { isDropdownExpanded = false },
@@ -71,7 +75,7 @@ fun LocationSearch(sunViewModel: SunViewModel = viewModel(), modifier: Modifier)
                             .fillMaxWidth()
                             .clickable {
                                 isDropdownExpanded = false
-                                sunViewModel.setCoordinates(item.lat.toDouble(), item.lon.toDouble(), true)
+                                shootInfoViewModel.setCoordinates(item.lat.toDouble(), item.lon.toDouble(), true)
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                     )
