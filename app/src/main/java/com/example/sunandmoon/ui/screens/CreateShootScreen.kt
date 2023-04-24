@@ -20,7 +20,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
-import com.example.sunandmoon.ui.components.SunCard
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import java.time.LocalDateTime
 

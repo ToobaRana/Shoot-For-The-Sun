@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sunandmoon.ui.components.SunCard
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +22,7 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
+import com.example.sunandmoon.ui.components.infoComponents.SunPositionsCard
 import java.time.LocalDateTime
 
 
@@ -47,7 +47,9 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
                     },
                     label = { Text("Name of your shoot") },
                     singleLine = true,
-                    modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
+                    modifier = modifier
+                        .fillMaxWidth(0.8f)
+                        .align(Alignment.CenterHorizontally),
                     leadingIcon = {
                         Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
                     },
@@ -66,7 +68,9 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
                     },
                     label = { Text("Name of your shoot") },
                     singleLine = true,
-                    modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
+                    modifier = modifier
+                        .fillMaxWidth(0.8f)
+                        .align(Alignment.CenterHorizontally),
                     leadingIcon = {
                         Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
                     },
@@ -92,9 +96,16 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
 
             {
                 item {
-                    SunCard(modifier, "Sunrise", painterResource(id = R.drawable.sunrise), shootInfoUIState.sunriseTime)
-                    SunCard(modifier, "Solar noon", painterResource(id = R.drawable.solarnoon), shootInfoUIState.solarNoonTime)
-                    SunCard(modifier, "Sunset", painterResource(id = R.drawable.sunset), shootInfoUIState.sunsetTime)
+
+                    SunPositionsCard(
+                        modifier = modifier,
+                        sunriseTime = shootInfoUIState.sunriseTime,
+                        solarNoonTime = shootInfoUIState.solarNoonTime ,
+                        sunsetTime = shootInfoUIState.sunsetTime
+                    )
+
+
+
                 }
             }
 

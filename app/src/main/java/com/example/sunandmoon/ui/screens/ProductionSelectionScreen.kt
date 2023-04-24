@@ -20,7 +20,6 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
-import com.example.sunandmoon.ui.components.SunCard
 import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
