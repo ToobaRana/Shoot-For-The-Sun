@@ -1,6 +1,7 @@
 package com.example.sunandmoon.ui.screens
 
 import android.location.Location
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,8 +17,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.ui.components.SunCard
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 
 import com.example.sunandmoon.R
+import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import java.time.LocalDateTime
@@ -25,16 +28,56 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShootInfoScreen(modifier: Modifier, navigateToNext: (localDateTime: LocalDateTime, location: Location) -> Unit, shootInfoViewModel: ShootInfoViewModel = viewModel()){
+fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoViewModel: ShootInfoViewModel = viewModel(), shoot: Shoot){
 
-    val sunUiState by shootInfoViewModel.shootInfoUIState.collectAsState()
+    val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
+
+    if (shootInfoUIState.shoot == null) {
+        shootInfoViewModel.setShoot(shoot)
+        return
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            Column() {
-                LocationSearch(modifier = modifier)
-                CalendarComponent(modifier)
+            Column(modifier.fillMaxWidth()) {
+                TextField(
+                    value = shootInfoUIState.shoot!!.name,
+                    onValueChange = { query ->
+                    },
+                    label = { Text("Name of your shoot") },
+                    singleLine = true,
+                    modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
+                    leadingIcon = {
+                        Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
+                        //cursorColor = MaterialTheme.colorScheme.primary,
+                        textColor = MaterialTheme.colorScheme.onSurface,
+                        containerColor = MaterialTheme.colorScheme.background,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
+
+                TextField(
+                    value = shootInfoUIState.shoot!!.locationName,
+                    onValueChange = { query ->
+                    },
+                    label = { Text("Name of your shoot") },
+                    singleLine = true,
+                    modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
+                    leadingIcon = {
+                        Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
+                        //cursorColor = MaterialTheme.colorScheme.primary,
+                        textColor = MaterialTheme.colorScheme.onSurface,
+                        containerColor = MaterialTheme.colorScheme.background,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
+                    )
+                )
             }
         },
 
@@ -48,17 +91,13 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: (localDateTime: LocalDat
             )
 
             {
-
                 item {
-                    SunCard(modifier, "Sunrise", painterResource(id = R.drawable.sunrise), sunUiState.sunriseTime)
-                    SunCard(modifier, "Solar noon", painterResource(id = R.drawable.solarnoon), sunUiState.solarNoonTime)
-                    SunCard(modifier, "Sunset", painterResource(id = R.drawable.sunset), sunUiState.sunsetTime)
+                    SunCard(modifier, "Sunrise", painterResource(id = R.drawable.sunrise), shootInfoUIState.sunriseTime)
+                    SunCard(modifier, "Solar noon", painterResource(id = R.drawable.solarnoon), shootInfoUIState.solarNoonTime)
+                    SunCard(modifier, "Sunset", painterResource(id = R.drawable.sunset), shootInfoUIState.sunsetTime)
                 }
             }
 
-        },
-        bottomBar = {
-            NavigationComposable(page = 0, navigateToNext)
         }
     )
 

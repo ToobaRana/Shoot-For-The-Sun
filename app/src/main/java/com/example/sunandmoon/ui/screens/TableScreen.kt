@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.data.util.LocationAndDateTime
+import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.TableViewModel
@@ -26,15 +27,10 @@ import java.util.*
 
 
 @Composable
-fun TableScreen(navigateToNext: (localDateTime: LocalDateTime, location: Location) -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel(), locationAndDateTime: LocationAndDateTime) {
-
+fun TableScreen(navigateToNextBottomBar: (index: Int) -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
     val tableUiState by tableViewModel.tableUiState.collectAsState()
 
-    TableView(modifier,tableViewModel, tableUiState, navigateToNext)
-
-    //Log.d("List: ", tableUIState.dateTableList.toString())
-
-    Log.i("aaa123", "ehmmm" + locationAndDateTime.dateTime.toString())
+    TableView(modifier,tableViewModel, tableUiState, navigateToNextBottomBar)
 }
 
 
@@ -42,7 +38,7 @@ fun TableScreen(navigateToNext: (localDateTime: LocalDateTime, location: Locatio
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNext: (localDateTime: LocalDateTime, location: Location) -> Unit) {
+fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNextBottomBar: (index: Int) -> Unit) {
 
 
     //tableViewModel.loadDateTableList(sunType = "Sunrise")
@@ -144,7 +140,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
             }
         },
         bottomBar = {
-            NavigationComposable(page = 1, navigateToNext)
+            NavigationComposable(page = 2, navigateToNextBottomBar)
         }
 
 

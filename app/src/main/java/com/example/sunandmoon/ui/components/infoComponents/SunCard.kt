@@ -27,9 +27,9 @@ fun SunCard(modifier: Modifier, displayElement : String, sunImage: Painter, sunT
             horizontalAlignment = Alignment.CenterHorizontally
         ){
 
-            Text(text= displayElement, modifier = modifier.padding(20.dp))
+            Text(text = displayElement, modifier = modifier.padding(20.dp))
             Image(painter = sunImage, contentDescription = "Image", modifier.size(80.dp) )
-            Text(text= sunTime, modifier = modifier.padding(20.dp))
+            Text(text = sunTime, modifier = modifier.padding(20.dp))
 
         }
     }

@@ -12,15 +12,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
+import com.example.sunandmoon.viewModel.CreateShootViewModel
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 
 //https://nominatim.openstreetmap.org/ui/search.html
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LocationSearch(shootInfoViewModel: ShootInfoViewModel = viewModel(), modifier: Modifier) {
+fun LocationSearch(createShootViewModel: CreateShootViewModel = viewModel(), modifier: Modifier) {
 
-    val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
+    val shootInfoUIState by createShootViewModel.createShootUIState.collectAsState()
 
     var searchQuery = shootInfoUIState.locationSearchQuery
 
@@ -31,7 +32,7 @@ fun LocationSearch(shootInfoViewModel: ShootInfoViewModel = viewModel(), modifie
         TextField(
             value = searchQuery,
             onValueChange = { query ->
-                shootInfoViewModel.setLocationSearchQuery(query)
+                createShootViewModel.setLocationSearchQuery(query)
             },
             label = { Text("Search for a location") },
             placeholder = { Text("Enter a location") },
@@ -44,7 +45,7 @@ fun LocationSearch(shootInfoViewModel: ShootInfoViewModel = viewModel(), modifie
                 onSearch = {
                     // handle search button press
                     if (searchQuery.isNotEmpty()) {
-                        shootInfoViewModel.loadLocationSearchResults(searchQuery)
+                        createShootViewModel.loadLocationSearchResults(searchQuery)
                         isDropdownExpanded = true
                     }
                 }
@@ -75,7 +76,7 @@ fun LocationSearch(shootInfoViewModel: ShootInfoViewModel = viewModel(), modifie
                             .fillMaxWidth()
                             .clickable {
                                 isDropdownExpanded = false
-                                shootInfoViewModel.setCoordinates(item.lat.toDouble(), item.lon.toDouble(), true)
+                                createShootViewModel.setCoordinates(item.lat.toDouble(), item.lon.toDouble(), true)
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                     )

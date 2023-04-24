@@ -8,10 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
+import com.example.sunandmoon.data.util.Shoot
 import java.time.LocalDateTime
 
 @Composable
-fun NavigationComposable(page: Int, navigateToNext: (localDateTime: LocalDateTime, location: Location) -> Unit){
+fun NavigationComposable(page: Int, navigateToNextBottomBar: (index: Int) -> Unit){
     //val items = listOf("Home", "Table")
 
     val icons = listOf(R.drawable.home_icon, R.drawable.find_shoot_icon, R.drawable.table_icon)
@@ -26,7 +27,7 @@ fun NavigationComposable(page: Int, navigateToNext: (localDateTime: LocalDateTim
                 selected = page == index,
                 onClick = {
                     if(index != page){
-                        navigateToNext(LocalDateTime.now(), Location("provider"))
+                        navigateToNextBottomBar(index)
                     }
                 }
             )

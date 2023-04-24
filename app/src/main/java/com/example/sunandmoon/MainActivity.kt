@@ -13,6 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.sunandmoon.data.util.LocationAndDateTime
+import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.ui.screens.ProductionSelectionScreen
 import com.example.sunandmoon.ui.screens.ShootInfoScreen
 import com.example.sunandmoon.ui.screens.TableScreen
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
@@ -48,29 +50,48 @@ class MainActivity : ComponentActivity() {
 fun MultipleScreenNavigator(modifier: Modifier) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "shootInfoScreen/{localDateTime}/{latitude}/{longitude}") {
-        composable("shootInfoScreen/{localDateTime}/{latitude}/{longitude}") {
-            ShootInfoScreen(
+    NavHost(navController = navController, startDestination = "productionSelectionScreen") {
+        composable("productionSelectionScreen") {
+            ProductionSelectionScreen(
                 modifier = modifier,
-                navigateToNext = { localDateTime: LocalDateTime, location: Location -> navController.navigate("tableScreen/${localDateTime}/${location.latitude}/${location.longitude}")}
+                navigateToShootInfoScreen = { shoot: Shoot -> navController.navigate("shootInfoScreen/${shoot.name}/${shoot.locationName}/${shoot.date}/${shoot.location.latitude}/${shoot.location.longitude}/${shoot.timeZoneOffset}")},
+                navigateToNextBottomBar = { index: Int ->
+                    when (index) {
+                        0 -> navController.popBackStack("productionSelectionScreen", false)
+                        1 -> navController.navigate("tableScreen")
+                        2 -> navController.navigate("tableScreen")
+                    }
+                }
             )
         }
-        composable("tableScreen/{localDateTime}/{latitude}/{longitude}"){ backStackEntry ->
+        composable("shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}") { backStackEntry ->
+            ShootInfoScreen(
+                modifier = modifier,
+                navigateToNext = { navController.navigate("tableScreen")},
+                shoot = getShootFromArgs(backStackEntry)
+            )
+        }
+        composable("tableScreen"){ backStackEntry ->
             TableScreen(
                 modifier = modifier,
-                navigateToNext = {localDateTime: LocalDateTime, location: Location -> navController.popBackStack("shootInfoScreen/{localDateTime}/{latitude}/{longitude}", false) },
-                locationAndDateTime = readArgsAndGetDataToTransfer(backStackEntry)
+                navigateToNextBottomBar = { index: Int ->
+                    when (index) {
+                        0 -> navController.popBackStack("productionSelectionScreen", false)
+                        1 -> navController.navigate("tableScreen")
+                        2 -> navController.navigate("tableScreen")
+                    }
+                }
             )
         }
     }
 }
 
-fun readArgsAndGetDataToTransfer(backStackEntry: NavBackStackEntry): LocationAndDateTime {
+fun getShootFromArgs(backStackEntry: NavBackStackEntry): Shoot {
     var localDateTime: LocalDateTime = LocalDateTime.parse(backStackEntry.arguments?.getString("localDateTime"), DateTimeFormatter.ISO_DATE_TIME)
 
     var location: Location = Location("provider")
     location.latitude = backStackEntry.arguments?.getString("latitude")?.toDouble() ?: 0.0
     location.longitude = backStackEntry.arguments?.getString("longitude")?.toDouble() ?: 0.0
 
-    return LocationAndDateTime(location, localDateTime)
+    return Shoot(name = "test", locationName = "test2", location = location, date = localDateTime, timeZoneOffset = 2.0)
 }

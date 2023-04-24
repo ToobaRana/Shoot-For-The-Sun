@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sunandmoon.viewModel.CreateShootViewModel
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -68,13 +70,13 @@ val weekdays =
 
 
 @Composable
-fun CalendarComponent(modifier: Modifier, shootInfoViewModel: ShootInfoViewModel = viewModel()) {
+fun CalendarComponent(modifier: Modifier, createShootViewModel: CreateShootViewModel = viewModel()) {
     var showCalendar by remember { mutableStateOf(false) }
     Button(onClick = { showCalendar = !showCalendar }) {
         Text(text = "Show Calendar")
     }
     if (showCalendar) {
-        CalendarComponentDisplay(modifier, shootInfoViewModel)
+        CalendarComponentDisplay(modifier, createShootViewModel)
     }
 
 
@@ -82,9 +84,9 @@ fun CalendarComponent(modifier: Modifier, shootInfoViewModel: ShootInfoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarComponentDisplay(modifier: Modifier, shootInfoViewModel: ShootInfoViewModel = viewModel()) {
+fun CalendarComponentDisplay(modifier: Modifier, createShootViewModel: CreateShootViewModel = viewModel()) {
 
-    val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
+    val shootInfoUIState by createShootViewModel.createShootUIState.collectAsState()
 
     //var currentYear by remember { mutableStateOf("2023") }
 
@@ -106,7 +108,11 @@ fun CalendarComponentDisplay(modifier: Modifier, shootInfoViewModel: ShootInfoVi
         detectTapGestures(onTap = {
                 focusManager.clearFocus()
             })
-        }
+        },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onSurface,
+            contentColor = MaterialTheme.colorScheme.background
+        )
 
 
     ) {
@@ -159,15 +165,29 @@ fun CalendarComponentDisplay(modifier: Modifier, shootInfoViewModel: ShootInfoVi
                         keyboardActions = KeyboardActions(
                             onDone = {
                                 if (currentYearText.isEmpty()){
-                                    shootInfoViewModel.updateYear(0)
+                                    createShootViewModel.updateYear(0)
                                 }
                                 else{
-                                    shootInfoViewModel.updateYear(currentYearText.toInt())
+                                    createShootViewModel.updateYear(currentYearText.toInt())
                                     focusManager.clearFocus()
                                 }
 
 
-                            })
+                            }
+                        ),
+                        colors = TextFieldDefaults.textFieldColors(
+                            cursorColor = MaterialTheme.colorScheme.background,
+                            textColor = MaterialTheme.colorScheme.background,
+                            containerColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                            focusedLabelColor = MaterialTheme.colorScheme.background,
+                            selectionColors = TextSelectionColors(
+                                handleColor = MaterialTheme.colorScheme.background,
+                                backgroundColor = MaterialTheme.colorScheme.onSurface
+                            )
+                        )
 
                     )
                     Spacer(modifier.size(30.dp))
@@ -206,7 +226,7 @@ fun CalendarComponentDisplay(modifier: Modifier, shootInfoViewModel: ShootInfoVi
                         }
                         for (y in daysBeforeFirst until numWeekdays) {
                             val day = (y + 1 - daysBeforeFirst)
-                            DrawDayBox(modifier,day, shootInfoUIState.chosenDate.dayOfMonth) { shootInfoViewModel.updateDay(day) }
+                            DrawDayBox(modifier,day, shootInfoUIState.chosenDate.dayOfMonth) { createShootViewModel.updateDay(day) }
                         }
                     } else {
                         for (y in 0 until numWeekdays) {
@@ -220,7 +240,7 @@ fun CalendarComponentDisplay(modifier: Modifier, shootInfoViewModel: ShootInfoVi
                                 )
 
                             } else {
-                               DrawDayBox(modifier,day, shootInfoUIState.chosenDate.dayOfMonth) { shootInfoViewModel.updateDay(day) }
+                               DrawDayBox(modifier,day, shootInfoUIState.chosenDate.dayOfMonth) { createShootViewModel.updateDay(day) }
 
 
                             }
@@ -247,7 +267,7 @@ fun drawWeekdays(numDays: Int) {
 //dropdown-menu for choosing month
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun monthDropDown(modifier: Modifier, currentMonth: Int, shootInfoViewModel: ShootInfoViewModel = viewModel()) {
+fun monthDropDown(modifier: Modifier, currentMonth: Int, createShootViewModel: CreateShootViewModel = viewModel()) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -264,7 +284,13 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, shootInfoViewModel: Sho
             onValueChange = { expanded = !expanded },
             label = { Text("Month") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            colors = TextFieldDefaults.textFieldColors(
+                //cursorColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.background,
+                containerColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                unfocusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
 
         ExposedDropdownMenu(
@@ -277,7 +303,7 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, shootInfoViewModel: Sho
                     onClick = {
 
 
-                        shootInfoViewModel.updateMonth(months.indexOf(selectionOption) + 1, amountDays[selectionOption]!!)
+                        createShootViewModel.updateMonth(months.indexOf(selectionOption) + 1, amountDays[selectionOption]!!)
                         //fetch date, update month in uistate
 
 
@@ -289,7 +315,6 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, shootInfoViewModel: Sho
             }
         }
     }
-
 }
 
 //returns which day the first of any month or year falls on

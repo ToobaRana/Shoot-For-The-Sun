@@ -15,7 +15,7 @@ import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 
 //test for fetching last known location
-@Composable
+/*@Composable
 fun currentLocationTest(
     fusedLocationProviderClient: FusedLocationProviderClient,
     viewModel: ShootInfoViewModel = viewModel(),
@@ -52,4 +52,4 @@ fun currentLocationTest(
         //Text(text = "month ${calendar.months[sunUiState.currentMonth]}")
 
     }
-}
+}*/
