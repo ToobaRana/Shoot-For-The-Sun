@@ -12,24 +12,24 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun SunCard(displayElement : String, sunImage: Painter, sunTime: String){
+fun SunCard(modifier: Modifier, displayElement : String, sunImage: Painter, sunTime: String){
 
     ElevatedCard(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(15.dp),
         //colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
 
     ){
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
 
-            Text(text= displayElement, modifier = Modifier.padding(20.dp))
-            Image(painter = sunImage, contentDescription = "Image", Modifier.size(80.dp) )
-            Text(text= sunTime, modifier = Modifier.padding(20.dp))
+            Text(text = displayElement, modifier = modifier.padding(20.dp))
+            Image(painter = sunImage, contentDescription = "Image", modifier.size(80.dp) )
+            Text(text = sunTime, modifier = modifier.padding(20.dp))
 
         }
     }

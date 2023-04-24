@@ -11,23 +11,23 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.checkPermissions
 import com.example.sunandmoon.ui.components.CalendarComponentDisplay
-import com.example.sunandmoon.viewModel.SunViewModel
+import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
-import java.time.YearMonth
 
 //test for fetching last known location
-@Composable
+/*@Composable
 fun currentLocationTest(
     fusedLocationProviderClient: FusedLocationProviderClient,
-    viewModel: SunViewModel = viewModel()
+    viewModel: ShootInfoViewModel = viewModel(),
+    modifier: Modifier
 ) {
     var showCalendar by remember { mutableStateOf(false)}
-    val sunUiState by viewModel.sunUiState.collectAsState()
+    val sunUiState by viewModel.shootInfoUIState.collectAsState()
     //checks permissions to see if button can be enabled
     //put denne før selve funksjonen så den slipper å gjøre konstante permission-kall
     //kan gjøres i viewmodel sin init
     viewModel.updateLocation(checkPermissions())
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
         Button(
             onClick = { viewModel.getCurrentPosition(fusedLocationProviderClient) },
@@ -46,10 +46,10 @@ fun currentLocationTest(
             Text(text = "Show Calendar")
         }
         if (showCalendar){
-            CalendarComponentDisplay(Modifier, viewModel)
+            CalendarComponentDisplay(modifier, viewModel)
         }
         Text(text = sunUiState.chosenDate.toString())
         //Text(text = "month ${calendar.months[sunUiState.currentMonth]}")
 
     }
-}
+}*/

@@ -1,27 +1,33 @@
 package com.example.sunandmoon.ui.components
 
-import android.graphics.Paint.Align
+
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sunandmoon.viewModel.SunViewModel
+import com.example.sunandmoon.viewModel.CreateShootViewModel
+import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.*
@@ -64,13 +70,13 @@ val weekdays =
 
 
 @Composable
-fun CalendarComponent(modifier: Modifier, sunViewModel: SunViewModel = viewModel()) {
+fun CalendarComponent(modifier: Modifier, createShootViewModel: CreateShootViewModel = viewModel()) {
     var showCalendar by remember { mutableStateOf(false) }
     Button(onClick = { showCalendar = !showCalendar }) {
         Text(text = "Show Calendar")
     }
     if (showCalendar) {
-        CalendarComponentDisplay(modifier, sunViewModel)
+        CalendarComponentDisplay(modifier, createShootViewModel)
     }
 
 
@@ -78,14 +84,14 @@ fun CalendarComponent(modifier: Modifier, sunViewModel: SunViewModel = viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = viewModel()) {
+fun CalendarComponentDisplay(modifier: Modifier, createShootViewModel: CreateShootViewModel = viewModel()) {
 
-    val sunUIState by sunViewModel.sunUiState.collectAsState()
+    val shootInfoUIState by createShootViewModel.createShootUIState.collectAsState()
 
     //var currentYear by remember { mutableStateOf("2023") }
 
     // vi har lyst til å prøve å la deg ha en blank tekstfelt for år
-    val currentYear: Int = sunUIState.chosenDate.year
+    val currentYear: Int = shootInfoUIState.chosenDate.year
     var currentYearText: String by remember {
         mutableStateOf(currentYear.toString())
     }
@@ -93,14 +99,23 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
         currentYearText = ""
     }
 
-
+    val focusManager = LocalFocusManager.current
 
     Card(
         shape = RoundedCornerShape(20.dp),
-        modifier = modifier,
+        modifier = modifier
+        .pointerInput(Unit) {
+        detectTapGestures(onTap = {
+                focusManager.clearFocus()
+            })
+        },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onSurface,
+            contentColor = MaterialTheme.colorScheme.background
+        )
 
 
-        ) {
+    ) {
 
         Column(
             modifier = modifier
@@ -116,13 +131,14 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
             ) {
                 Spacer(modifier.size(30.dp))
                 Box {
-                    monthDropDown(modifier, sunUIState.chosenDate.monthValue)
+                    monthDropDown(modifier, shootInfoUIState.chosenDate.monthValue)
                 }
                 Spacer(modifier.size(30.dp))
                 Box(modifier = modifier.wrapContentSize(Alignment.Center, false)) {
-                    val focusManager = LocalFocusManager.current
+
+
                     TextField(
-                        modifier = modifier.fillMaxSize(0.7f)/*.onKeyEvent { type -> if(type.type == KeyEventType.KeyUp) }*/,
+                        modifier = modifier.fillMaxSize(0.7f),
                         value = currentYearText,
                         onValueChange = { year: String ->
                             if (year.isNotEmpty()) {
@@ -130,15 +146,12 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
 
                                     currentYearText = year.replace("\\D".toRegex(), "")
 
-
                                     Log.v("ÅR", year);
 
                                 }
                             } else {
                                 currentYearText = ""
                             }
-
-
                             Log.v("ÅR", year);
                         },
 
@@ -151,9 +164,30 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                sunViewModel.updateYear(currentYearText.toInt())
-                                focusManager.clearFocus()
-                            })
+                                if (currentYearText.isEmpty()){
+                                    createShootViewModel.updateYear(0)
+                                }
+                                else{
+                                    createShootViewModel.updateYear(currentYearText.toInt())
+                                    focusManager.clearFocus()
+                                }
+
+
+                            }
+                        ),
+                        colors = TextFieldDefaults.textFieldColors(
+                            cursorColor = MaterialTheme.colorScheme.background,
+                            textColor = MaterialTheme.colorScheme.background,
+                            containerColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                            focusedLabelColor = MaterialTheme.colorScheme.background,
+                            selectionColors = TextSelectionColors(
+                                handleColor = MaterialTheme.colorScheme.background,
+                                backgroundColor = MaterialTheme.colorScheme.onSurface
+                            )
+                        )
 
                     )
                     Spacer(modifier.size(30.dp))
@@ -164,19 +198,16 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 drawWeekdays(numWeekdays)
-
             }
             val daysBeforeFirst = weekdays.indexOf(
                 getDayOfFirst(
-                    month = (sunUIState.chosenDate.monthValue),
+                    month = (shootInfoUIState.chosenDate.monthValue),
                     year = currentYear
                 )
             )
             val calenderDayHeight =
-                (amountDays[months[sunUIState.chosenDate.monthValue - 1]]!! + daysBeforeFirst - 1) / 7
-
+                (amountDays[months[shootInfoUIState.chosenDate.monthValue - 1]]!! + daysBeforeFirst - 1) / 7
 
 
             for (i in 0..calenderDayHeight) {
@@ -195,30 +226,13 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                         }
                         for (y in daysBeforeFirst until numWeekdays) {
                             val day = (y + 1 - daysBeforeFirst)
-                            val selected = false
-                            Box(
-                                modifier = modifier
-                                    .size(50.dp)
-                                    .padding(1.dp)
-                                    .clickable { sunViewModel.updateDay(day); },
-
-                                //bruk en array med farger/tall for å endre. Ha referanser til farger slik at det er mulig å endre på de
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-
-                                    text = day.toString(),
-                                    fontSize = 20.sp,
-
-
-                                    )
-                            }
+                            DrawDayBox(modifier,day, shootInfoUIState.chosenDate.dayOfMonth) { createShootViewModel.updateDay(day) }
                         }
                     } else {
                         for (y in 0 until numWeekdays) {
                             val day = (y + (i * 7) + 1) - daysBeforeFirst
 
-                            if (day > amountDays[months[sunUIState.chosenDate.monthValue - 1]]!!) {
+                            if (day > amountDays[months[shootInfoUIState.chosenDate.monthValue - 1]]!!) {
                                 Spacer(
                                     modifier = modifier
                                         .size(50.dp)
@@ -226,23 +240,7 @@ fun CalendarComponentDisplay(modifier: Modifier, sunViewModel: SunViewModel = vi
                                 )
 
                             } else {
-                                Box(
-                                    modifier = modifier
-                                        .size(50.dp)
-                                        .padding(1.dp)
-                                        .clickable { sunViewModel.updateDay(day) },
-
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-
-                                        text = day.toString(),
-                                        fontSize = 20.sp,
-
-
-                                        )
-
-                                }
+                               DrawDayBox(modifier,day, shootInfoUIState.chosenDate.dayOfMonth) { createShootViewModel.updateDay(day) }
 
 
                             }
@@ -269,7 +267,7 @@ fun drawWeekdays(numDays: Int) {
 //dropdown-menu for choosing month
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun monthDropDown(modifier: Modifier, currentMonth: Int, sunViewModel: SunViewModel = viewModel()) {
+fun monthDropDown(modifier: Modifier, currentMonth: Int, createShootViewModel: CreateShootViewModel = viewModel()) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -285,11 +283,17 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, sunViewModel: SunViewMo
             value = months[currentMonth - 1],
             onValueChange = { expanded = !expanded },
             label = { Text("Month") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = true) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = TextFieldDefaults.textFieldColors(
+                //cursorColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.background,
+                containerColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                unfocusedLabelColor = MaterialTheme.colorScheme.background
+            )
         )
-        ExposedDropdownMenu(
 
+        ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
@@ -299,7 +303,7 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, sunViewModel: SunViewMo
                     onClick = {
 
 
-                        sunViewModel.updateMonth(months.indexOf(selectionOption) + 1)
+                        createShootViewModel.updateMonth(months.indexOf(selectionOption) + 1, amountDays[selectionOption]!!)
                         //fetch date, update month in uistate
 
 
@@ -311,7 +315,6 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, sunViewModel: SunViewMo
             }
         }
     }
-
 }
 
 //returns which day the first of any month or year falls on
@@ -325,3 +328,25 @@ fun getDayOfFirst(month: Int, year: Int): String {
 }
 
 //masking dates for getDayOfFirst-call
+
+@Composable
+fun DrawDayBox(modifier: Modifier, day: Int, chosenDay: Int, updateDay: () -> Unit){
+    val brush = Brush.horizontalGradient(listOf(Color.Gray, Color.Black))
+
+    var usedModifier = modifier
+    if (day == chosenDay){
+        usedModifier = modifier.border(BorderStroke(2.dp,brush), RoundedCornerShape(5.dp))
+    }
+    Box(
+        modifier = usedModifier
+            .size(50.dp)
+            .padding(1.dp)
+            .clickable() { updateDay(); },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = day.toString(),
+            fontSize = 20.sp,
+        )
+    }
+}

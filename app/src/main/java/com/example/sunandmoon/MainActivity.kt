@@ -1,26 +1,27 @@
 package com.example.sunandmoon
 
+import android.location.Location
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.sunandmoon.ui.screens.HomeScreen
+import com.example.sunandmoon.data.util.LocationAndDateTime
+import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.ui.screens.ProductionSelectionScreen
+import com.example.sunandmoon.ui.screens.ShootInfoScreen
 import com.example.sunandmoon.ui.screens.TableScreen
-import com.example.sunandmoon.ui.screens.TableView
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
-import com.example.sunandmoon.viewModel.SunViewModel
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.FusedLocationProviderClient
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
     //initializing here to get context of activity (this) before setcontent
@@ -30,14 +31,14 @@ class MainActivity : ComponentActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setContent {
-
+            val modifier = Modifier
             SunAndMoonTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier,
+                    modifier = modifier,
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MultipleScreenNavigator()
+                    MultipleScreenNavigator(modifier)
                 }
             }
         }
@@ -46,11 +47,51 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MultipleScreenNavigator() {
+fun MultipleScreenNavigator(modifier: Modifier) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "homescreen") {
-        composable("homescreen") { HomeScreen(modifier = Modifier, navigateToNext = {navController.navigate("tablescreen")})}
-        composable("tablescreen"){ TableScreen(modifier = Modifier, navigateToNext = {navController.popBackStack("homescreen", false) })}
+    NavHost(navController = navController, startDestination = "productionSelectionScreen") {
+        composable("productionSelectionScreen") {
+            ProductionSelectionScreen(
+                modifier = modifier,
+                navigateToShootInfoScreen = { shoot: Shoot -> navController.navigate("shootInfoScreen/${shoot.name}/${shoot.locationName}/${shoot.date}/${shoot.location.latitude}/${shoot.location.longitude}/${shoot.timeZoneOffset}")},
+                navigateToNextBottomBar = { index: Int ->
+                    when (index) {
+                        0 -> navController.popBackStack("productionSelectionScreen", false)
+                        1 -> navController.navigate("tableScreen")
+                        2 -> navController.navigate("tableScreen")
+                    }
+                }
+            )
+        }
+        composable("shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}") { backStackEntry ->
+            ShootInfoScreen(
+                modifier = modifier,
+                navigateToNext = { navController.navigate("tableScreen")},
+                shoot = getShootFromArgs(backStackEntry)
+            )
+        }
+        composable("tableScreen"){ backStackEntry ->
+            TableScreen(
+                modifier = modifier,
+                navigateToNextBottomBar = { index: Int ->
+                    when (index) {
+                        0 -> navController.popBackStack("productionSelectionScreen", false)
+                        1 -> navController.navigate("tableScreen")
+                        2 -> navController.navigate("tableScreen")
+                    }
+                }
+            )
+        }
     }
+}
+
+fun getShootFromArgs(backStackEntry: NavBackStackEntry): Shoot {
+    var localDateTime: LocalDateTime = LocalDateTime.parse(backStackEntry.arguments?.getString("localDateTime"), DateTimeFormatter.ISO_DATE_TIME)
+
+    var location: Location = Location("provider")
+    location.latitude = backStackEntry.arguments?.getString("latitude")?.toDouble() ?: 0.0
+    location.longitude = backStackEntry.arguments?.getString("longitude")?.toDouble() ?: 0.0
+
+    return Shoot(name = "test", locationName = "test2", location = location, date = localDateTime, timeZoneOffset = 2.0)
 }

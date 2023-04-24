@@ -1,6 +1,7 @@
 package com.example.sunandmoon.ui.screens
 
 import android.annotation.SuppressLint
+import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,24 +17,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.TableUIState
-import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.data.util.LocationAndDateTime
+import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.TableViewModel
-import kotlinx.coroutines.flow.update
-import kotlinx.serialization.json.JsonNull.content
+import java.time.LocalDateTime
 import java.util.*
 
 
 @Composable
-fun TableScreen(navigateToNext: () -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
-
+fun TableScreen(navigateToNextBottomBar: (index: Int) -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
     val tableUiState by tableViewModel.tableUiState.collectAsState()
 
-    TableView(modifier,tableViewModel, tableUiState, navigateToNext)
-
-    //Log.d("List: ", tableUIState.dateTableList.toString())
-
+    TableView(modifier,tableViewModel, tableUiState, navigateToNextBottomBar)
 }
 
 
@@ -41,7 +38,7 @@ fun TableScreen(navigateToNext: () -> Unit, modifier: Modifier, tableViewModel: 
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNext: () -> Unit) {
+fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNextBottomBar: (index: Int) -> Unit) {
 
 
     //tableViewModel.loadDateTableList(sunType = "Sunrise")
@@ -49,16 +46,16 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
     Scaffold(modifier = modifier.fillMaxSize(),
         content = { innerPadding ->
             val padding = innerPadding
-            Column(Modifier.fillMaxSize()) {
+            Column(modifier.fillMaxSize()) {
 
                 var chosenSunType = ""
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = modifier.height(40.dp))
 
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
 
-                    Spacer(modifier = Modifier.width(10.dp))
-                    chosenSunType = dropdownMenuSunType(tableViewModel)
+                    Spacer(modifier = modifier.width(10.dp))
+                    chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
 
 
                     Log.d("tableUiStateUnit", tableUIState.chosenSunType)
@@ -66,22 +63,22 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
 
                     //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
-                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = modifier.width(10.dp))
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = modifier.height(20.dp))
 
 
-                Column(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = modifier.fillMaxWidth()) {
                     // Render the header row
                     Row(
-                        modifier = Modifier
+                        modifier = modifier
                             .fillMaxWidth()
                             .background(Color.LightGray)
                     ) {
                         Text(
                             text = "Day",
-                            modifier = Modifier
+                            modifier = modifier
                                 .weight(1f)
                                 .padding(8.dp),
                             textAlign = TextAlign.Center,
@@ -89,7 +86,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                         )
                         Text(
                             text = chosenSunType,
-                            modifier = Modifier
+                            modifier = modifier
                                 .weight(1f)
                                 .padding(8.dp),
                             textAlign = TextAlign.Center,
@@ -97,7 +94,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                         )
                         Text(
                             text = "Our $chosenSunType",
-                            modifier = Modifier
+                            modifier = modifier
                                 .weight(1f)
                                 .padding(8.dp),
                             textAlign = TextAlign.Center,
@@ -111,7 +108,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
                     // Render the table rows
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = modifier.fillMaxSize()
                     ) {
                         var i = 0
                         items(apiDateTableList) { date ->
@@ -128,7 +125,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                                 apiSunTime = sunriseTime,
                                 day = day,
                                 calculationSunTime = tableUIState.calculationsDateTableList[monthInt-1],
-                                modifier = Modifier
+                                modifier = modifier
                                     .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
                                     .padding(8.dp)
                             )
@@ -137,13 +134,13 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                         }
 
                     }
-                    Spacer(modifier = Modifier.height(200.dp))
+                    Spacer(modifier = modifier.height(200.dp))
                 }
 
             }
         },
         bottomBar = {
-            NavigationComposable(page = 1, navigateToNext)
+            NavigationComposable(page = 2, navigateToNextBottomBar)
         }
 
 
@@ -154,7 +151,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
+fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: Modifier): String{
     //Dropdown
     val options = stringArrayResource(com.example.sunandmoon.R.array.suntype)
     var expanded by remember { mutableStateOf(false) }
@@ -164,10 +161,10 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
     //Dropdown menu setup
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }, modifier = Modifier.width(350.dp)
+        onExpandedChange = { expanded = !expanded }, modifier = modifier.width(350.dp)
     ) {
         TextField(
-            modifier = Modifier.menuAnchor(),
+            modifier = modifier.menuAnchor(),
             // The `menuAnchor` modifier must be passed to the text field for correctness.
 
             readOnly = true,
@@ -175,9 +172,13 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
             onValueChange = {},
             label = { Text("Type")},
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-
-            )
+            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                //cursorColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor =  MaterialTheme.colorScheme.primary,
+                focusedLabelColor = MaterialTheme.colorScheme.onPrimary
+            ),
+        )
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
@@ -203,11 +204,3 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel()): String{
 
     return selectedOptionText                                                                                            
 }
-
-
-
-
-
-
-
-
