@@ -1,6 +1,7 @@
 package com.example.sunandmoon.ui.screens
 
 import android.location.Location
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +18,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
@@ -44,48 +49,32 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            Column(modifier.fillMaxWidth()) {
-                TextField(
-                    value = shootInfoUIState.shoot!!.name,
-                    onValueChange = { query ->
-                    },
-                    label = { Text("Name of your shoot") },
-                    singleLine = true,
-                    modifier = modifier
-                        .fillMaxWidth(0.8f)
-                        .align(Alignment.CenterHorizontally),
-                    leadingIcon = {
-                        Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        //cursorColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.onSurface,
-                        containerColor = MaterialTheme.colorScheme.background,
-                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
-                    )
-                )
+            Column(modifier.fillMaxWidth().padding(top = 30.dp)) {
+                
+                //Header for shoot name
+                Text(text = "Sun & Moon", modifier = modifier.fillMaxWidth().align(CenterHorizontally), fontSize = 50.sp, color = Color.White, textAlign = TextAlign.Center )
+                
+                //Location for shoot
+                Row(modifier = modifier.align(CenterHorizontally)) {
+                    Image(painter = painterResource(id = R.drawable.location), contentDescription = "map icon", modifier = modifier.size(35.dp).padding(end = 5.dp))
+                    Text(text = "IFI", fontSize = 20.sp, color = Color.White)
+                }
 
-                TextField(
-                    value = shootInfoUIState.shoot!!.locationName,
-                    onValueChange = { query ->
-                    },
-                    label = { Text("Name of your shoot") },
-                    singleLine = true,
-                    modifier = modifier
-                        .fillMaxWidth(0.8f)
-                        .align(Alignment.CenterHorizontally),
-                    leadingIcon = {
-                        Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        //cursorColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.onSurface,
-                        containerColor = MaterialTheme.colorScheme.background,
-                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
-                    )
-                )
+                Spacer(modifier = modifier.size(40.dp))
+
+                //Calendar and time 
+                Row(modifier = modifier.align(CenterHorizontally)){
+                    Image(painter = painterResource(id = R.drawable.calendar), contentDescription = "calendar icon", modifier = modifier.size(35.dp).padding(end = 5.dp))
+                    Text(text = "14. Jan 2023", fontSize = 20.sp, color = Color.White)
+                    
+                    Spacer(modifier = modifier.size(30.dp))
+
+                    Image(painter = painterResource(id = R.drawable.clock), contentDescription = "clock icon", modifier = modifier.size(35.dp).padding(end = 5.dp))
+                    Text(text = "06:13", fontSize = 20.sp, color = Color.White)
+
+
+                }
+
             }
         },
 

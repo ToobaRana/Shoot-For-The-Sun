@@ -29,7 +29,7 @@ fun WeatherCard(modifier: Modifier){
                 .padding(15.dp)
         ) {
 
-            Text(text = "12:15")
+            Text(text = "06:13")
 
             Row(
                 modifier
