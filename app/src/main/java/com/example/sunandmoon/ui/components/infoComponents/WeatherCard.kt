@@ -22,41 +22,51 @@ fun WeatherCard(modifier: Modifier){
         modifier = modifier
             .fillMaxWidth()
             .padding(15.dp)
-        //colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+    ) {
 
-    ){
+        Column(
+            modifier = modifier
+                .padding(15.dp)
+        ) {
 
-        Row(modifier.padding(5.dp)) {
             Text(text = "12:15")
-        }
-        
-        Row(
-            modifier
-                .padding(start = 60.dp, bottom = 10.dp)
-                .fillMaxWidth()) {
-            //pic of weather
-            Image(painter = painterResource(id = R.drawable.rain), contentDescription = "weather condition", modifier.size(80.dp) )
-            
-            Column(modifier.fillMaxWidth().padding(start = 60.dp)) {
-                Row() {
 
-                    //The temperature
-                    Image(painter = painterResource(id = R.drawable.thermometer), contentDescription = "thermometer", modifier.size(35.dp) )
-                    Text(text = "7°C", modifier.padding(start = 10.dp), fontSize = 20.sp)
-                    
-                }
+            Row(
+                modifier
+                    .padding(start = 60.dp, bottom = 10.dp)
+                    .fillMaxWidth()
+            ){
 
-                Spacer(modifier.size(15.dp))
-                
-                Row() {
-                    //Rainfall
-                    Image(painter = painterResource(id = R.drawable.raindrops), contentDescription = "raindrops", modifier.size(35.dp) )
-                    Text(text = "3 mm", modifier.padding(start = 10.dp), fontSize = 20.sp)
+                //pic of weather
+                Image(
+                    painter = painterResource(id = R.drawable.rain),
+                    contentDescription = "weather condition",
+                    modifier = modifier.size(80.dp)
+                )
+
+                Column(
+                    modifier
+                        .fillMaxWidth()
+                        .padding(start = 60.dp)
+                ){
+
+                    Row(){
+
+                        //The temperature
+                        Image(painter = painterResource(id = R.drawable.thermometer), contentDescription = "thermometer", modifier = modifier.size(35.dp))
+                        Text(text = "7°C", modifier.padding(start = 10.dp), fontSize = 20.sp)
+
+                    }
+
+                    Spacer(modifier.size(15.dp))
+
+                    Row() {
+                        //Rainfall
+                        Image(painter = painterResource(id = R.drawable.raindrops), contentDescription = "raindrops", modifier = modifier.size(35.dp))
+                        Text(text = "3 mm", modifier.padding(start = 10.dp), fontSize = 20.sp)
+                    }
                 }
             }
-            
         }
-
     }
-    
 }
