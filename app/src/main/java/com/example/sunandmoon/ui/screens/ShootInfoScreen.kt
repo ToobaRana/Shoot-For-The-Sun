@@ -24,6 +24,7 @@ import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.infoComponents.SunPositionsCard
+import com.example.sunandmoon.ui.components.infoComponents.UVCard
 import com.example.sunandmoon.ui.components.infoComponents.WeatherCard
 import com.example.sunandmoon.ui.components.infoComponents.WindCard
 import java.time.LocalDateTime
@@ -111,6 +112,9 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
                         modifier = modifier)
 
                     WindCard(
+                        modifier = modifier)
+
+                    UVCard(
                         modifier = modifier)
 
 

@@ -23,11 +23,9 @@ fun SunPositionsCard(modifier: Modifier, sunriseTime : String, solarNoonTime: St
         modifier = modifier
             .fillMaxWidth()
             .padding(15.dp)
-        //colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
-
     ){
 
-        Row() {
+        Row(modifier.padding(10.dp)) {
                 SunPositionComponent(modifier = modifier.width(125.dp), sunImage = painterResource(R.drawable.sunrise) , sunTime = sunriseTime)
                 SunPositionComponent(modifier = modifier.width(125.dp), sunImage = painterResource(R.drawable.solarnoon) , sunTime = solarNoonTime)
                 SunPositionComponent(modifier = modifier.width(125.dp), sunImage = painterResource(R.drawable.sunset) , sunTime = sunsetTime)

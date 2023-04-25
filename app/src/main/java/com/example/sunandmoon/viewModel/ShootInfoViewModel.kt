@@ -23,9 +23,9 @@ class ShootInfoViewModel : ViewModel() {
     private val _shootInfoUIState = MutableStateFlow(
         ShootInfoUIState(
             shoot = Shoot(),
-            sunriseTime = "not calculated",
-            solarNoonTime = "not calculated",
-            sunsetTime = "not calculated"
+            sunriseTime = "05:23",
+            solarNoonTime = "14:06",
+            sunsetTime = "21:02"
         )
     )
 

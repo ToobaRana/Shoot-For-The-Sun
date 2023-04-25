@@ -7,12 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 
 @Composable
-fun WindCard(modifier: Modifier){
+fun UVCard(modifier: Modifier){
 
     ElevatedCard(
         modifier = modifier
@@ -33,23 +34,24 @@ fun WindCard(modifier: Modifier){
                     .fillMaxWidth()
             ){
 
-                Column(
-                ){
-                    //The wind description
-                    Image(painter = painterResource(id = R.drawable.wind), contentDescription = "wind", modifier = modifier.size(50.dp))
-                    Text(text = "4 m/s", fontSize = 20.sp)
-                }
-
-                Spacer(modifier.size(80.dp))
-
-                //pic of wind compass
+                //UV icon that symbolises how intense the UV-rays are
                 Image(
-                    painter = painterResource(id = R.drawable.windcompass),
-                    contentDescription = "wind compass",
+                    painter = painterResource(id = R.drawable.uv1),
+                    contentDescription = "UV-intensity based icon",
                     modifier = modifier
-                        .size(115.dp)
+                        .size(80.dp)
                 )
 
+                Spacer(modifier.size(40.dp))
+
+                Column(
+                ){
+
+                    //UV info
+                    Text(text = "UV-index: 1", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier.size(10.dp))
+                    Text(text = "No need for protection", fontSize = 15.sp)
+                }
             }
         }
     }
