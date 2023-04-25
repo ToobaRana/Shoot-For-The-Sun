@@ -22,7 +22,7 @@ fun SunPositionComponent(modifier: Modifier, sunImage: Painter, sunTime: String)
         ){
 
 
-            Image(painter = sunImage, contentDescription = "Image", modifier.size(80.dp) )
+            Image(painter = sunImage, contentDescription = "Sun position", modifier.size(80.dp) )
             Text(text = sunTime)
 
         }

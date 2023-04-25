@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.ui.components.SunPositionComponent
@@ -31,7 +32,6 @@ fun SunPositionsCard(modifier: Modifier, sunriseTime : String, solarNoonTime: St
                 SunPositionComponent(modifier = modifier.width(125.dp), sunImage = painterResource(R.drawable.solarnoon) , sunTime = solarNoonTime)
                 SunPositionComponent(modifier = modifier.width(125.dp), sunImage = painterResource(R.drawable.sunset) , sunTime = sunsetTime)
             }
-
         }
 
 

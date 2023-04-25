@@ -17,12 +17,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.modifier.modifierLocalConsumer
 
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.infoComponents.SunPositionsCard
+import com.example.sunandmoon.ui.components.infoComponents.WeatherCard
 import java.time.LocalDateTime
 
 
@@ -103,6 +105,8 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
                         solarNoonTime = shootInfoUIState.solarNoonTime ,
                         sunsetTime = shootInfoUIState.sunsetTime
                     )
+
+                    WeatherCard(modifier)
 
 
 
