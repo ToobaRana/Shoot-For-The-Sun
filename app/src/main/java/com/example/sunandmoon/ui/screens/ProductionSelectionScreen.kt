@@ -1,12 +1,11 @@
 package com.example.sunandmoon.ui.screens
 
 import android.location.Location
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -42,7 +41,9 @@ fun ProductionSelectionScreen(modifier: Modifier, navigateToShootInfoScreen: (sh
                     onValueChange = { query ->
                     },
                     singleLine = true,
-                    modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
+                    modifier = modifier
+                        .fillMaxWidth(0.8f)
+                        .align(Alignment.CenterHorizontally),
                     leadingIcon = {
                         Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
                     },
@@ -70,7 +71,38 @@ fun ProductionSelectionScreen(modifier: Modifier, navigateToShootInfoScreen: (sh
             }
         },
         bottomBar = {
-            NavigationComposable(page = 0, navigateToNextBottomBar)
+            Column(modifier.fillMaxWidth()) {
+                PagePickerProductionShoots(modifier, productionSelectionViewModel)
+                NavigationComposable(page = 0, navigateToNextBottomBar)
+            }
         }
     )
 }
+
+@Composable
+fun PagePickerProductionShoots(modifier: Modifier, productionSelectionViewModel: ProductionSelectionViewModel = viewModel()){
+    Box(
+        modifier
+            .fillMaxWidth()
+            .padding(20.dp), contentAlignment = Alignment.Center) {
+        Row(
+            modifier
+                .width(260.dp)
+                .height(35.dp)
+                .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(15.dp)),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            val productionButtonColor = MaterialTheme.colorScheme.primary
+            val productionTextColor = MaterialTheme.colorScheme.tertiary
+            val shootButtonColor = MaterialTheme.colorScheme.tertiary
+            val shootTextColor = MaterialTheme.colorScheme.primary
+            Button(onClick = { /*TODO*/ }, modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = productionButtonColor)) {
+                Text("Productions", color = productionTextColor)
+            }
+            Button(onClick = { /*TODO*/ }, modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = shootButtonColor)) {
+                Text("Shoots", color = shootTextColor)
+            }
+        }
+    }
+}
+

@@ -5,7 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class Shoot(
-    val name: String = "my production",
+    val name: String = "My Shoot",
     val locationName: String = "UiO",
     val location: Location = Location("").apply {
         latitude = 59.943965
