@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import java.lang.Math.min
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class TableViewModel : ViewModel() {
 
@@ -53,8 +54,15 @@ class TableViewModel : ViewModel() {
 
 
             for (date in sameDaysList.sorted()){
-                var calculationSunTime = getSunRiseNoonFall(LocalDateTime.now(), tableUiState.value.timeZoneOffset, tableUiState.value.latitude, tableUiState.value.longitude)
+                println("This is the date" + date)
+                var stringDate = date.toString() + " 00:00"
+                var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                var dateTime = LocalDateTime.parse(stringDate, formatter)
+
+
+                var calculationSunTime = getSunRiseNoonFall(dateTime, tableUiState.value.timeZoneOffset, tableUiState.value.latitude, tableUiState.value.longitude)
                 println(calculationSunTime)
+                println(dateTime)
 
                 if (tableUiState.value.chosenSunType == "Sunrise"){
                     sunRiseTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date.toString(), "+01:00" ).properties.sunrise.time

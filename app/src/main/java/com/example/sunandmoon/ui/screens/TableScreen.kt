@@ -106,6 +106,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                     println("calculations:" + tableUIState.calculationsDateTableList)
 
 
+
                     // Render the table rows
                     LazyColumn(
                         modifier = modifier.fillMaxSize()
@@ -120,6 +121,9 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                             var sunriseTime = elementInTableUiStateList[1]
                             var day = elementInTableUiStateList[0]
                             var monthInt = day.split("-")[1].toInt()
+                            println(monthInt)
+
+                            println("Our CalculationsTime: " + tableUIState.calculationsDateTableList[monthInt-1])
 
                             TableCard(
                                 apiSunTime = sunriseTime,
@@ -131,6 +135,8 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                             )
 
                             i+=1
+
+
                         }
 
                     }
