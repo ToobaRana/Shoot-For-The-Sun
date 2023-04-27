@@ -126,7 +126,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
                             //println("Our CalculationsTime: " + tableUIState.calculationsDateTableList[i-1])
                             println("monthInt: " + monthInt)
-
+//hei
 
 
                                     TableCard(
