@@ -13,9 +13,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
+import com.example.sunandmoon.data.ProductionSelectionUIState
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
@@ -32,12 +35,24 @@ fun ProductionSelectionScreen(modifier: Modifier, navigateToShootInfoScreen: (sh
 
     val productionSelectionUIState by productionSelectionViewModel.productionSelectionUIState.collectAsState()
 
+    val pageTitleTexts = listOf("Your produtions", "All of your shoots")
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             Column(modifier.fillMaxWidth()) {
+                Text(
+                    text = pageTitleTexts[productionSelectionUIState.currentPageIndex],
+                    fontSize = 35.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(30.dp),
+                    fontWeight = FontWeight(500)
+                )
                 TextField(
-                    value = "Choose event",
+                    value = "",
+                    placeholder = {Text("Search...", color = MaterialTheme.colorScheme.primary)},
                     onValueChange = { query ->
                     },
                     singleLine = true,
@@ -65,14 +80,14 @@ fun ProductionSelectionScreen(modifier: Modifier, navigateToShootInfoScreen: (sh
                     .padding(top = 20.dp)
             )
             {
-                items(productionSelectionUIState.productionsList) { production ->
+                items(productionSelectionUIState.shootsList) { production ->
                     ProductionCard(modifier, production, navigateToShootInfoScreen)
                 }
             }
         },
         bottomBar = {
             Column(modifier.fillMaxWidth()) {
-                PagePickerProductionShoots(modifier, productionSelectionViewModel)
+                PagePickerProductionShoots(modifier, productionSelectionViewModel, productionSelectionUIState)
                 NavigationComposable(page = 0, navigateToNextBottomBar)
             }
         }
@@ -80,7 +95,7 @@ fun ProductionSelectionScreen(modifier: Modifier, navigateToShootInfoScreen: (sh
 }
 
 @Composable
-fun PagePickerProductionShoots(modifier: Modifier, productionSelectionViewModel: ProductionSelectionViewModel = viewModel()){
+fun PagePickerProductionShoots(modifier: Modifier, productionSelectionViewModel: ProductionSelectionViewModel = viewModel(), productionSelectionUIState: ProductionSelectionUIState){
     Box(
         modifier
             .fillMaxWidth()
@@ -92,15 +107,13 @@ fun PagePickerProductionShoots(modifier: Modifier, productionSelectionViewModel:
                 .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(15.dp)),
             horizontalArrangement = Arrangement.Start
         ) {
-            val productionButtonColor = MaterialTheme.colorScheme.primary
-            val productionTextColor = MaterialTheme.colorScheme.tertiary
-            val shootButtonColor = MaterialTheme.colorScheme.tertiary
-            val shootTextColor = MaterialTheme.colorScheme.primary
-            Button(onClick = { /*TODO*/ }, modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = productionButtonColor)) {
-                Text("Productions", color = productionTextColor)
+            val currentPageIndex = productionSelectionUIState.currentPageIndex
+            val colors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary)
+            Button(onClick = { if(currentPageIndex != 0) productionSelectionViewModel.changeCurrentPageIndex() }, modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = colors[currentPageIndex])) {
+                Text("Productions", color = colors[(currentPageIndex + 1) % 2])
             }
-            Button(onClick = { /*TODO*/ }, modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = shootButtonColor)) {
-                Text("Shoots", color = shootTextColor)
+            Button(onClick = { if(currentPageIndex != 1) productionSelectionViewModel.changeCurrentPageIndex() }, modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = colors[(currentPageIndex + 1) % 2])) {
+                Text("All Shoots", color = colors[currentPageIndex])
             }
         }
     }
