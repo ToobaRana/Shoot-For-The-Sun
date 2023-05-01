@@ -22,7 +22,7 @@ class ProductionSelectionViewModel : ViewModel() {
     private val _productionSelectionUIState = MutableStateFlow(
         ProductionSelectionUIState(
             shootsList = listOf(testShoot1, testShoot2),
-            productionsList = listOf(testProduction1, testProduction2)
+            productionsList = listOf() //listOf(testProduction1, testProduction2)
         )
     )
 

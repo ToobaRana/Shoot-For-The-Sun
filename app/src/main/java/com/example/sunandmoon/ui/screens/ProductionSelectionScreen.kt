@@ -1,6 +1,6 @@
 package com.example.sunandmoon.ui.screens
 
-import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,19 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.ProductionSelectionUIState
 import com.example.sunandmoon.data.util.Shoot
-import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
-import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
+import com.example.sunandmoon.ui.components.infoComponents.ShootCard
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
-import com.example.sunandmoon.viewModel.ShootInfoViewModel
-import java.time.LocalDateTime
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +32,7 @@ fun ProductionSelectionScreen(modifier: Modifier, navigateToShootInfoScreen: (sh
 
     val productionSelectionUIState by productionSelectionViewModel.productionSelectionUIState.collectAsState()
 
-    val pageTitleTexts = listOf("Your produtions", "All of your shoots")
+    val pageTitleTexts = listOf("Your produtions", "Individual shoots")
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -73,15 +70,33 @@ fun ProductionSelectionScreen(modifier: Modifier, navigateToShootInfoScreen: (sh
             }
         },
         content = {innerPadding ->
-            LazyColumn(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(top = 20.dp)
-            )
-            {
-                items(productionSelectionUIState.shootsList) { production ->
-                    ProductionCard(modifier, production, navigateToShootInfoScreen)
+            if(productionSelectionUIState.currentPageIndex == 0 && productionSelectionUIState.productionsList.isEmpty()) {
+                Box(modifier = modifier.fillMaxSize()){
+                    Text("Empty...\n\n(Add a production)", color = MaterialTheme.colorScheme.primary, modifier = modifier.align(Alignment.Center), textAlign = TextAlign.Center)
+                }
+            }
+            else if(productionSelectionUIState.currentPageIndex == 1 && productionSelectionUIState.shootsList.isEmpty()) {
+                Box(modifier = modifier.fillMaxSize()){
+                    Text("Empty...\n\n(Add a shoot)", color = MaterialTheme.colorScheme.primary, modifier = modifier.align(Alignment.Center), textAlign = TextAlign.Center)
+                }
+            }
+            else {
+                LazyColumn(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .padding(top = 20.dp)
+                )
+                {
+                    if (productionSelectionUIState.currentPageIndex == 0) {
+                        items(productionSelectionUIState.productionsList) { production ->
+                            //ShootCard(modifier, production, navigateToShootInfoScreen)
+                        }
+                    } else {
+                        items(productionSelectionUIState.shootsList) { production ->
+                            ShootCard(modifier, production, navigateToShootInfoScreen)
+                        }
+                    }
                 }
             }
         },
@@ -102,7 +117,7 @@ fun PagePickerProductionShoots(modifier: Modifier, productionSelectionViewModel:
             .padding(20.dp), contentAlignment = Alignment.Center) {
         Row(
             modifier
-                .width(260.dp)
+                .width(320.dp)
                 .height(35.dp)
                 .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(15.dp)),
             horizontalArrangement = Arrangement.Start
@@ -110,10 +125,10 @@ fun PagePickerProductionShoots(modifier: Modifier, productionSelectionViewModel:
             val currentPageIndex = productionSelectionUIState.currentPageIndex
             val colors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary)
             Button(onClick = { if(currentPageIndex != 0) productionSelectionViewModel.changeCurrentPageIndex() }, modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = colors[currentPageIndex])) {
-                Text("Productions", color = colors[(currentPageIndex + 1) % 2])
+                Text("Productions", color = colors[(currentPageIndex + 1) % 2], fontSize = 14.sp)
             }
             Button(onClick = { if(currentPageIndex != 1) productionSelectionViewModel.changeCurrentPageIndex() }, modifier.weight(1f), colors = ButtonDefaults.buttonColors(containerColor = colors[(currentPageIndex + 1) % 2])) {
-                Text("All Shoots", color = colors[currentPageIndex])
+                Text("Individual Shoots", color = colors[currentPageIndex], fontSize = 14.sp)
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.example.sunandmoon.ui.components.infoComponents
 
-import android.location.Location
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ElevatedCard
@@ -10,11 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.data.util.Shoot
-import java.time.LocalDateTime
-import java.time.LocalTime
 
 @Composable
-fun ProductionCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shoot: Shoot) -> Unit) {
+fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shoot: Shoot) -> Unit) {
     ElevatedCard(
         modifier = modifier
         .fillMaxWidth()
