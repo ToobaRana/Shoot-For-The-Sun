@@ -28,7 +28,14 @@ import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductionSelectionScreen(modifier: Modifier, navigateToShootInfoScreen: (shoot: Shoot) -> Unit, productionSelectionViewModel: ProductionSelectionViewModel = viewModel(), navigateToNextBottomBar: (index: Int) -> Unit){
+fun ProductionSelectionScreen(
+    modifier: Modifier,
+    navigateToShootInfoScreen: (shoot: Shoot) -> Unit,
+    productionSelectionViewModel: ProductionSelectionViewModel = viewModel(),
+    navigateToNextBottomBar: (index: Int) -> Unit,
+    navigateToCreateShootScreen: () -> Unit,
+    navigateToCreateProductionScreen: () -> Unit
+){
 
     val productionSelectionUIState by productionSelectionViewModel.productionSelectionUIState.collectAsState()
 
@@ -67,6 +74,32 @@ fun ProductionSelectionScreen(modifier: Modifier, navigateToShootInfoScreen: (sh
                         unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
                     )
                 )
+
+                Box(
+                    modifier
+                        .fillMaxWidth()
+                        .padding(20.dp), contentAlignment = Alignment.Center) {
+                    Row(
+                        modifier
+                            .width(320.dp)
+                            .height(75.dp),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+
+                        Button(onClick = {
+                            navigateToCreateShootScreen()
+                        }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
+                            Row() {
+                                Icon(painterResource(R.drawable.plus_icon), "location search field icon", modifier.size(24.dp), MaterialTheme.colorScheme.background)
+                                Text("  Add new", fontSize = 16.sp, )
+                            }
+                        }
+                        Spacer(modifier = modifier.weight(0.2f))
+                        FilledIconButton(onClick = { /* TODO */ }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
+                            Text("Order by", fontSize = 16.sp)
+                        }
+                    }
+                }
             }
         },
         content = {innerPadding ->

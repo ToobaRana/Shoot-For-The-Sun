@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.sunandmoon.data.util.LocationAndDateTime
 import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.ui.screens.CreateShootScreen
 import com.example.sunandmoon.ui.screens.ProductionSelectionScreen
 import com.example.sunandmoon.ui.screens.ShootInfoScreen
 import com.example.sunandmoon.ui.screens.TableScreen
@@ -61,7 +62,9 @@ fun MultipleScreenNavigator(modifier: Modifier) {
                         1 -> navController.navigate("tableScreen")
                         2 -> navController.navigate("tableScreen")
                     }
-                }
+                },
+                navigateToCreateProductionScreen = { navController.navigate("createProductionScreen") },
+                navigateToCreateShootScreen = { navController.navigate("createShootScreen") }
             )
         }
         composable("shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}") { backStackEntry ->
@@ -69,6 +72,18 @@ fun MultipleScreenNavigator(modifier: Modifier) {
                 modifier = modifier,
                 navigateToNext = { navController.navigate("tableScreen")},
                 shoot = getShootFromArgs(backStackEntry)
+            )
+        }
+        composable("createProductionScreen") {
+            CreateShootScreen(
+                modifier = modifier,
+                navigateToNext = { navController.popBackStack("productionSelectionScreen", false)},
+            )
+        }
+        composable("createShootScreen") {
+            CreateShootScreen(
+                modifier = modifier,
+                navigateToNext = { navController.popBackStack("productionSelectionScreen", false)},
             )
         }
         composable("tableScreen"){ backStackEntry ->

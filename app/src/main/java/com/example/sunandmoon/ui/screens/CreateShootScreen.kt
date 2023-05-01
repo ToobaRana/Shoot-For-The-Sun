@@ -27,7 +27,7 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateShootScreen(modifier: Modifier, navigateToNext: (localDateTime: LocalDateTime, location: Location) -> Unit, shootInfoViewModel: ShootInfoViewModel = viewModel()){
+fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoViewModel: ShootInfoViewModel = viewModel()){
 
     val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
 
@@ -48,7 +48,7 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: (localDateTime: LocalD
                     CalendarComponent(modifier)
 
                     Button(onClick = {
-
+                        navigateToNext()
                     }) {
                         Text(text = "Save")
                     }
