@@ -193,6 +193,7 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
+            modifier = modifier.background(MaterialTheme.colorScheme.tertiary)
         ) {
             options.forEach { selectionOption ->
                 DropdownMenuItem(
@@ -205,7 +206,7 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
 
 
                     },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                 )
             }
         }

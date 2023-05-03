@@ -90,7 +90,7 @@ fun ProductionSelectionScreen(
                             navigateToCreateShootScreen()
                         }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
                             Row() {
-                                Icon(painterResource(R.drawable.plus_icon), "location search field icon", modifier.size(24.dp), MaterialTheme.colorScheme.background)
+                                Icon(painterResource(R.drawable.plus_icon), "location search field icon", modifier.size(24.dp), MaterialTheme.colorScheme.onPrimary)
                                 Text("  Add new", fontSize = 16.sp, )
                             }
                         }
@@ -118,7 +118,6 @@ fun ProductionSelectionScreen(
                     modifier = modifier
                         .fillMaxSize()
                         .padding(innerPadding)
-                        .padding(top = 20.dp)
                 )
                 {
                     if (productionSelectionUIState.currentPageIndex == 0) {
