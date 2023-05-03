@@ -3,6 +3,7 @@ package com.example.sunandmoon.ui.components
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 
 import androidx.compose.foundation.clickable
@@ -110,8 +111,8 @@ fun CalendarComponentDisplay(modifier: Modifier, createShootViewModel: CreateSho
             })
         },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onSurface,
-            contentColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.primary
         )
 
 
@@ -176,16 +177,16 @@ fun CalendarComponentDisplay(modifier: Modifier, createShootViewModel: CreateSho
                             }
                         ),
                         colors = TextFieldDefaults.textFieldColors(
-                            cursorColor = MaterialTheme.colorScheme.background,
-                            textColor = MaterialTheme.colorScheme.background,
-                            containerColor = MaterialTheme.colorScheme.onSurface,
-                            unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
-                            focusedIndicatorColor = MaterialTheme.colorScheme.background,
-                            focusedLabelColor = MaterialTheme.colorScheme.background,
+                            cursorColor = MaterialTheme.colorScheme.primary,
+                            textColor = MaterialTheme.colorScheme.primary,
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
                             selectionColors = TextSelectionColors(
-                                handleColor = MaterialTheme.colorScheme.background,
-                                backgroundColor = MaterialTheme.colorScheme.onSurface
+                                handleColor = MaterialTheme.colorScheme.primary,
+                                backgroundColor = MaterialTheme.colorScheme.background
                             )
                         )
 
@@ -286,16 +287,21 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, createShootViewModel: C
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = TextFieldDefaults.textFieldColors(
                 //cursorColor = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.background,
-                containerColor = MaterialTheme.colorScheme.onSurface,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
-                unfocusedLabelColor = MaterialTheme.colorScheme.background
+                textColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                unfocusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                disabledTrailingIconColor = MaterialTheme.colorScheme.primary,
+                errorTrailingIconColor = MaterialTheme.colorScheme.primary,
             )
         )
 
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
+            //modifier = modifier.background(MaterialTheme.colorScheme.tertiary)
         ) {
             months.forEach { selectionOption ->
                 DropdownMenuItem(
@@ -310,7 +316,7 @@ fun monthDropDown(modifier: Modifier, currentMonth: Int, createShootViewModel: C
                         expanded = false
 
                     },
-                    text = { Text(text = selectionOption) }
+                    text = { Text(text = selectionOption, color = MaterialTheme.colorScheme.onPrimary) }
                 )
             }
         }
@@ -331,7 +337,7 @@ fun getDayOfFirst(month: Int, year: Int): String {
 
 @Composable
 fun DrawDayBox(modifier: Modifier, day: Int, chosenDay: Int, updateDay: () -> Unit){
-    val brush = Brush.horizontalGradient(listOf(Color.Gray, Color.Black))
+    val brush = Brush.horizontalGradient(listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.primary))
 
     var usedModifier = modifier
     if (day == chosenDay){
