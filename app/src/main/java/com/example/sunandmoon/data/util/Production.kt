@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class Production(
     val name: String = "My Production",
     val shoots: List<Shoot> = listOf(),
-    var numShoots: Int,
+    var numShoots: Int = 0,
     var duration: Pair<LocalDateTime?, LocalDateTime?> = Pair(null, null)
 
 )
