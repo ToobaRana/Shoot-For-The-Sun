@@ -24,8 +24,8 @@ class TableViewModel : ViewModel() {
         TableUIState(
             apiDateTableList = listOf(),
             calculationsDateTableList = listOf("", "", "", "", "", "", "", "", "", "", "", ""),
-            latitude = 59.943965,
-            longitude = 10.7178129,
+            latitude = 17.607788,
+            longitude = 8.081666,
             chosenDate = LocalDate.now(),
             chosenSunType = "Sunrise",
             timeZoneOffset = 1.0
@@ -84,20 +84,20 @@ class TableViewModel : ViewModel() {
                 println("This is the date" + date)
 
                 if (tableUiState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date.toString(), "+01:00" ).properties.sunrise.time
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUiState.value.latitude, tableUiState.value.longitude, date.toString(), "+01:00" ).properties.sunrise.time
                     apiDateTableList.add(sunRiseTime)
 
 
                 }
 
                 if (tableUiState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date.toString(), "+01:00" ).properties.solarnoon.time
+                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUiState.value.latitude, tableUiState.value.longitude, date.toString(), "+01:00" ).properties.solarnoon.time
                     apiDateTableList.add(solarNoon)
 
                 }
 
                 if (tableUiState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, date.toString(), "+01:00" ).properties.sunset.time
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUiState.value.latitude, tableUiState.value.longitude, date.toString(), "+01:00" ).properties.sunset.time
                     apiDateTableList.add(sunSetTime)
 
                 }
