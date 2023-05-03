@@ -1,6 +1,10 @@
 package com.example.sunandmoon.data
 
-import android.util.Log
+//import android.R
+import android.R
+import android.provider.Settings.Global.getString
+import com.example.sunandmoon.BuildConfig
+
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import com.example.sunandmoon.model.LocationTimeZoneOffsetResultModel.LocationTimeZoneOffsetResult
 import com.example.sunandmoon.model.SunriseModel.Sunrise3
@@ -10,6 +14,8 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.serialization.gson.*
+
+
 
 class DataSource() {
 
@@ -26,13 +32,16 @@ class DataSource() {
         }
     }
 
+    val API_KEY = BuildConfig.API_KEY
+
+
 
     suspend fun fetchSunrise3Data(sunOrMoon: String, lat: Double, lon: Double, date: String, offset: String): Sunrise3 {
         val endPoint = "$baseURLMet$sunOrMoon?lat=$lat&lon=$lon&date=$date&offset=$offset"
 
         val apiResults: Sunrise3 = client.get(endPoint) {
             headers {
-                header("X-Gravitee-API-Key", "8cd39d98-b237-4a76-9e5e-40eb381b354b")
+                header("X-Gravitee-API-Key", API_KEY)
             }
         }
             .body()

@@ -106,6 +106,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                     println("calculations:" + tableUIState.calculationsDateTableList)
 
 
+
                     // Render the table rows
                     LazyColumn(
                         modifier = modifier.fillMaxSize()
@@ -114,24 +115,34 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                         items(apiDateTableList) { date ->
                             //println(date)
 
-                            println(apiDateTableList.size)
+
+                            println(i)
                             var elementInTableUiStateList = date.split("T")
 
                             var sunriseTime = elementInTableUiStateList[1]
                             var day = elementInTableUiStateList[0]
                             var monthInt = day.split("-")[1].toInt()
+                            //println(monthInt)
 
-                            TableCard(
-                                apiSunTime = sunriseTime,
-                                day = day,
-                                calculationSunTime = tableUIState.calculationsDateTableList[monthInt-1],
-                                modifier = modifier
-                                    .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
-                                    .padding(8.dp)
-                            )
+                            //println("Our CalculationsTime: " + tableUIState.calculationsDateTableList[i-1])
+                            println("monthInt: " + monthInt)
+//hei
 
-                            i+=1
+
+                                    TableCard(
+                                        apiSunTime = sunriseTime,
+                                        day = day,
+                                        calculationSunTime = tableUIState.calculationsDateTableList[monthInt-1]  ,
+                                        modifier = modifier
+                                            .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
+                                            .padding(8.dp)
+                                    )
+
+
+
+
                         }
+
 
                     }
                     Spacer(modifier = modifier.height(200.dp))
