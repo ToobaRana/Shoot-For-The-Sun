@@ -64,7 +64,7 @@ class TableViewModel : ViewModel() {
             println(sameDaysListFromJanuary)
 
             for (date in sameDaysListFromJanuary.sorted()){
-                var stringDate = date.toString() + " 00:00"
+                var stringDate = "$date 00:00"
                 var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                 var dateTime = LocalDateTime.parse(stringDate, formatter)
 
@@ -235,5 +235,32 @@ class TableViewModel : ViewModel() {
             loadSunInformation()
         }
     }
+    fun updateDay(day: Int){
+        setNewDate(_tableUIState.value.chosenDate.year, _tableUIState.value.chosenDate.monthValue, day)
+
+    }
+
+    fun updateMonth(month: Int, maxDate: Int){
+        var day = _tableUIState.value.chosenDate.dayOfMonth
+        if (maxDate < day){
+            day = maxDate
+        }
+        setNewDate(_tableUIState.value.chosenDate.year, month, day)
+    }
+
+    fun updateYear(year: Int){
+        setNewDate(year, _tableUIState.value.chosenDate.monthValue, _tableUIState.value.chosenDate.dayOfMonth)
+    }
+
+    fun setNewDate(year: Int, month: Int, day: Int){
+        _tableUIState.update { currentState ->
+            currentState.copy(
+                chosenDate = LocalDateTime.of(year, month, day, 12, 0, 0)
+            )
+
+        }
+        loadSunInformation()
+    }
+
 
 }
