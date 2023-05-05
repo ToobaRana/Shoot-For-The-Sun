@@ -1,5 +1,6 @@
 package com.example.sunandmoon
 
+import android.content.Context
 import android.location.Location
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,6 +13,10 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import com.example.sunandmoon.data.localDatabase.AppDatabase
+import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
+import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.util.LocationAndDateTime
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.screens.CreateShootScreen
@@ -21,18 +26,35 @@ import com.example.sunandmoon.ui.screens.TableScreen
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.FusedLocationProviderClient
+import dagger.Component
+import dagger.Module
+import dagger.Provides
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 
 class MainActivity : ComponentActivity() {
     //initializing here to get context of activity (this) before setcontent
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    lateinit var appComponent: AppComponent
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        /*appComponent = DaggerAppComponent.builder()
+            .appModule(AppModule(applicationContext))
+            .build()*/
+
+        val modifier = Modifier
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "database-name"
+        ).build()
+
         setContent {
-            val modifier = Modifier
             SunAndMoonTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -109,4 +131,21 @@ fun getShootFromArgs(backStackEntry: NavBackStackEntry): Shoot {
     location.longitude = backStackEntry.arguments?.getString("longitude")?.toDouble() ?: 0.0
 
     return Shoot(name = "test", locationName = "test2", location = location, date = localDateTime, timeZoneOffset = 2.0)
+}
+
+@Module
+class AppModule(private val context: Context) {
+    @Provides
+    fun provideAppDatabase(): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java, "database-name"
+        ).build()
+    }
+}
+
+@Component(modules = [AppModule::class])
+interface AppComponent {
+    fun shootDao(): ShootDao
+    fun productionDao(): ProductionDao
 }
