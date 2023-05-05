@@ -11,9 +11,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
+import java.time.LocalTime
 
 @Composable
-fun UVCard(modifier: Modifier){
+fun UVCard(modifier: Modifier, time : LocalTime){
 
     ElevatedCard(
         modifier = modifier
@@ -26,7 +27,7 @@ fun UVCard(modifier: Modifier){
                 .padding(15.dp)
         ) {
 
-            Text(text = "06:13")
+            Text(text = time.toString())
 
             Row(
                 modifier
