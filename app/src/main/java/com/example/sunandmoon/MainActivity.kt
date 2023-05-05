@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
     //initializing here to get context of activity (this) before setcontent
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    lateinit var appComponent: AppComponent
+    //lateinit var appComponent: AppComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +49,10 @@ class MainActivity : ComponentActivity() {
 
         val modifier = Modifier
 
-        val db = Room.databaseBuilder(
+        /*val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "database-name"
-        ).build()
+        ).build()*/
 
         setContent {
             SunAndMoonTheme {
@@ -133,7 +133,7 @@ fun getShootFromArgs(backStackEntry: NavBackStackEntry): Shoot {
     return Shoot(name = "test", locationName = "test2", location = location, date = localDateTime, timeZoneOffset = 2.0)
 }
 
-@Module
+/*@Module
 class AppModule(private val context: Context) {
     @Provides
     fun provideAppDatabase(): AppDatabase {
@@ -148,4 +148,4 @@ class AppModule(private val context: Context) {
 interface AppComponent {
     fun shootDao(): ShootDao
     fun productionDao(): ProductionDao
-}
+}*/

@@ -9,5 +9,4 @@ data class Production(
     val shoots: List<Shoot> = listOf(),
     var numShoots: Int = 0,
     var duration: Pair<LocalDateTime?, LocalDateTime?> = Pair(null, null)
-
 )
