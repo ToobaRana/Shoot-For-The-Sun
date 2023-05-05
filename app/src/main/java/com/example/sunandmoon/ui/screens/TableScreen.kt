@@ -5,30 +5,33 @@ import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.data.util.LocationAndDateTime
 import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.TableViewModel
 import java.time.LocalDateTime
-import java.util.*
 
 
 @Composable
 fun TableScreen(navigateToNextBottomBar: (index: Int) -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
-    val tableUiState by tableViewModel.tableUiState.collectAsState()
+    val tableUiState by tableViewModel.tableUIState.collectAsState()
 
     TableView(modifier,tableViewModel, tableUiState, navigateToNextBottomBar)
 }
@@ -43,88 +46,98 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
     //tableViewModel.loadDateTableList(sunType = "Sunrise")
     //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
-    Scaffold(modifier = modifier.fillMaxSize(),
-        content = { innerPadding ->
-            val padding = innerPadding
-            Column(modifier.fillMaxSize()) {
+    var chosenSunType = ""
 
-                var chosenSunType = ""
+    Scaffold(
+        modifier = modifier.fillMaxSize().padding(top=20.dp),
+        topBar = {
 
-                Spacer(modifier = modifier.height(40.dp))
+            Text(
+                text = "Comparing our calculations to MET-API",
+                fontSize = 30.sp,
+                textAlign = TextAlign.Center,
+                modifier = modifier
+                    .padding(top = 2.dp, end = 5.dp, start = 5.dp),
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight(400)
+            )
 
-                Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        },
 
-                    Spacer(modifier = modifier.width(10.dp))
-                    chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
-
-
-                    Log.d("tableUiStateUnit", tableUIState.chosenSunType)
-                    Log.d("chosenUnitDropDown", chosenSunType)
-
-
-                    //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
-                    Spacer(modifier = modifier.width(10.dp))
-                }
-
-                Spacer(modifier = modifier.height(20.dp))
+        content = { innerPadding -> innerPadding
 
 
-                Column(modifier = modifier.fillMaxWidth()) {
+
+                    Column(modifier.padding(start = 8.dp, end = 8.dp, top = 90.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            LocationSearch(modifier = modifier.width(200.dp))
+                            chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
+                        }
+
+                        Spacer(modifier = modifier.height(10.dp))
+                        CalendarComponent(modifier)
+
+                        Spacer(modifier = modifier.height(10.dp))
+                    }
+
+
+
+
+
+
+
+
+                Column(modifier.padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)) {
                     // Render the header row
                     Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .background(Color.LightGray)
+
+                            modifier.background(Color.LightGray)
                     ) {
                         Text(
                             text = "Day",
+                            fontSize = 20.sp,
+
                             modifier = modifier
                                 .weight(1f)
-                                .padding(8.dp),
+                                .padding(3.dp),
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = chosenSunType,
+                            fontSize = 20.sp,
                             modifier = modifier
                                 .weight(1f)
-                                .padding(8.dp),
+                                .padding(3.dp),
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = "Our $chosenSunType",
+                            fontSize = 20.sp,
                             modifier = modifier
                                 .weight(1f)
-                                .padding(8.dp),
+                                .padding(3.dp),
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    var apiDateTableList = tableUIState.apiDateTableList
-                    println("api:" + apiDateTableList)
-                    println("calculations:" + tableUIState.calculationsDateTableList)
-
-
-
-                    // Render the table rows
+                    Spacer(modifier = modifier.height(1.dp))
                     LazyColumn(
-                        modifier = modifier.fillMaxSize()
                     ) {
-                        var i = 0
-                        items(apiDateTableList) { date ->
-                            //println(date)
 
+                        items(tableUIState.apiDateTableList) { date ->
 
-                            println(i)
-                            var elementInTableUiStateList = date.split("T")
+                            val elementInTableUiStateList = date.split("T")
 
-                            var sunriseTime = elementInTableUiStateList[1]
-                            var day = elementInTableUiStateList[0]
-                            var monthInt = day.split("-")[1].toInt()
-                            //println(monthInt)
+                            val sunriseTime = elementInTableUiStateList[1]
+                            val day = elementInTableUiStateList[0]
+                            val monthInt = day.split("-")[1].toInt()
 
-                            //println("Our CalculationsTime: " + tableUIState.calculationsDateTableList[i-1])
                             println("monthInt: " + monthInt)
 //hei
 
@@ -137,6 +150,7 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                                             .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
                                             .padding(8.dp)
                                     )
+                            Spacer(modifier = modifier.height(1.dp))
 
 
 
@@ -145,10 +159,10 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
 
                     }
-                    Spacer(modifier = modifier.height(200.dp))
+                    
                 }
 
-            }
+
         },
         bottomBar = {
             NavigationComposable(page = 2, navigateToNextBottomBar)
@@ -172,7 +186,7 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
     //Dropdown menu setup
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }, modifier = modifier.width(350.dp)
+        onExpandedChange = { expanded = !expanded }, modifier = modifier.width(155.dp)
     ) {
         TextField(
             modifier = modifier.menuAnchor(),
@@ -181,13 +195,21 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
-            label = { Text("Type")},
+            label = { Text("Type", color= MaterialTheme.colorScheme.primary)},
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(
-                //cursorColor = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.onPrimary,
-                containerColor =  MaterialTheme.colorScheme.primary,
+                placeholderColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor =  MaterialTheme.colorScheme.primary,
+                unfocusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                disabledTextColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.primary,
+                containerColor =  MaterialTheme.colorScheme.onBackground,
                 focusedLabelColor = MaterialTheme.colorScheme.onPrimary
+
+
+
             ),
         )
         ExposedDropdownMenu(
