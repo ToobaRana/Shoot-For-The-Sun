@@ -1,9 +1,12 @@
 package com.example.sunandmoon.viewModel
 
+import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.TableUIState
+import com.example.sunandmoon.data.util.LocationAndDateTime
 import com.example.sunandmoon.getSunRiseNoonFall
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,21 +22,26 @@ class TableViewModel : ViewModel() {
 
     private val dataSource = DataSource()
 
-    private val _tableUiState = MutableStateFlow(
+    private val _tableUIState = MutableStateFlow(
 
         TableUIState(
             apiDateTableList = listOf(),
             calculationsDateTableList = listOf("", "", "", "", "", "", "", "", "", "", "", ""),
-            latitude = 17.607788,
-            longitude = 8.081666,
-            chosenDate = LocalDate.now(),
+            locationSearchQuery = "UiO",
+            locationSearchResults = listOf(),
+            location = Location("").apply {
+                latitude = 59.943965
+                longitude = 10.7178129
+            },
+            chosenDate = LocalDateTime.now(),
             chosenSunType = "Sunrise",
             timeZoneOffset = 1.0
+
         )
     )
 
 
-    val tableUiState: StateFlow<TableUIState> = _tableUiState.asStateFlow()
+    val tableUIState: StateFlow<TableUIState> = _tableUIState.asStateFlow()
 
 
     init {
@@ -50,8 +58,8 @@ class TableViewModel : ViewModel() {
             var apiDateTableList = mutableListOf<String>()
             var calculationsDateTableList = mutableListOf<String>()
 
-            val sameDaysList = getSameDaysInYear(tableUiState.value.chosenDate)
-            val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUiState.value.chosenDate)
+            val sameDaysList = getSameDaysInYear(tableUIState.value.chosenDate.toLocalDate())
+            val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUIState.value.chosenDate.toLocalDate())
             println(sameDaysList)
             println(sameDaysListFromJanuary)
 
@@ -60,19 +68,19 @@ class TableViewModel : ViewModel() {
                 var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                 var dateTime = LocalDateTime.parse(stringDate, formatter)
 
-                var calculationSunTime = getSunRiseNoonFall(dateTime, tableUiState.value.timeZoneOffset, tableUiState.value.latitude, tableUiState.value.longitude)
+                var calculationSunTime = getSunRiseNoonFall(dateTime, tableUIState.value.timeZoneOffset, tableUIState.value.location.latitude, tableUIState.value.location.longitude)
                 println(calculationSunTime)
                 println(dateTime)
-                if (tableUiState.value.chosenSunType == "Sunrise"){
+                if (tableUIState.value.chosenSunType == "Sunrise"){
                     calculationsDateTableList.add(calculationSunTime[0])
 
                 }
 
-                if (tableUiState.value.chosenSunType == "SolarNoon"){
+                if (tableUIState.value.chosenSunType == "SolarNoon"){
                     calculationsDateTableList.add(calculationSunTime[1])
                 }
 
-                if (tableUiState.value.chosenSunType == "Sunset"){
+                if (tableUIState.value.chosenSunType == "Sunset"){
                     calculationsDateTableList.add(calculationSunTime[2])
                 }
 
@@ -83,28 +91,28 @@ class TableViewModel : ViewModel() {
                 println(date)
                 println("This is the date" + date)
 
-                if (tableUiState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUiState.value.latitude, tableUiState.value.longitude, date.toString(), "+01:00" ).properties.sunrise.time
+                if (tableUIState.value.chosenSunType == "Sunrise"){
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+01:00" ).properties.sunrise.time
                     apiDateTableList.add(sunRiseTime)
 
 
                 }
 
-                if (tableUiState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUiState.value.latitude, tableUiState.value.longitude, date.toString(), "+01:00" ).properties.solarnoon.time
+                if (tableUIState.value.chosenSunType == "SolarNoon"){
+                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+01:00" ).properties.solarnoon.time
                     apiDateTableList.add(solarNoon)
 
                 }
 
-                if (tableUiState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUiState.value.latitude, tableUiState.value.longitude, date.toString(), "+01:00" ).properties.sunset.time
+                if (tableUIState.value.chosenSunType == "Sunset"){
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+01:00" ).properties.sunset.time
                     apiDateTableList.add(sunSetTime)
 
                 }
             }
 
 
-            _tableUiState.update{currentState ->
+            _tableUIState.update{currentState ->
                 currentState.copy(
                     apiDateTableList = apiDateTableList,
                     calculationsDateTableList = calculationsDateTableList
@@ -170,10 +178,61 @@ class TableViewModel : ViewModel() {
     }
 
     fun setSunType(sunType: String){
-        _tableUiState.update{ currentState ->
+        _tableUIState.update{ currentState ->
             currentState.copy(
                 chosenSunType = sunType,
             )
+        }
+    }
+
+    fun setLocationSearchQuery(inputQuery: String) {
+        _tableUIState.update { currentState ->
+            currentState.copy(
+                locationSearchQuery = inputQuery
+            )
+        }
+    }
+
+    fun loadLocationSearchResults(query: String) {
+        viewModelScope.launch {
+            try {
+                val locationSearchResults = dataSource.fetchLocationSearchResults(query, 10)
+
+                _tableUIState.update { currentState ->
+                    currentState.copy(
+                        locationSearchResults = locationSearchResults
+                    )
+                }
+
+            } catch (e: Throwable) {
+                Log.d("error", "uh oh" + e.toString())
+            }
+        }
+    }
+
+    fun setTimeZoneOffset(timeZoneOffset: Double) {
+        _tableUIState.update { currentState ->
+            currentState.copy(
+                timeZoneOffset = timeZoneOffset
+            )
+        }
+    }
+
+    fun setCoordinates(newLatitude: Double, newLongitude: Double, setTimeZoneOffset: Boolean) {
+        viewModelScope.launch {
+            if(setTimeZoneOffset) {
+                val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLatitude, newLongitude)
+                setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
+            }
+            _tableUIState.update { currentState ->
+                currentState.copy(
+                    location = Location("").apply {
+                        latitude = newLatitude
+                        longitude = newLongitude
+                    }
+                )
+            }
+            loadSunInformation()
         }
     }
 
