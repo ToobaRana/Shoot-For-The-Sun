@@ -10,9 +10,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
+import java.time.LocalTime
 
 @Composable
-fun WindCard(modifier: Modifier){
+fun WindCard(modifier: Modifier, time : LocalTime){
 
     ElevatedCard(
         modifier = modifier
@@ -25,7 +26,7 @@ fun WindCard(modifier: Modifier){
                 .padding(15.dp)
         ) {
 
-            Text(text = "06:13")
+            Text(text = time.toString())
 
             Row(
                 modifier

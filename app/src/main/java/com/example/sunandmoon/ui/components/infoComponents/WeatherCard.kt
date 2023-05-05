@@ -14,10 +14,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.SunPositionComponent
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 
 @Composable
-fun WeatherCard(modifier: Modifier){
+fun WeatherCard(modifier: Modifier, time : LocalTime){
 
     ElevatedCard(
         modifier = modifier
@@ -30,7 +32,7 @@ fun WeatherCard(modifier: Modifier){
                 .padding(15.dp)
         ) {
 
-            Text(text = "06:13")
+            Text(text = time.toString())
 
             Row(
                 modifier
