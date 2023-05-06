@@ -12,16 +12,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.ProductionSelectionUIState
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.NavigationComposable
+import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
 import com.example.sunandmoon.ui.components.infoComponents.ShootCard
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 
@@ -31,77 +34,15 @@ import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 fun ProductionSelectionScreen(
     modifier: Modifier,
     navigateToShootInfoScreen: (shoot: Shoot) -> Unit,
-    productionSelectionViewModel: ProductionSelectionViewModel = viewModel(),
+    productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
     navigateToNextBottomBar: (index: Int) -> Unit,
     navigateToCreateShootScreen: () -> Unit,
-    navigateToCreateProductionScreen: () -> Unit
 ){
 
     val productionSelectionUIState by productionSelectionViewModel.productionSelectionUIState.collectAsState()
 
-    val pageTitleTexts = listOf("Your produtions", "Individual shoots")
-
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = {
-            Column(modifier.fillMaxWidth()) {
-                Text(
-                    text = pageTitleTexts[productionSelectionUIState.currentPageIndex],
-                    fontSize = 35.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(30.dp),
-                    fontWeight = FontWeight(500)
-                )
-                TextField(
-                    value = "",
-                    placeholder = {Text("Search...", color = MaterialTheme.colorScheme.primary)},
-                    onValueChange = { query ->
-                    },
-                    singleLine = true,
-                    modifier = modifier
-                        .fillMaxWidth(0.8f)
-                        .align(Alignment.CenterHorizontally),
-                    leadingIcon = {
-                        Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        //cursorColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.onSurface,
-                        containerColor = MaterialTheme.colorScheme.background,
-                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-
-                Box(
-                    modifier
-                        .fillMaxWidth()
-                        .padding(20.dp), contentAlignment = Alignment.Center) {
-                    Row(
-                        modifier
-                            .width(320.dp)
-                            .height(75.dp),
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-
-                        Button(onClick = {
-                            navigateToCreateShootScreen()
-                        }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
-                            Row() {
-                                Icon(painterResource(R.drawable.plus_icon), "location search field icon", modifier.size(24.dp), MaterialTheme.colorScheme.onPrimary)
-                                Text("  Add new", fontSize = 16.sp, )
-                            }
-                        }
-                        Spacer(modifier = modifier.weight(0.2f))
-                        FilledIconButton(onClick = { /* TODO */ }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
-                            Text("Order by", fontSize = 16.sp)
-                        }
-                    }
-                }
-            }
-        },
         content = {innerPadding ->
             if(productionSelectionUIState.currentPageIndex == 0 && productionSelectionUIState.productionsList.isEmpty()) {
                 Box(modifier = modifier.fillMaxSize()){
@@ -120,13 +61,14 @@ fun ProductionSelectionScreen(
                         .padding(innerPadding)
                 )
                 {
+                    item { ProductionShootSelectionTopPart(modifier, navigateToCreateShootScreen, productionSelectionViewModel, productionSelectionUIState) }
                     if (productionSelectionUIState.currentPageIndex == 0) {
                         items(productionSelectionUIState.productionsList) { production ->
-                            //ShootCard(modifier, production, navigateToShootInfoScreen)
+                            ProductionCard(modifier, production)
                         }
                     } else {
-                        items(productionSelectionUIState.shootsList) { production ->
-                            ShootCard(modifier, production, navigateToShootInfoScreen)
+                        items(productionSelectionUIState.shootsList) { shoot ->
+                            ShootCard(modifier, shoot, navigateToShootInfoScreen)
                         }
                     }
                 }
@@ -134,7 +76,6 @@ fun ProductionSelectionScreen(
         },
         bottomBar = {
             Column(modifier.fillMaxWidth()) {
-                PagePickerProductionShoots(modifier, productionSelectionViewModel, productionSelectionUIState)
                 NavigationComposable(page = 0, navigateToNextBottomBar)
             }
         }
@@ -146,7 +87,10 @@ fun PagePickerProductionShoots(modifier: Modifier, productionSelectionViewModel:
     Box(
         modifier
             .fillMaxWidth()
-            .padding(20.dp), contentAlignment = Alignment.Center) {
+            .padding(20.dp,30.dp,20.dp,10.dp),
+        contentAlignment = Alignment.Center
+    )
+    {
         Row(
             modifier
                 .width(320.dp)
@@ -166,3 +110,71 @@ fun PagePickerProductionShoots(modifier: Modifier, productionSelectionViewModel:
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProductionShootSelectionTopPart(
+    modifier: Modifier,
+    navigateToCreateShootScreen: () -> Unit,
+    productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
+    productionSelectionUIState: ProductionSelectionUIState
+) {
+    val pageTitleTexts = listOf("Your produtions", "Individual shoots")
+
+    Column(modifier.fillMaxWidth()) {
+        Text(
+            text = pageTitleTexts[productionSelectionUIState.currentPageIndex],
+            fontSize = 35.sp,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(30.dp),
+            fontWeight = FontWeight(500)
+        )
+        TextField(
+            value = "",
+            placeholder = {Text("Search...", color = MaterialTheme.colorScheme.primary)},
+            onValueChange = { query ->
+            },
+            singleLine = true,
+            modifier = modifier
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally),
+            leadingIcon = {
+                Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                //cursorColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.onSurface,
+                containerColor = MaterialTheme.colorScheme.background,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
+            )
+        )
+        PagePickerProductionShoots(modifier, productionSelectionViewModel, productionSelectionUIState)
+        Box(
+            modifier
+                .fillMaxWidth()
+                .padding(20.dp,20.dp,20.dp,10.dp), contentAlignment = Alignment.Center) {
+            Row(
+                modifier
+                    .width(320.dp)
+                    .height(45.dp),
+                horizontalArrangement = Arrangement.Start
+            ) {
+
+                Button(onClick = {
+                    navigateToCreateShootScreen()
+                }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
+                    Row() {
+                        Icon(painterResource(R.drawable.plus_icon), "location search field icon", modifier.size(24.dp), MaterialTheme.colorScheme.onPrimary)
+                        Text("  Add new", fontSize = 16.sp, )
+                    }
+                }
+                Spacer(modifier = modifier.weight(0.2f))
+                FilledIconButton(onClick = { /* TODO */ }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
+                    Text("Order by", fontSize = 16.sp)
+                }
+            }
+        }
+    }
+}
