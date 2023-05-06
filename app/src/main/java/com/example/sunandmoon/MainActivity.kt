@@ -29,23 +29,23 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.Component
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+//import com.example.sunandmoon.di.DaggerAppComponent
 
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     //initializing here to get context of activity (this) before setcontent
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    //lateinit var appComponent: AppComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        /*appComponent = DaggerAppComponent.builder()
-            .appModule(AppModule(applicationContext))
-            .build()*/
+
 
         val modifier = Modifier
 
@@ -85,7 +85,6 @@ fun MultipleScreenNavigator(modifier: Modifier) {
                         2 -> navController.navigate("tableScreen")
                     }
                 },
-                navigateToCreateProductionScreen = { navController.navigate("createProductionScreen") },
                 navigateToCreateShootScreen = { navController.navigate("createShootScreen") }
             )
         }
@@ -94,12 +93,6 @@ fun MultipleScreenNavigator(modifier: Modifier) {
                 modifier = modifier,
                 navigateToNext = { navController.navigate("tableScreen")},
                 shoot = getShootFromArgs(backStackEntry)
-            )
-        }
-        composable("createProductionScreen") {
-            CreateShootScreen(
-                modifier = modifier,
-                navigateToNext = { navController.popBackStack("productionSelectionScreen", false)},
             )
         }
         composable("createShootScreen") {
@@ -133,19 +126,9 @@ fun getShootFromArgs(backStackEntry: NavBackStackEntry): Shoot {
     return Shoot(name = "test", locationName = "test2", location = location, date = localDateTime, timeZoneOffset = 2.0)
 }
 
-/*@Module
-class AppModule(private val context: Context) {
-    @Provides
-    fun provideAppDatabase(): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java, "database-name"
-        ).build()
-    }
-}
-
+/*
 @Component(modules = [AppModule::class])
-interface AppComponent {
+interface DaggerAppComponent {
     fun shootDao(): ShootDao
     fun productionDao(): ProductionDao
 }*/
