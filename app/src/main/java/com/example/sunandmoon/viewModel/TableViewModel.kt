@@ -16,7 +16,10 @@ import kotlinx.coroutines.launch
 import java.lang.Math.min
 import java.time.LocalDate
 import java.time.LocalDateTime
+//import java.time.ZoneId
+//import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.TimeZone
 
 class TableViewModel : ViewModel() {
 
@@ -60,8 +63,7 @@ class TableViewModel : ViewModel() {
 
             val sameDaysList = getSameDaysInYear(tableUIState.value.chosenDate.toLocalDate())
             val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUIState.value.chosenDate.toLocalDate())
-            println(sameDaysList)
-            println(sameDaysListFromJanuary)
+
 
             for (date in sameDaysListFromJanuary.sorted()){
                 var stringDate = "$date 00:00"
@@ -69,11 +71,13 @@ class TableViewModel : ViewModel() {
                 var dateTime = LocalDateTime.parse(stringDate, formatter)
 
                 var calculationSunTime = getSunRiseNoonFall(dateTime, tableUIState.value.timeZoneOffset, tableUIState.value.location.latitude, tableUIState.value.location.longitude)
-                println(calculationSunTime)
-                println(dateTime)
+
+
+                Log.d("latitude", tableUIState.value.location.latitude.toString())
+                Log.d("longitude", tableUIState.value.location.longitude.toString())
+
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     calculationsDateTableList.add(calculationSunTime[0])
-
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
@@ -86,26 +90,24 @@ class TableViewModel : ViewModel() {
 
             }
 
+
             for (date in sameDaysList.sorted()){
 
-                println(date)
-                println("This is the date" + date)
-
                 if (tableUIState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+01:00" ).properties.sunrise.time
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "01:00").properties.sunrise.time
                     apiDateTableList.add(sunRiseTime)
 
 
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+01:00" ).properties.solarnoon.time
+                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "01:00").properties.solarnoon.time
                     apiDateTableList.add(solarNoon)
 
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+01:00" ).properties.sunset.time
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "01:00").properties.sunset.time
                     apiDateTableList.add(sunSetTime)
 
                 }
@@ -149,7 +151,6 @@ class TableViewModel : ViewModel() {
             }
 
         }
-        //println(sameDays.sorted())
 
         return sameDays.sorted()
     }
@@ -172,7 +173,6 @@ class TableViewModel : ViewModel() {
 
 
         }
-        //println(sameDays.sorted())
 
         return sameDays.sorted()
     }
@@ -223,6 +223,7 @@ class TableViewModel : ViewModel() {
             if(setTimeZoneOffset) {
                 val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLatitude, newLongitude)
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
+
             }
             _tableUIState.update { currentState ->
                 currentState.copy(
@@ -261,6 +262,18 @@ class TableViewModel : ViewModel() {
         }
         loadSunInformation()
     }
+
+    /*
+
+    fun findOffset(location: String, date: String): String {
+        val zoneId = ZoneId.of(location)
+        val zonedDateTime = ZonedDateTime.parse(date)
+        val offset = zoneId.rules.getOffset(zonedDateTime.toInstant()).toString()
+        Log.d("offset", offset)
+        return offset
+    }
+
+     */
 
 
 }
