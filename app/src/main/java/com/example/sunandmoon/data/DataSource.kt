@@ -22,7 +22,7 @@ class DataSource() {
     val baseURLMet: String = "https://api.met.no/weatherapi/sunrise/3.0/"
     val baseURLNominatim: String = "https://nominatim.openstreetmap.org/search"
     val baseURLWheretheiss: String = "https://api.wheretheiss.at/v1/coordinates/"
-
+    val baseURLWeatherAPIMet : String = "https://api.met.no/weatherapi/locationforecast/2.0/"
 
     private val client = HttpClient() {
 
