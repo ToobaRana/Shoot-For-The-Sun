@@ -1,22 +1,39 @@
 package com.example.sunandmoon.viewModel
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.CreateShootUIState
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.fetchLocation
+import com.example.sunandmoon.data.localDatabase.AppDatabase
+import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
+import com.example.sunandmoon.data.localDatabase.dao.ShootDao
+import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
+import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
+import com.example.sunandmoon.data.util.Shoot
 import com.google.android.gms.location.FusedLocationProviderClient
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class CreateShootViewModel : ViewModel() {
+@HiltViewModel
+class CreateShootViewModel  @Inject constructor(
+    private val database: AppDatabase
+) : ViewModel() {
 
     private val dataSource = DataSource()
+
+    val productionDao: ProductionDao = database.productionDao()
+    val shootDao: ShootDao = database.shootDao()
 
     private val _createShootUIState = MutableStateFlow(
         CreateShootUIState(
@@ -26,7 +43,8 @@ class CreateShootViewModel : ViewModel() {
             latitude = 59.943965,
             longitude = 10.7178129,
             chosenDate = LocalDateTime.now(),
-            timeZoneOffset = 2.0
+            timeZoneOffset = 2.0,
+            parentProductionId = null
         )
     )
 
@@ -161,6 +179,25 @@ class CreateShootViewModel : ViewModel() {
             currentState.copy(
                 name = inputName
             )
+        }
+    }
+
+    fun saveShootInProduction() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                shootDao.insert(
+                    StorableShoot(
+                        uid = 0,
+                        parentProductionId = _createShootUIState.value.parentProductionId,
+                        name = _createShootUIState.value.name,
+                        locationName = _createShootUIState.value.locationSearchQuery,
+                        latitude = _createShootUIState.value.latitude,
+                        longitude = _createShootUIState.value.longitude,
+                        date = _createShootUIState.value.chosenDate,
+                        timeZoneOffset = _createShootUIState.value.timeZoneOffset,
+                    )
+                )
+            }
         }
     }
 }

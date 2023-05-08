@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.checkPermissions
@@ -34,7 +35,7 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShootViewModel: CreateShootViewModel = viewModel()){
+fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShootViewModel: CreateShootViewModel = hiltViewModel()){
 
     val createShootUIState by createShootViewModel.createShootUIState.collectAsState()
     checkPermissions { enabled: Boolean -> createShootViewModel.updateLocation(enabled) }
@@ -123,6 +124,7 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShoo
 
                     Button(onClick = {
                         //save stuff
+                        createShootViewModel.saveShootInProduction()
                         navigateToNext()
                     }) {
                         Text(text = "Save")

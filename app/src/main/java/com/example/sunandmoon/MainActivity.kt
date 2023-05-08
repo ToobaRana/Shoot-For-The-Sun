@@ -45,14 +45,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
-
         val modifier = Modifier
-
-        /*val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "database-name"
-        ).build()*/
 
         setContent {
             SunAndMoonTheme {
@@ -61,7 +54,6 @@ class MainActivity : ComponentActivity() {
                     modifier = modifier,
                     color = MaterialTheme.colorScheme.background
                 ) {
-
                     MultipleScreenNavigator(modifier)
                 }
             }
@@ -124,12 +116,10 @@ fun getShootFromArgs(backStackEntry: NavBackStackEntry): Shoot {
     location.latitude = backStackEntry.arguments?.getString("latitude")?.toDouble() ?: 0.0
     location.longitude = backStackEntry.arguments?.getString("longitude")?.toDouble() ?: 0.0
 
-    return Shoot(name = "test", locationName = "test2", location = location, date = localDateTime, timeZoneOffset = 2.0)
-}
+    val shootName: String = backStackEntry.arguments?.getString("shootName")!!
+    val locationName: String = backStackEntry.arguments?.getString("locationName")!!
 
-/*
-@Component(modules = [AppModule::class])
-interface DaggerAppComponent {
-    fun shootDao(): ShootDao
-    fun productionDao(): ProductionDao
-}*/
+    val timeZoneOffset: Double = backStackEntry.arguments?.getString("timeZoneOffset")!!.toDouble()
+
+    return Shoot(name = shootName, locationName = locationName, location = location, date = localDateTime, timeZoneOffset = timeZoneOffset)
+}
