@@ -5,6 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class Shoot(
+    val id: Int? = null,
     val name: String = "My Shoot",
     val locationName: String = "UiO",
     val location: Location = Location("").apply {
