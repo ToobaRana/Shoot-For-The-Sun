@@ -4,6 +4,7 @@ import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchRes
 import java.time.LocalDateTime
 
 data class CreateShootUIState (
+    val name: String = "",
     val locationSearchQuery: String,
     val locationSearchResults: List<LocationSearchResults>,
     val locationEnabled: Boolean,

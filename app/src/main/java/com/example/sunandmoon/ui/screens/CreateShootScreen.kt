@@ -51,9 +51,9 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShoo
 
             {
                 item{
-                    Row(horizontalArrangement = Arrangement.Center) {
+                    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
 
-                        Spacer(modifier = modifier.fillMaxWidth(0.05f))
+
 
                         TextField(value = createShootUIState.name,
                             label = { Text("Title") },
@@ -88,7 +88,7 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShoo
 
 
                         )
-                        Spacer(modifier = modifier.fillMaxWidth(0.05f))
+
                     }
 
 
