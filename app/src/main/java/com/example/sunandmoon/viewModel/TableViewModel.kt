@@ -23,7 +23,6 @@ class TableViewModel : ViewModel() {
     private val dataSource = DataSource()
 
     private val _tableUIState = MutableStateFlow(
-
         TableUIState(
             apiDateTableList = listOf(),
             calculationsDateTableList = listOf("", "", "", "", "", "", "", "", "", "", "", ""),
@@ -36,13 +35,10 @@ class TableViewModel : ViewModel() {
             chosenDate = LocalDateTime.now(),
             chosenSunType = "Sunrise",
             timeZoneOffset = 1.0
-
         )
     )
 
-
     val tableUIState: StateFlow<TableUIState> = _tableUIState.asStateFlow()
-
 
     init {
         loadSunInformation()
