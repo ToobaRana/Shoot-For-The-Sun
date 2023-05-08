@@ -4,6 +4,7 @@ package com.example.sunandmoon.data
 import android.R
 import android.provider.Settings.Global.getString
 import com.example.sunandmoon.BuildConfig
+import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import com.example.sunandmoon.model.LocationTimeZoneOffsetResultModel.LocationTimeZoneOffsetResult
@@ -22,7 +23,7 @@ class DataSource() {
     val baseURLMet: String = "https://api.met.no/weatherapi/sunrise/3.0/"
     val baseURLNominatim: String = "https://nominatim.openstreetmap.org/search"
     val baseURLWheretheiss: String = "https://api.wheretheiss.at/v1/coordinates/"
-    val baseURLWeatherAPIMet : String = "https://api.met.no/weatherapi/locationforecast/2.0/"
+    val baseURLLocationForecast : String = "https://api.met.no/weatherapi/locationforecast/2.0/complete"
 
     private val client = HttpClient() {
 
@@ -67,5 +68,20 @@ class DataSource() {
         val apiResults: LocationTimeZoneOffsetResult = client.get(endPoint).body()
 
         return apiResults
+    }
+
+    //example
+    //https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=60.10&lon=10
+    suspend fun fetchWeatherAPI(lat : String, lon : String){
+        val endPoint = "$baseURLLocationForecast?lat=$lat&lon=$lon"
+
+        val apiResults : LocationForecast = client.get(endPoint){
+            headers {
+                header("X-Gravitee-API-Key", API_KEY)
+            }
+        }
+            .body()
+
+
     }
 }
