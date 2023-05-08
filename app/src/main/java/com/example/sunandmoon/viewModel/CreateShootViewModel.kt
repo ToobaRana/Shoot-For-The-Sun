@@ -89,10 +89,16 @@ class CreateShootViewModel : ViewModel() {
     //calls fetchLocation method with provider client, then updates latitude and longitude in uiState with return value
     fun getCurrentPosition(fusedLocationProviderClient: FusedLocationProviderClient) {
         viewModelScope.launch() {
-            val location = fetchLocation(fusedLocationProviderClient)
-            if (location != null) {
-                setCoordinates(location.first, location.second, true)
+            val location = fetchLocation(fusedLocationProviderClient) { latitude: Double, longitude: Double, setTimeZoneOffset: Boolean ->
+                setCoordinates(
+                    latitude,
+                    longitude,
+                    setTimeZoneOffset
+                )
             }
+
+
+
         }
     }
 

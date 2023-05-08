@@ -61,6 +61,7 @@ class MainActivity : ComponentActivity() {
                     modifier = modifier,
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    checkPermissions()
                     MultipleScreenNavigator(modifier)
                 }
             }
