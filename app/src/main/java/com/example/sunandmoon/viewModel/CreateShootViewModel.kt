@@ -142,8 +142,12 @@ class CreateShootViewModel : ViewModel() {
         setNewDate(year, _createShootUIState.value.chosenDate.monthValue, _createShootUIState.value.chosenDate.dayOfMonth)
     }
 
-    fun setShootName(inputName: String) {
-
+    fun updateShootName(inputName: String) {
+        _createShootUIState.update { currentState ->
+            currentState.copy(
+                name = inputName
+            )
+        }
     }
 }
 
