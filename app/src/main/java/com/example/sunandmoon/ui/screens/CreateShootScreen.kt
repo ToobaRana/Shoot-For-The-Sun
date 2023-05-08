@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
+import com.example.sunandmoon.checkPermissions
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.viewModel.CreateShootViewModel
@@ -36,7 +37,7 @@ import java.time.LocalDateTime
 fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShootViewModel: CreateShootViewModel = viewModel()){
 
     val createShootUIState by createShootViewModel.createShootUIState.collectAsState()
-
+    checkPermissions { enabled: Boolean -> createShootViewModel.updateLocation(enabled) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         content = {innerPadding ->

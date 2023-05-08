@@ -19,59 +19,33 @@ import io.ktor.client.request.*
 //checks if app has permissions to use location.
 
 @Composable
-fun checkPermissions(): Boolean {
-
+fun checkPermissions(setPermission: (permissions: Boolean)->Unit):Boolean {
     val context = LocalContext.current
-    val isPermissionGranted = remember { mutableStateOf(false) }
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-
-        isPermissionGranted.value = isGranted
-        Log.v("test", "$isPermissionGranted")
-
+    ) { value ->
+        setPermission(value);
     }
     val granted = ContextCompat.checkSelfPermission(
         context,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
     if (granted == PackageManager.PERMISSION_GRANTED) {
-        println("JADA!! VI FANT DEG");
+        Log.v("location","Location enabled");
         return true
-
     } else {
-
         println(granted)
         SideEffect {
-
             requestPermissionLauncher.launch(
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         }
     }
-
     return false
-
 }
 
 //send a request to use last know location, waits 200 ms, then returns it
-@SuppressLint("MissingPermission")
-fun fetchLocation(
-    fusedLocationClient: FusedLocationProviderClient,
-    setCoordinates: (latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) -> Unit
-) {
 
-
-    val request = LastLocationRequest.Builder().build()
-    try {
-        fusedLocationClient.getLastLocation(request).addOnSuccessListener {
-            setCoordinates(it.latitude, it.longitude, true);
-        }
-    } catch (e: java.lang.IllegalStateException) {
-        println("location could not be fetched in time")
-    }
-
-}
 
 
 

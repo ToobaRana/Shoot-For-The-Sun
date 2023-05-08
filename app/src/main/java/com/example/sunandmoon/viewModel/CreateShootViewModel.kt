@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.CreateShootUIState
 import com.example.sunandmoon.data.DataSource
-import com.example.sunandmoon.data.ShootInfoUIState
-import com.example.sunandmoon.fetchLocation
-import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.data.fetchLocation
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +22,7 @@ class CreateShootViewModel : ViewModel() {
         CreateShootUIState(
             locationSearchQuery = "UiO",
             locationSearchResults = listOf(),
-            locationEnabled = true,
+            locationEnabled = false,
             latitude = 59.943965,
             longitude = 10.7178129,
             chosenDate = LocalDateTime.now(),
@@ -73,8 +71,9 @@ class CreateShootViewModel : ViewModel() {
 
     fun setCoordinates(latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) {
         viewModelScope.launch {
-            if(setTimeZoneOffset) {
-                val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(latitude, longitude)
+            if (setTimeZoneOffset) {
+                val locationTimeZoneOffsetResult =
+                    dataSource.fetchLocationTimezoneOffset(latitude, longitude)
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
             }
             _createShootUIState.update { currentState ->
@@ -89,20 +88,20 @@ class CreateShootViewModel : ViewModel() {
     //calls fetchLocation method with provider client, then updates latitude and longitude in uiState with return value
     fun getCurrentPosition(fusedLocationProviderClient: FusedLocationProviderClient) {
         viewModelScope.launch() {
-            val location = fetchLocation(fusedLocationProviderClient) { latitude: Double, longitude: Double, setTimeZoneOffset: Boolean ->
-                setCoordinates(
-                    latitude,
-                    longitude,
-                    setTimeZoneOffset
-                )
-            }
-
+            val location =
+                fetchLocation(fusedLocationProviderClient) { latitude: Double, longitude: Double, setTimeZoneOffset: Boolean ->
+                    setCoordinates(
+                        latitude,
+                        longitude,
+                        setTimeZoneOffset
+                    )
+                }
 
 
         }
     }
 
-    fun setNewDate(year: Int, month: Int, day: Int){
+    fun setNewDate(year: Int, month: Int, day: Int) {
         _createShootUIState.update { currentState ->
             currentState.copy(
                 chosenDate = LocalDateTime.of(year, month, day, 12, 0, 0)
@@ -113,7 +112,8 @@ class CreateShootViewModel : ViewModel() {
     fun loadTimeZoneOffset(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
-                val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(latitude, longitude)
+                val locationTimeZoneOffsetResult =
+                    dataSource.fetchLocationTimezoneOffset(latitude, longitude)
 
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
 
@@ -131,21 +131,29 @@ class CreateShootViewModel : ViewModel() {
         }
     }
 
-    fun updateDay(day: Int){
+    fun updateDay(day: Int) {
 
-        setNewDate(_createShootUIState.value.chosenDate.year, _createShootUIState.value.chosenDate.monthValue, day)
+        setNewDate(
+            _createShootUIState.value.chosenDate.year,
+            _createShootUIState.value.chosenDate.monthValue,
+            day
+        )
     }
 
-    fun updateMonth(month: Int, maxDate: Int){
+    fun updateMonth(month: Int, maxDate: Int) {
         var day = _createShootUIState.value.chosenDate.dayOfMonth
-        if (maxDate < day){
+        if (maxDate < day) {
             day = maxDate
         }
         setNewDate(_createShootUIState.value.chosenDate.year, month, day)
     }
 
-    fun updateYear(year: Int){
-        setNewDate(year, _createShootUIState.value.chosenDate.monthValue, _createShootUIState.value.chosenDate.dayOfMonth)
+    fun updateYear(year: Int) {
+        setNewDate(
+            year,
+            _createShootUIState.value.chosenDate.monthValue,
+            _createShootUIState.value.chosenDate.dayOfMonth
+        )
     }
 
     fun updateShootName(inputName: String) {
