@@ -20,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
+import com.example.sunandmoon.viewModel.CreateShootViewModel
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import java.time.LocalDateTime
 
@@ -27,9 +28,9 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoViewModel: ShootInfoViewModel = viewModel()){
+fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShootViewModel: CreateShootViewModel = viewModel()){
 
-    val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
+    val createShootUIState by createShootViewModel.createShootUIState.collectAsState()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -44,7 +45,14 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoV
 
             {
                 item {
-                    LocationSearch(modifier = modifier)
+                    LocationSearch(
+                        modifier,
+                        createShootUIState.locationSearchQuery,
+                        createShootUIState.locationSearchResults,
+                        {query: String -> createShootViewModel.setLocationSearchQuery(query)},
+                        {query: String -> createShootViewModel.loadLocationSearchResults(query)},
+                        {latitude: Double, longitude: Double, setTimeZoneOffset: Boolean -> createShootViewModel.setCoordinates(latitude, longitude, setTimeZoneOffset)},
+                    )
                     CalendarComponent(modifier)
 
                     Button(onClick = {

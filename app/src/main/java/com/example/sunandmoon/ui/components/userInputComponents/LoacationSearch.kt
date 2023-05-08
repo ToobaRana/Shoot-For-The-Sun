@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
+import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import com.example.sunandmoon.viewModel.CreateShootViewModel
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 
@@ -19,20 +20,25 @@ import com.example.sunandmoon.viewModel.ShootInfoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LocationSearch(createShootViewModel: CreateShootViewModel = viewModel(), modifier: Modifier) {
+fun LocationSearch(
+    modifier: Modifier,
+    locationSearchQuery: String,
+    locationSearchResults: List<LocationSearchResults>,
+    setLocationSearchQuery: (query: String) -> Unit,
+    loadLocationSearchResults: (query: String) -> Unit,
+    setCoordinates: (latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) -> Unit,
+) {
 
-    val shootInfoUIState by createShootViewModel.createShootUIState.collectAsState()
-
-    var searchQuery = shootInfoUIState.locationSearchQuery
+    //val shootInfoUIState by createShootViewModel.createShootUIState.collectAsState()
 
     //var searchResults by remember { mutableStateOf<List<String>>(emptyList()) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxWidth()) {
         TextField(
-            value = searchQuery,
+            value = locationSearchQuery,
             onValueChange = { query ->
-                createShootViewModel.setLocationSearchQuery(query)
+                setLocationSearchQuery(query)
             },
             label = { Text("Search for a location") },
             placeholder = { Text("Enter a location") },
@@ -44,8 +50,8 @@ fun LocationSearch(createShootViewModel: CreateShootViewModel = viewModel(), mod
             keyboardActions = KeyboardActions(
                 onSearch = {
                     // handle search button press
-                    if (searchQuery.isNotEmpty()) {
-                        createShootViewModel.loadLocationSearchResults(searchQuery)
+                    if (locationSearchQuery.isNotEmpty()) {
+                        loadLocationSearchResults(locationSearchQuery)
                         isDropdownExpanded = true
                     }
                 }
@@ -63,24 +69,23 @@ fun LocationSearch(createShootViewModel: CreateShootViewModel = viewModel(), mod
         )
 
         if (isDropdownExpanded) {
-            val searchResults = shootInfoUIState.locationSearchResults
             DropdownMenu(
                 expanded = isDropdownExpanded,
                 onDismissRequest = { isDropdownExpanded = false },
                 modifier = modifier.width(IntrinsicSize.Max)
             ) {
-                searchResults.forEachIndexed { index, item ->
+                locationSearchResults.forEachIndexed { index, item ->
                     Text(
                         text = item.display_name,
                         modifier = modifier
                             .fillMaxWidth()
                             .clickable {
                                 isDropdownExpanded = false
-                                createShootViewModel.setCoordinates(item.lat.toDouble(), item.lon.toDouble(), true)
+                                setCoordinates(item.lat.toDouble(), item.lon.toDouble(), true)
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                     )
-                    if (index < searchResults.lastIndex) {
+                    if (index < locationSearchResults.lastIndex) {
                         Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
                     }
                 }
