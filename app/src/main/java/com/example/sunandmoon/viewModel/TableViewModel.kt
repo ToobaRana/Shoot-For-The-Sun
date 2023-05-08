@@ -36,7 +36,6 @@ class TableViewModel : ViewModel() {
             chosenDate = LocalDateTime.now(),
             chosenSunType = "Sunrise",
             timeZoneOffset = 1.0
-
         )
     )
 

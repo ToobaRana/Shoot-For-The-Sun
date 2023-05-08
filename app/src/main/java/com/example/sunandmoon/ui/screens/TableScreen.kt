@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.data.util.LocationAndDateTime
@@ -112,70 +113,63 @@ fun TableView(
                         }
                     )
                     chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
+
+
                 }
 
-                Spacer(modifier = modifier.height(10.dp))
-                CalendarComponent(
-                    modifier,
-                    tableUIState.chosenDate,
-                    updateYear = { year: Int -> tableViewModel.updateYear(year) },
-                    updateMonth = { month: Int, maxDay: Int ->
-                        tableViewModel.updateMonth(
-                            month,
-                            maxDay
-                        )
-                    },
-                    updateDay = { day: Int -> tableViewModel.updateDay(day) })
+
+
+
 
                 Spacer(modifier = modifier.height(10.dp))
             }
 
 
 
+            Box{
 
+            //Spacer(modifier = modifier.height(10.dp))
 
-
-
-
-            Column(modifier.padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)) {
+                //modifier.padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)
+                Box(modifier.fillMaxSize().padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)) {
                 // Render the header row
-                Row(
 
-                    modifier.background(Color.LightGray)
-                ) {
-                    Text(
-                        text = "Day",
-                        fontSize = 20.sp,
-
-                        modifier = modifier
-                            .weight(1f)
-                            .padding(3.dp),
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = chosenSunType,
-                        fontSize = 20.sp,
-                        modifier = modifier
-                            .weight(1f)
-                            .padding(3.dp),
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Our $chosenSunType",
-                        fontSize = 20.sp,
-                        modifier = modifier
-                            .weight(1f)
-                            .padding(3.dp),
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
                 Spacer(modifier = modifier.height(1.dp))
                 LazyColumn(
                 ) {
+                    item { Row(
 
+                        modifier.background(Color.LightGray)
+                    ) {
+                        Text(
+                            text = "Day",
+                            fontSize = 20.sp,
+
+                            modifier = modifier
+                                .weight(1f)
+                                .padding(3.dp),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = chosenSunType,
+                            fontSize = 20.sp,
+                            modifier = modifier
+                                .weight(1f)
+                                .padding(3.dp),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Our $chosenSunType",
+                            fontSize = 20.sp,
+                            modifier = modifier
+                                .weight(1f)
+                                .padding(3.dp),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
+                    } }
                     items(tableUIState.apiDateTableList) { date ->
 
                         val elementInTableUiStateList = date.split("T")
@@ -184,8 +178,8 @@ fun TableView(
                         val day = elementInTableUiStateList[0]
                         val monthInt = day.split("-")[1].toInt()
 
-                        println("monthInt: " + monthInt)
-//hei
+                        println("monthInt: $monthInt")
+
 
 
                         TableCard(
@@ -202,6 +196,24 @@ fun TableView(
                     }
 
 
+                }
+
+            }
+                Box(modifier
+                    .fillMaxWidth()
+                    .padding(top = 165.dp)
+                    .zIndex(1f), contentAlignment = Alignment.Center)   {
+                    CalendarComponent(
+                        modifier,
+                        tableUIState.chosenDate,
+                        updateYear = { year: Int -> tableViewModel.updateYear(year) },
+                        updateMonth = { month: Int, maxDay: Int ->
+                            tableViewModel.updateMonth(
+                                month,
+                                maxDay
+                            )
+                        },
+                        updateDay = { day: Int -> tableViewModel.updateDay(day) })
                 }
 
             }

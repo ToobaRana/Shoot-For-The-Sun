@@ -6,6 +6,8 @@ import com.example.sunandmoon.data.util.Shoot
 // currentPageIndex is 0 if on "productions" page or 1 if on "all shoots" page
 data class ProductionSelectionUIState (
     val currentPageIndex: Int = 0,
-    val productionsList: List<Production>,
-    val shootsList: List<Shoot>
+    val productionsList: List<Production> = listOf(),
+    val productionShootsList: List<Shoot> = listOf(),
+    val independentShootsList: List<Shoot> = listOf(),
+    val selectedProduction: Shoot? = null
 )
