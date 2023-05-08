@@ -30,18 +30,26 @@ import java.time.LocalDateTime
 
 
 @Composable
-fun TableScreen(navigateToNextBottomBar: (index: Int) -> Unit, modifier: Modifier, tableViewModel: TableViewModel = viewModel()) {
+fun TableScreen(
+    navigateToNextBottomBar: (index: Int) -> Unit,
+    modifier: Modifier,
+    tableViewModel: TableViewModel = viewModel()
+) {
     val tableUiState by tableViewModel.tableUIState.collectAsState()
 
-    TableView(modifier,tableViewModel, tableUiState, navigateToNextBottomBar)
+    TableView(modifier, tableViewModel, tableUiState, navigateToNextBottomBar)
 }
-
 
 
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), tableUIState: TableUIState, navigateToNextBottomBar: (index: Int) -> Unit) {
+fun TableView(
+    modifier: Modifier,
+    tableViewModel: TableViewModel = viewModel(),
+    tableUIState: TableUIState,
+    navigateToNextBottomBar: (index: Int) -> Unit
+) {
 
 
     //tableViewModel.loadDateTableList(sunType = "Sunrise")
@@ -49,7 +57,9 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
     var chosenSunType = ""
 
     Scaffold(
-        modifier = modifier.fillMaxSize().padding(top=20.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 20.dp),
         topBar = {
 
             Text(
@@ -64,110 +74,137 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
 
         },
 
-        content = { innerPadding -> innerPadding
+        content = { innerPadding ->
+            innerPadding
 
 
 
-                    Column(modifier.padding(start = 8.dp, end = 8.dp, top = 90.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            LocationSearch(
-                                modifier = modifier.width(200.dp),
-                                locationSearchQuery = tableUIState.locationSearchQuery,
-                                locationSearchResults = tableUIState.locationSearchResults,
-                                setLocationSearchQuery = {query: String -> tableViewModel.setLocationSearchQuery(query)},
-                                loadLocationSearchResults = {query: String -> tableViewModel.loadLocationSearchResults(query)},
-                                setCoordinates = {newLatitude: Double, newLongitude: Double, setTimeZoneOffset: Boolean -> tableViewModel.setCoordinates(newLatitude, newLongitude, setTimeZoneOffset)}
+            Column(
+                modifier.padding(start = 8.dp, end = 8.dp, top = 90.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    LocationSearch(
+                        modifier = modifier.width(200.dp),
+                        locationSearchQuery = tableUIState.locationSearchQuery,
+                        locationSearchResults = tableUIState.locationSearchResults,
+                        setLocationSearchQuery = { query: String ->
+                            tableViewModel.setLocationSearchQuery(
+                                query
                             )
-                            chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
+                        },
+                        loadLocationSearchResults = { query: String ->
+                            tableViewModel.loadLocationSearchResults(
+                                query
+                            )
+                        },
+                        setCoordinates = { newLatitude: Double, newLongitude: Double, setTimeZoneOffset: Boolean ->
+                            tableViewModel.setCoordinates(
+                                newLatitude,
+                                newLongitude,
+                                setTimeZoneOffset
+                            )
                         }
+                    )
+                    chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
+                }
 
-                        Spacer(modifier = modifier.height(10.dp))
-                        CalendarComponent(modifier)
-
-                        Spacer(modifier = modifier.height(10.dp))
-                    }
-
-
-
-
-
-
-
-
-                Column(modifier.padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)) {
-                    // Render the header row
-                    Row(
-
-                            modifier.background(Color.LightGray)
-                    ) {
-                        Text(
-                            text = "Day",
-                            fontSize = 20.sp,
-
-                            modifier = modifier
-                                .weight(1f)
-                                .padding(3.dp),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
+                Spacer(modifier = modifier.height(10.dp))
+                CalendarComponent(
+                    modifier,
+                    tableUIState.chosenDate,
+                    updateYear = { year: Int -> tableViewModel.updateYear(year) },
+                    updateMonth = { month: Int, maxDay: Int ->
+                        tableViewModel.updateMonth(
+                            month,
+                            maxDay
                         )
-                        Text(
-                            text = chosenSunType,
-                            fontSize = 20.sp,
-                            modifier = modifier
-                                .weight(1f)
-                                .padding(3.dp),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Our $chosenSunType",
-                            fontSize = 20.sp,
-                            modifier = modifier
-                                .weight(1f)
-                                .padding(3.dp),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Spacer(modifier = modifier.height(1.dp))
-                    LazyColumn(
-                    ) {
+                    },
+                    updateDay = { day: Int -> tableViewModel.updateDay(day) })
 
-                        items(tableUIState.apiDateTableList) { date ->
+                Spacer(modifier = modifier.height(10.dp))
+            }
 
-                            val elementInTableUiStateList = date.split("T")
 
-                            val sunriseTime = elementInTableUiStateList[1]
-                            val day = elementInTableUiStateList[0]
-                            val monthInt = day.split("-")[1].toInt()
 
-                            println("monthInt: " + monthInt)
+
+
+
+
+
+            Column(modifier.padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)) {
+                // Render the header row
+                Row(
+
+                    modifier.background(Color.LightGray)
+                ) {
+                    Text(
+                        text = "Day",
+                        fontSize = 20.sp,
+
+                        modifier = modifier
+                            .weight(1f)
+                            .padding(3.dp),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = chosenSunType,
+                        fontSize = 20.sp,
+                        modifier = modifier
+                            .weight(1f)
+                            .padding(3.dp),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Our $chosenSunType",
+                        fontSize = 20.sp,
+                        modifier = modifier
+                            .weight(1f)
+                            .padding(3.dp),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(modifier = modifier.height(1.dp))
+                LazyColumn(
+                ) {
+
+                    items(tableUIState.apiDateTableList) { date ->
+
+                        val elementInTableUiStateList = date.split("T")
+
+                        val sunriseTime = elementInTableUiStateList[1]
+                        val day = elementInTableUiStateList[0]
+                        val monthInt = day.split("-")[1].toInt()
+
+                        println("monthInt: " + monthInt)
 //hei
 
 
-                                    TableCard(
-                                        apiSunTime = sunriseTime,
-                                        day = day,
-                                        calculationSunTime = tableUIState.calculationsDateTableList[monthInt-1]  ,
-                                        modifier = modifier
-                                            .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
-                                            .padding(8.dp)
-                                    )
-                            Spacer(modifier = modifier.height(1.dp))
-
-
-
-
-                        }
+                        TableCard(
+                            apiSunTime = sunriseTime,
+                            day = day,
+                            calculationSunTime = tableUIState.calculationsDateTableList[monthInt - 1],
+                            modifier = modifier
+                                .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
+                                .padding(8.dp)
+                        )
+                        Spacer(modifier = modifier.height(1.dp))
 
 
                     }
-                    
+
+
                 }
+
+            }
 
 
         },
@@ -176,14 +213,13 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
         }
 
 
-
     )
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: Modifier): String{
+fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: Modifier): String {
     //Dropdown
     val options = stringArrayResource(com.example.sunandmoon.R.array.suntype)
     var expanded by remember { mutableStateOf(false) }
@@ -202,19 +238,18 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
-            label = { Text("Type", color= MaterialTheme.colorScheme.primary)},
+            label = { Text("Type", color = MaterialTheme.colorScheme.primary) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(
                 placeholderColor = MaterialTheme.colorScheme.primary,
-                unfocusedIndicatorColor =  MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
                 unfocusedTrailingIconColor = MaterialTheme.colorScheme.primary,
                 focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
                 cursorColor = MaterialTheme.colorScheme.primary,
                 disabledTextColor = MaterialTheme.colorScheme.primary,
                 textColor = MaterialTheme.colorScheme.primary,
-                containerColor =  MaterialTheme.colorScheme.onBackground,
+                containerColor = MaterialTheme.colorScheme.onBackground,
                 focusedLabelColor = MaterialTheme.colorScheme.onPrimary
-
 
 
             ),
@@ -243,5 +278,5 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
     }
     Log.d("dropdownSelectedOptionText", selectedOptionText)
 
-    return selectedOptionText                                                                                            
+    return selectedOptionText
 }

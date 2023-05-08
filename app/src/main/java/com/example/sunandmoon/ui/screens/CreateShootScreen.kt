@@ -108,7 +108,16 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShoo
                         {query: String -> createShootViewModel.loadLocationSearchResults(query)},
                         {latitude: Double, longitude: Double, setTimeZoneOffset: Boolean -> createShootViewModel.setCoordinates(latitude, longitude, setTimeZoneOffset)},
                     )
-                    CalendarComponent(modifier)
+                    CalendarComponent(modifier,
+                        createShootUIState.chosenDate,
+                        updateYear = { year: Int -> createShootViewModel.updateYear(year) },
+                        updateMonth = { month: Int, maxDay: Int ->
+                            createShootViewModel.updateMonth(
+                                month,
+                                maxDay
+                            )
+                        },
+                        updateDay = { day: Int -> createShootViewModel.updateDay(day) })
 
 
                     Button(onClick = {
