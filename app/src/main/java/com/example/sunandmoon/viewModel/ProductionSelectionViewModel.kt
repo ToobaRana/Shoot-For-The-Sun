@@ -30,13 +30,11 @@ class ProductionSelectionViewModel @Inject constructor(
 
     val testShoot1 = Shoot()
     val testShoot2 = Shoot(name = "testTestTestTestTestTestTestTestTestTestTestTest")
-    val testProduction1 = Production()
-    val testProduction2 = Production()
 
     //sunDataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, "2022-12-18", "+01:00" ).properties.sunrise.time
     private val _productionSelectionUIState = MutableStateFlow(
         ProductionSelectionUIState(
-            productionsList = listOf(), //listOf(testProduction1, testProduction2),
+            productionsList = listOf(),
             shootsList = listOf(testShoot1, testShoot2)
         )
     )
@@ -82,7 +80,7 @@ class ProductionSelectionViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 productionDao.insert(StorableProduction(
                     uid = 0,
-                    name = "test2",
+                    name = "test " + (Math.random()*1000).toInt().toString(),
                     startDateTime = null,
                     endDateTime = null
                 ))

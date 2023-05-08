@@ -41,13 +41,14 @@ fun ProductionSelectionScreen(
 
     val productionSelectionUIState by productionSelectionViewModel.productionSelectionUIState.collectAsState()
 
+    val currentPageIsEmpty: Boolean =
+        (productionSelectionUIState.currentPageIndex == 0 && productionSelectionUIState.productionsList.isEmpty())
+        || (productionSelectionUIState.currentPageIndex == 1 && productionSelectionUIState.shootsList.isEmpty())
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            if(productionSelectionUIState.currentPageIndex == 0 && productionSelectionUIState.productionsList.isEmpty()) {
-                ProductionShootSelectionTopPart(modifier, navigateToCreateShootScreen, productionSelectionViewModel, productionSelectionUIState)
-            }
-            else if(productionSelectionUIState.currentPageIndex == 1 && productionSelectionUIState.shootsList.isEmpty()) {
+            if(currentPageIsEmpty) {
                 ProductionShootSelectionTopPart(modifier, navigateToCreateShootScreen, productionSelectionViewModel, productionSelectionUIState)
             }
         },
@@ -171,7 +172,12 @@ fun ProductionShootSelectionTopPart(
             ) {
 
                 Button(onClick = {
-                    navigateToCreateShootScreen()
+                    if(productionSelectionUIState.currentPageIndex == 0) {
+                        productionSelectionViewModel.saveProduction()
+                    }
+                    else {
+                        navigateToCreateShootScreen()
+                    }
                 }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
                     Row() {
                         Icon(painterResource(R.drawable.plus_icon), "location search field icon", modifier.size(24.dp), MaterialTheme.colorScheme.onPrimary)
