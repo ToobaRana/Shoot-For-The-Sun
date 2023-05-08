@@ -6,8 +6,8 @@ import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 
 @Dao
 interface ShootDao {
-    @Query("SELECT * FROM shoot")
-    fun getAll(): List<StorableShoot>
+    @Query("SELECT * FROM shoot WHERE parent_production_id IS NULL")
+    fun getAllIndependentShoots(): List<StorableShoot>
 
     @Query("SELECT * FROM shoot WHERE parent_production_id = :productionId")
     fun loadByProductionId(productionId: Int): List<StorableShoot>

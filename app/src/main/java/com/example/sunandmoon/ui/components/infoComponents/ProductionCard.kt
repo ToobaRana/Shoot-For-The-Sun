@@ -10,37 +10,61 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Production
 import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 
 @Composable
-fun ProductionCard(modifier: Modifier, production: Production) {
+fun ProductionCard(
+    modifier: Modifier,
+    production: Production,
+    goIntoProduction: () -> Unit
+) {
     ElevatedCard(
-    modifier = modifier
-        .fillMaxWidth()
-        .padding(35.dp, 10.dp)
-        .clickable { /* TODO */ },
-    elevation = CardDefaults.cardElevation(defaultElevation = 15.dp)
-    ){
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(35.dp, 10.dp)
+            .clickable {
+                goIntoProduction()
+            },
+        elevation = CardDefaults.cardElevation(defaultElevation = 15.dp)
+    ) {
         Column(
             modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Row(modifier = modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-                Icon(painterResource(R.drawable.bell_icon), "Notification icon", modifier.align(CenterVertically).padding(8.dp, 0.dp).size(32.dp), MaterialTheme.colorScheme.onPrimary)
+        ) {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+            ) {
+                Icon(
+                    painterResource(R.drawable.bell_icon),
+                    "Notification icon",
+                    modifier
+                        .align(CenterVertically)
+                        .padding(8.dp, 0.dp)
+                        .size(32.dp),
+                    MaterialTheme.colorScheme.onPrimary
+                )
                 Divider(
                     color = MaterialTheme.colorScheme.background,
-                    modifier = Modifier.fillMaxHeight().width(2.dp))
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(2.dp)
+                )
                 Text(text = production.name, modifier = modifier.padding(16.dp), fontSize = 22.sp)
             }
 
             Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.background)
 
             var dateIntervalText = "Empty"
-            if(production.duration.first != null && production.duration.second != null) {
-                dateIntervalText = production.duration.first?.toLocalDate().toString() + " - " + production.duration.second?.toLocalDate().toString()
+            if (production.duration.first != null && production.duration.second != null) {
+                dateIntervalText = production.duration.first?.toLocalDate()
+                    .toString() + " - " + production.duration.second?.toLocalDate().toString()
             }
             Text(text = dateIntervalText, modifier = modifier.padding(18.dp), fontSize = 18.sp)
         }
