@@ -43,6 +43,14 @@ fun ProductionSelectionScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        topBar = {
+            if(productionSelectionUIState.currentPageIndex == 0 && productionSelectionUIState.productionsList.isEmpty()) {
+                ProductionShootSelectionTopPart(modifier, navigateToCreateShootScreen, productionSelectionViewModel, productionSelectionUIState)
+            }
+            else if(productionSelectionUIState.currentPageIndex == 1 && productionSelectionUIState.shootsList.isEmpty()) {
+                ProductionShootSelectionTopPart(modifier, navigateToCreateShootScreen, productionSelectionViewModel, productionSelectionUIState)
+            }
+        },
         content = {innerPadding ->
             if(productionSelectionUIState.currentPageIndex == 0 && productionSelectionUIState.productionsList.isEmpty()) {
                 Box(modifier = modifier.fillMaxSize()){
