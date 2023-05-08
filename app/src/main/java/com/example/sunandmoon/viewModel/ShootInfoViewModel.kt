@@ -1,20 +1,14 @@
 package com.example.sunandmoon.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ShootInfoUIState
 import com.example.sunandmoon.data.util.Shoot
-import com.example.sunandmoon.fetchLocation
 import com.example.sunandmoon.getSunRiseNoonFall
-import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class ShootInfoViewModel : ViewModel() {
 
