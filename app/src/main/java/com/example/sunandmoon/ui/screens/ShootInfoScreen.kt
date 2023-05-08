@@ -32,6 +32,7 @@ import com.example.sunandmoon.ui.components.infoComponents.SunPositionsCard
 import com.example.sunandmoon.ui.components.infoComponents.UVCard
 import com.example.sunandmoon.ui.components.infoComponents.WeatherCard
 import com.example.sunandmoon.ui.components.infoComponents.WindCard
+import com.example.sunandmoon.ui.theme.UVLowColor
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -58,25 +59,25 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
             Column(modifier.fillMaxWidth().padding(top = 30.dp)) {
                 
                 //Header for shoot name
-                Text(text = shootInfoUIState.shoot!!.name, modifier = modifier.fillMaxWidth().align(CenterHorizontally), fontSize = 50.sp, color = Color.White, textAlign = TextAlign.Center )
+                Text(text = shootInfoUIState.shoot!!.name, modifier = modifier.fillMaxWidth().align(CenterHorizontally), fontSize = 50.sp, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center )
                 
                 //Location for shoot
                 Row(modifier = modifier.align(CenterHorizontally)) {
-                    Image(painter = painterResource(id = R.drawable.location), contentDescription = "map icon", modifier = modifier.size(35.dp).padding(end = 5.dp))
-                    Text(text = shootInfoUIState.shoot!!.locationName, fontSize = 20.sp, color = Color.White)
+                    Icon(painter = painterResource(id = R.drawable.location1), "Location Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.secondary)
+                    Text(text = shootInfoUIState.shoot!!.locationName, fontSize = 20.sp, color = MaterialTheme.colorScheme.secondary)
                 }
 
                 Spacer(modifier = modifier.size(40.dp))
 
                 //Calendar and time 
                 Row(modifier = modifier.align(CenterHorizontally)){
-                    Image(painter = painterResource(id = R.drawable.calendar), contentDescription = "calendar icon", modifier = modifier.size(35.dp).padding(end = 5.dp))
-                    Text(text = date.toString(), fontSize = 20.sp, color = Color.White)
+                    Icon(painter = painterResource(id = R.drawable.calendar), "Calendar Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.secondary)
+                    Text(text = date.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.secondary)
                     
                     Spacer(modifier = modifier.size(30.dp))
 
-                    Image(painter = painterResource(id = R.drawable.clock), contentDescription = "clock icon", modifier = modifier.size(35.dp).padding(end = 5.dp))
-                    Text(text = time.toString(), fontSize = 20.sp, color = Color.White)
+                    Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.secondary)
+                    Text(text = time.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.secondary)
 
 
                 }
@@ -111,8 +112,6 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
 
                     UVCard(
                         modifier = modifier, time)
-
-
 
                 }
             }

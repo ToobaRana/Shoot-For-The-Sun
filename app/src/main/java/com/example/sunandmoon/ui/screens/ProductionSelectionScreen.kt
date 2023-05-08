@@ -126,7 +126,7 @@ fun ProductionShootSelectionTopPart(
     productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
     productionSelectionUIState: ProductionSelectionUIState
 ) {
-    val pageTitleTexts = listOf("Your produtions", "Individual shoots")
+    val pageTitleTexts = listOf("Your productions", "Individual shoots")
 
     Column(modifier.fillMaxWidth()) {
         Text(
@@ -148,7 +148,7 @@ fun ProductionShootSelectionTopPart(
                 .fillMaxWidth(0.8f)
                 .align(Alignment.CenterHorizontally),
             leadingIcon = {
-                Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
+                Icon(painterResource(R.drawable.search), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
             },
             colors = TextFieldDefaults.textFieldColors(
                 //cursorColor = MaterialTheme.colorScheme.primary,
