@@ -72,12 +72,17 @@ fun CalendarComponent(
     updateDay: (day: Int) -> Unit,
     updateMonth: (month: Int, maxDays: Int) -> Unit
 ) {
+
     var showCalendar by remember { mutableStateOf(false) }
-    Button(onClick = { showCalendar = !showCalendar }) {
-        Text(text = "Show Calendar")
-    }
-    if (showCalendar) {
-        CalendarComponentDisplay(modifier, chosenDate, updateYear, updateDay, updateMonth)
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Button(onClick = { showCalendar = !showCalendar}) {
+            Text(text = "Choose date")
+        }
+        if (showCalendar) {
+            CalendarComponentDisplay(modifier, chosenDate, updateYear, updateDay, updateMonth)
+        }
+
     }
 
 
