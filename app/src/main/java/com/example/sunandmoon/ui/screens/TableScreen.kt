@@ -74,7 +74,14 @@ fun TableView(modifier: Modifier,tableViewModel: TableViewModel = viewModel(), t
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            LocationSearch(modifier = modifier.width(200.dp))
+                            LocationSearch(
+                                modifier = modifier.width(200.dp),
+                                locationSearchQuery = tableUIState.locationSearchQuery,
+                                locationSearchResults = tableUIState.locationSearchResults,
+                                setLocationSearchQuery = {query: String -> tableViewModel.setLocationSearchQuery(query)},
+                                loadLocationSearchResults = {query: String -> tableViewModel.loadLocationSearchResults(query)},
+                                setCoordinates = {newLatitude: Double, newLongitude: Double, setTimeZoneOffset: Boolean -> tableViewModel.setCoordinates(newLatitude, newLongitude, setTimeZoneOffset)}
+                            )
                             chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
                         }
 
