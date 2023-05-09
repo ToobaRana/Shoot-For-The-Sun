@@ -5,9 +5,9 @@ import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchRes
 
 data class ShootInfoUIState(
 
-    val shoot: Shoot?,
+    val shoot: Shoot? = null,
 
-    val sunriseTime: String,
-    val solarNoonTime: String,
-    val sunsetTime: String
+    val sunriseTime: String = "not calculated",
+    val solarNoonTime: String = "not calculated",
+    val sunsetTime: String = "not calculated"
 )

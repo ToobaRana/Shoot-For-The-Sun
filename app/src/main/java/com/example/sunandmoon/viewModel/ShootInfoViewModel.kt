@@ -16,7 +16,6 @@ class ShootInfoViewModel : ViewModel() {
 
     private val _shootInfoUIState = MutableStateFlow(
         ShootInfoUIState(
-            shoot = Shoot(),
             sunriseTime = "05:23",
             solarNoonTime = "14:06",
             sunsetTime = "21:02"
@@ -48,5 +47,7 @@ class ShootInfoViewModel : ViewModel() {
         }
         val sunTimes = getSunRiseNoonFall(shoot.date, shoot.timeZoneOffset, shoot.location.latitude, shoot.location.longitude)
         setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
+
+
     }
 }

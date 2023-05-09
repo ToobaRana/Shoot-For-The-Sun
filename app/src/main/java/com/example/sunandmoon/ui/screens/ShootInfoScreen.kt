@@ -42,15 +42,16 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
 
     val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
 
-    var dateAndTime = shootInfoUIState.shoot!!.date
-    var date = dateAndTime.toLocalDate()
-    var timeWithSeconds = dateAndTime.toLocalTime()
-    var time = timeWithSeconds.truncatedTo(ChronoUnit.MINUTES)
-
     if (shootInfoUIState.shoot == null) {
         shootInfoViewModel.setShoot(shoot)
         return
     }
+
+    val dateAndTime = shootInfoUIState.shoot!!.date
+    val date = dateAndTime.toLocalDate()
+    val timeWithSeconds = dateAndTime.toLocalTime()
+    val time = timeWithSeconds.truncatedTo(ChronoUnit.MINUTES)
+
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
