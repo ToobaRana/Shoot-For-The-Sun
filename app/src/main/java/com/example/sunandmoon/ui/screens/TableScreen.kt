@@ -128,9 +128,6 @@ fun TableView(
 
             Box{
 
-            //Spacer(modifier = modifier.height(10.dp))
-
-                //modifier.padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)
                 Box(modifier.fillMaxSize().padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)) {
                 // Render the header row
 
@@ -173,14 +170,13 @@ fun TableView(
                     items(tableUIState.apiDateTableList) { date ->
 
                         val elementInTableUiStateList = date.split("T")
+                        println(elementInTableUiStateList)
 
                         val sunriseTime = elementInTableUiStateList[1]
                         val day = elementInTableUiStateList[0]
                         val monthInt = day.split("-")[1].toInt()
 
                         println("monthInt: $monthInt")
-
-
 
                         TableCard(
                             apiSunTime = sunriseTime,

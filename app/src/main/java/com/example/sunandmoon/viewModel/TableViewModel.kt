@@ -14,19 +14,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.lang.Math.min
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
-//import java.time.ZoneId
-//import java.time.ZonedDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.TimeZone
+import java.util.*
 
 class TableViewModel : ViewModel() {
 
     private val dataSource = DataSource()
 
     private val _tableUIState = MutableStateFlow(
-
         TableUIState(
             apiDateTableList = listOf(),
             calculationsDateTableList = listOf("", "", "", "", "", "", "", "", "", "", "", ""),
@@ -38,14 +39,12 @@ class TableViewModel : ViewModel() {
             },
             chosenDate = LocalDateTime.now(),
             chosenSunType = "Sunrise",
-            timeZoneOffset = 1.0
-
+            timeZoneOffset = 2.0,
+            timezone_id = "Europa/Oslo"
         )
     )
 
-
     val tableUIState: StateFlow<TableUIState> = _tableUIState.asStateFlow()
-
 
     init {
         loadSunInformation()
@@ -63,7 +62,8 @@ class TableViewModel : ViewModel() {
 
             val sameDaysList = getSameDaysInYear(tableUIState.value.chosenDate.toLocalDate())
             val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUIState.value.chosenDate.toLocalDate())
-
+            //println(sameDaysList)
+            //println(sameDaysListFromJanuary)
 
             for (date in sameDaysListFromJanuary.sorted()){
                 var stringDate = "$date 00:00"
@@ -71,10 +71,6 @@ class TableViewModel : ViewModel() {
                 var dateTime = LocalDateTime.parse(stringDate, formatter)
 
                 var calculationSunTime = getSunRiseNoonFall(dateTime, tableUIState.value.timeZoneOffset, tableUIState.value.location.latitude, tableUIState.value.location.longitude)
-
-
-                Log.d("latitude", tableUIState.value.location.latitude.toString())
-                Log.d("longitude", tableUIState.value.location.longitude.toString())
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     calculationsDateTableList.add(calculationSunTime[0])
@@ -90,27 +86,55 @@ class TableViewModel : ViewModel() {
 
             }
 
-
             for (date in sameDaysList.sorted()){
 
+                var offsetTest = findOffset("Australia/Darwin", date.toString())
+                Log.d("offsetTest", offsetTest)
+
+                Log.d("test", tableUIState.value.timeZoneOffset.toString())
+
+                Log.d("location", tableUIState.value.timezone_id)
+                Log.d("date", date.toString())
+
+
+                println(tableUIState.value.timeZoneOffset.toString())
+
+                var offset = findOffset(tableUIState.value.timezone_id, date.toString())
+                setTimeZone(offset.toDouble())
+
+                Log.d("offset", offset)
+                var sign: String
+                if (offset.startsWith('-')) {
+                    sign = "-"
+                } else {
+                    sign = "+"
+                }
+
+                if (offset.toInt() == 0){
+                    val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
+                    offset = sign + "0" +"$offsetFromUiState:00"
+                }
+               else if (offset.toInt() >= 10){
+                    offset = "$sign$offset:00"
+                } else if(offset.toInt()<10){
+                    offset = sign + "0" +"$offset:00"
+                }
+
                 if (tableUIState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "01:00").properties.sunrise.time
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+00:00").properties.sunrise.time
                     apiDateTableList.add(sunRiseTime)
-
-
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "01:00").properties.solarnoon.time
+                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+00:00").properties.solarnoon.time
                     apiDateTableList.add(solarNoon)
-
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "01:00").properties.sunset.time
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+00:00").properties.sunset.time
                     apiDateTableList.add(sunSetTime)
-
                 }
+
             }
 
 
@@ -167,8 +191,8 @@ class TableViewModel : ViewModel() {
 
 
 
-                val sameDayOfMonth = LocalDate.of(year, month, dayToUse)
-                sameDays.add(sameDayOfMonth)
+            val sameDayOfMonth = LocalDate.of(year, month, dayToUse)
+            sameDays.add(sameDayOfMonth)
 
 
 
@@ -181,6 +205,14 @@ class TableViewModel : ViewModel() {
         _tableUIState.update{ currentState ->
             currentState.copy(
                 chosenSunType = sunType,
+            )
+        }
+    }
+
+    fun setTimeZone(timezone: Double){
+        _tableUIState.update { currentState ->
+            currentState.copy(
+                timeZoneOffset = timezone
             )
         }
     }
@@ -210,10 +242,11 @@ class TableViewModel : ViewModel() {
         }
     }
 
-    fun setTimeZoneOffset(timeZoneOffset: Double) {
+    fun setTimeZoneOffset(timeZoneOffset: Double, timezone_id: String) {
         _tableUIState.update { currentState ->
             currentState.copy(
-                timeZoneOffset = timeZoneOffset
+                timeZoneOffset = timeZoneOffset,
+                timezone_id = timezone_id
             )
         }
     }
@@ -222,9 +255,10 @@ class TableViewModel : ViewModel() {
         viewModelScope.launch {
             if(setTimeZoneOffset) {
                 val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLatitude, newLongitude)
-                setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
-
+                setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble(), locationTimeZoneOffsetResult.timezone_id)
             }
+
+
             _tableUIState.update { currentState ->
                 currentState.copy(
                     location = Location("").apply {
@@ -263,17 +297,22 @@ class TableViewModel : ViewModel() {
         loadSunInformation()
     }
 
-    /*
-
     fun findOffset(location: String, date: String): String {
-        val zoneId = ZoneId.of(location)
-        val zonedDateTime = ZonedDateTime.parse(date)
-        val offset = zoneId.rules.getOffset(zonedDateTime.toInstant()).toString()
-        Log.d("offset", offset)
-        return offset
+        val calendar = Calendar.getInstance()
+        val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        dateFormat.calendar = calendar
+        val dateTime = dateFormat.parse(date)
+        val timeZone = TimeZone.getTimeZone(location)
+        val offsetInMillis = timeZone.getOffset(calendar.timeInMillis)
+        val offsetHours = offsetInMillis / (1000 * 60 * 60)
+        println(offsetHours.toString())
+        return offsetHours.toString()
     }
 
-     */
+
 
 
 }
+
+
+
