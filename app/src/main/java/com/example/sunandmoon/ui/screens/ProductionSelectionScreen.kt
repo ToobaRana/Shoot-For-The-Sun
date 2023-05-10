@@ -213,7 +213,7 @@ fun ProductionShootSelectionTopPart(
                 .align(Alignment.CenterHorizontally),
             leadingIcon = {
                 Icon(
-                    painterResource(R.drawable.find_shoot_icon),
+                    painterResource(R.drawable.search),
                     "location search field icon",
                     Modifier,
                     MaterialTheme.colorScheme.primary
