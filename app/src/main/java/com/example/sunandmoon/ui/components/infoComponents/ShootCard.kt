@@ -21,12 +21,12 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shoot: Shoot) -
             .padding(35.dp, 10.dp)
             .clickable { navigateToNext(shoot) },
         elevation = CardDefaults.cardElevation(defaultElevation = 15.dp)
-    ){
+    ) {
         Column(
             modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             Text(text = shoot.name, modifier = modifier.padding(20.dp))
             Text(text = shoot.date.toLocalDate().toString(), modifier = modifier.padding(20.dp))
         }

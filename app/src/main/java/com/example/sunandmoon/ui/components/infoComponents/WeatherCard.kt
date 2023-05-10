@@ -2,8 +2,7 @@ package com.example.sunandmoon.ui.components.infoComponents
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -14,17 +13,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.SunPositionComponent
+import com.example.sunandmoon.ui.theme.SunColor
+import com.example.sunandmoon.ui.theme.ThermometerColor
+import com.example.sunandmoon.ui.theme.WeatherBlueColor
 import java.time.LocalDateTime
 import java.time.LocalTime
 
 
 @Composable
-fun WeatherCard(modifier: Modifier, time : LocalTime){
+fun WeatherCard(modifier: Modifier, time: LocalTime) {
 
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(15.dp)
+            .height(150.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.primary
+        )
+
     ) {
 
         Column(
@@ -38,25 +46,31 @@ fun WeatherCard(modifier: Modifier, time : LocalTime){
                 modifier
                     .padding(start = 60.dp, bottom = 10.dp)
                     .fillMaxWidth()
-            ){
+            ) {
 
                 //pic of weather
-                Image(
+                Icon(
                     painter = painterResource(id = R.drawable.rain),
-                    contentDescription = "weather condition",
-                    modifier = modifier.size(80.dp)
+                    "Weather Condition Image",
+                    modifier.size(100.dp),
+                    WeatherBlueColor
                 )
 
                 Column(
                     modifier
                         .fillMaxWidth()
                         .padding(start = 60.dp)
-                ){
+                ) {
 
-                    Row(){
+                    Row() {
 
                         //The temperature
-                        Image(painter = painterResource(id = R.drawable.thermometer), contentDescription = "thermometer", modifier = modifier.size(35.dp))
+                        Icon(
+                            painter = painterResource(id = R.drawable.thermometer),
+                            "Thermometer Image",
+                            modifier.size(35.dp),
+                            ThermometerColor
+                        )
                         Text(text = "7°C", modifier.padding(start = 10.dp), fontSize = 20.sp)
 
                     }
@@ -65,7 +79,12 @@ fun WeatherCard(modifier: Modifier, time : LocalTime){
 
                     Row() {
                         //Rainfall
-                        Image(painter = painterResource(id = R.drawable.raindrops), contentDescription = "raindrops", modifier = modifier.size(35.dp))
+                        Icon(
+                            painter = painterResource(id = R.drawable.raindrops),
+                            "Raindrops Image",
+                            modifier.size(35.dp),
+                            WeatherBlueColor
+                        )
                         Text(text = "3 mm", modifier.padding(start = 10.dp), fontSize = 20.sp)
                     }
                 }

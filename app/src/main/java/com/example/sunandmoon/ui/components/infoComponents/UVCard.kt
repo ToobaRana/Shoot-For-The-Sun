@@ -2,8 +2,7 @@ package com.example.sunandmoon.ui.components.infoComponents
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -11,15 +10,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
+import com.example.sunandmoon.ui.theme.UVLowColor
+import com.example.sunandmoon.ui.theme.WeatherBlueColor
 import java.time.LocalTime
 
 @Composable
-fun UVCard(modifier: Modifier, time : LocalTime){
+fun UVCard(modifier: Modifier, time: LocalTime) {
 
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(15.dp)
+            .height(150.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.primary
+        )
+
+
     ) {
 
         Column(
@@ -33,20 +41,24 @@ fun UVCard(modifier: Modifier, time : LocalTime){
                 modifier
                     .padding(start = 60.dp, top = 5.dp)
                     .fillMaxWidth()
-            ){
+            ) {
+
+                Spacer(modifier.size(10.dp))
+
 
                 //UV icon that symbolises how intense the UV-rays are
-                Image(
-                    painter = painterResource(id = R.drawable.uv1),
-                    contentDescription = "UV-intensity based icon",
-                    modifier = modifier
-                        .size(80.dp)
+                Icon(
+                    painter = painterResource(id = R.drawable.sun),
+                    "UV-Intensity Based Image",
+                    modifier.size(100.dp),
+                    UVLowColor
                 )
 
-                Spacer(modifier.size(40.dp))
+
+                Spacer(modifier.size(30.dp))
 
                 Column(
-                ){
+                ) {
 
                     //UV info
                     Text(text = "UV-index: 1", fontSize = 20.sp, fontWeight = FontWeight.Bold)

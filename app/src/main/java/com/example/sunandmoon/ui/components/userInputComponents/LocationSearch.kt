@@ -10,11 +10,8 @@ import androidx.compose.ui.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
-import com.example.sunandmoon.viewModel.CreateShootViewModel
-import com.example.sunandmoon.viewModel.ShootInfoViewModel
 
 //https://nominatim.openstreetmap.org/ui/search.html
 
@@ -57,7 +54,7 @@ fun LocationSearch(
                 }
             ),
             leadingIcon = {
-                Icon(painterResource(R.drawable.find_shoot_icon), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
+                Icon(painterResource(R.drawable.searchlocation), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
             },
             colors = TextFieldDefaults.textFieldColors(
                 //cursorColor = MaterialTheme.colorScheme.primary,
