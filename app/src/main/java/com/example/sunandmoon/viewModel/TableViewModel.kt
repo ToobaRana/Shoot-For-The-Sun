@@ -40,7 +40,8 @@ class TableViewModel : ViewModel() {
             chosenDate = LocalDateTime.now(),
             chosenSunType = "Sunrise",
             timeZoneOffset = 2.0,
-            timezone_id = "Europa/Oslo"
+            timezone_id = "Europa/Oslo",
+            sign = ""
         )
     )
 
@@ -88,50 +89,39 @@ class TableViewModel : ViewModel() {
 
             for (date in sameDaysList.sorted()){
 
-                var offsetTest = findOffset("Australia/Darwin", date.toString())
-                Log.d("offsetTest", offsetTest)
-
-                Log.d("test", tableUIState.value.timeZoneOffset.toString())
-
-                Log.d("location", tableUIState.value.timezone_id)
-                Log.d("date", date.toString())
-
-
-                println(tableUIState.value.timeZoneOffset.toString())
-
                 var offset = findOffset(tableUIState.value.timezone_id, date.toString())
                 setTimeZone(offset.toDouble())
 
-                Log.d("offset", offset)
-                var sign: String
-                if (offset.startsWith('-')) {
-                    sign = "-"
+                if (tableUIState.value.sign == "-") {
+                    val signValue = "-"
+                    setSignType(signValue)
                 } else {
-                    sign = "+"
+                    val signValue = "+"
+                    setSignType(signValue)
                 }
 
                 if (offset.toInt() == 0){
                     val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
-                    offset = sign + "0" +"$offsetFromUiState:00"
+                    offset = "0$offsetFromUiState:00"
                 }
                else if (offset.toInt() >= 10){
-                    offset = "$sign$offset:00"
+                    offset = "$offset:00"
                 } else if(offset.toInt()<10){
-                    offset = sign + "0" +"$offset:00"
+                    offset = "0$offset:00"
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+00:00").properties.sunrise.time
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "${tableUIState.value.sign}$offset").properties.sunrise.time
                     apiDateTableList.add(sunRiseTime)
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+00:00").properties.solarnoon.time
+                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "${tableUIState.value.sign}$offset").properties.solarnoon.time
                     apiDateTableList.add(solarNoon)
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "+00:00").properties.sunset.time
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "${tableUIState.value.sign}$offset").properties.sunset.time
                     apiDateTableList.add(sunSetTime)
                 }
 
@@ -205,6 +195,13 @@ class TableViewModel : ViewModel() {
         _tableUIState.update{ currentState ->
             currentState.copy(
                 chosenSunType = sunType,
+            )
+        }
+    }
+    fun setSignType(signType: String){
+        _tableUIState.update{ currentState ->
+            currentState.copy(
+                sign = signType,
             )
         }
     }
