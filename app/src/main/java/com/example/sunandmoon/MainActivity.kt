@@ -78,20 +78,22 @@ fun MultipleScreenNavigator(modifier: Modifier) {
                         2 -> navController.navigate("tableScreen")
                     }
                 },
-                navigateToCreateShootScreen = { navController.navigate("createShootScreen") }
+                navigateToCreateShootScreen = { navController.navigate("createShootScreen") },
+                navController = navController,
+                currentScreenRoute = "productionSelectionScreen"
             )
         }
         composable("shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}") { backStackEntry ->
             ShootInfoScreen(
                 modifier = modifier,
-                navigateToNext = { navController.navigate("tableScreen")},
+                navigateBack = { navController.popBackStack("productionSelectionScreen", false) },
                 shoot = getShootFromArgs(backStackEntry)
             )
         }
         composable("createShootScreen") {
             CreateShootScreen(
                 modifier = modifier,
-                navigateToNext = { navController.popBackStack("productionSelectionScreen", false)},
+                navigateBack = { navController.popBackStack("productionSelectionScreen", false) },
             )
         }
         composable("tableScreen"){ backStackEntry ->

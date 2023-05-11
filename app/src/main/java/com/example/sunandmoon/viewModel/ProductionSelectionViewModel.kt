@@ -122,6 +122,20 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
+    fun deleteProduction() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val idToDelete: Int? = _productionSelectionUIState.value.selectedProduction?.id
+                Log.i("aaa12345", idToDelete.toString())
+                if(idToDelete != null) {
+                    productionDao.delete(productionDao.loadById(idToDelete))
+                    getAllProductions()
+                }
+            }
+            goOutOfProduction()
+        }
+    }
+
     fun changeCurrentPageIndex() {
         _productionSelectionUIState.update { currentState ->
             val newPageIndex = (
@@ -137,9 +151,10 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
-    fun goIntoProduction() {
+    fun goIntoProduction(production: Production) {
         _productionSelectionUIState.update { currentState ->
             currentState.copy(
+                selectedProduction = production,
                 currentPageIndex = SelectionPages.PRODUCTION_SHOOTS.ordinal
             )
         }

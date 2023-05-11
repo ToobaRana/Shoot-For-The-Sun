@@ -28,6 +28,7 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
+import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
 import com.example.sunandmoon.ui.components.infoComponents.SunPositionsCard
 import com.example.sunandmoon.ui.components.infoComponents.UVCard
 import com.example.sunandmoon.ui.components.infoComponents.WeatherCard
@@ -39,7 +40,7 @@ import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoViewModel: ShootInfoViewModel = viewModel(), shoot: Shoot){
+fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewModel: ShootInfoViewModel = viewModel(), shoot: Shoot){
 
     val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
 
@@ -57,11 +58,17 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            Column(modifier.fillMaxWidth().padding(top = 30.dp)) {
-                
+            Column(modifier.fillMaxWidth().padding(top = 10.dp)) {
+                GoBackEditDeleteBar(
+                    modifier,
+                    MaterialTheme.colorScheme.secondary,
+                    navigateBack,
+                    { /* TODO */ },
+                    { /* TODO */ })
+
                 //Header for shoot name
                 Text(text = shootInfoUIState.shoot!!.name, modifier = modifier.fillMaxWidth().align(CenterHorizontally), fontSize = 50.sp, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center )
-                
+
                 //Location for shoot
                 Row(modifier = modifier.align(CenterHorizontally)) {
                     Icon(painter = painterResource(id = R.drawable.location1), "Location Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.secondary)
@@ -70,11 +77,11 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
 
                 Spacer(modifier = modifier.size(40.dp))
 
-                //Calendar and time 
+                //Calendar and time
                 Row(modifier = modifier.align(CenterHorizontally)){
                     Icon(painter = painterResource(id = R.drawable.calendar), "Calendar Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.secondary)
                     Text(text = date.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.secondary)
-                    
+
                     Spacer(modifier = modifier.size(30.dp))
 
                     Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.secondary)

@@ -32,16 +32,19 @@ import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import java.time.LocalDateTime
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShootViewModel: CreateShootViewModel = hiltViewModel()){
+fun CreateShootScreen(
+    modifier: Modifier,
+    navigateBack: () -> Unit,
+    createShootViewModel: CreateShootViewModel = hiltViewModel(),
+) {
 
     val createShootUIState by createShootViewModel.createShootUIState.collectAsState()
     checkPermissions { enabled: Boolean -> createShootViewModel.updateLocation(enabled) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        content = {innerPadding ->
+        content = { innerPadding ->
             val focusManager = LocalFocusManager.current
 
             LazyColumn(
@@ -52,14 +55,16 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShoo
             )
 
             {
-                item{
-                    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-
+                item {
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
 
 
                         TextField(value = createShootUIState.name,
                             label = { Text("Title") },
-                            onValueChange = {name->
+                            onValueChange = { name ->
                                 createShootViewModel.updateShootName(name);
                             },
                             placeholder = { Text("My Shoot") },
@@ -94,11 +99,15 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShoo
                     }
 
 
-
                 }
-                item{
+                item {
                     Spacer(modifier = modifier.size(20.dp))
-                    Divider(modifier = modifier.fillMaxWidth().height(3.dp), color = MaterialTheme.colorScheme.onSurface)
+                    Divider(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .height(3.dp),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                     Spacer(modifier = modifier.size(20.dp))
                 }
                 item {
@@ -106,9 +115,15 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShoo
                         modifier,
                         createShootUIState.locationSearchQuery,
                         createShootUIState.locationSearchResults,
-                        {query: String -> createShootViewModel.setLocationSearchQuery(query)},
-                        {query: String -> createShootViewModel.loadLocationSearchResults(query)},
-                        {latitude: Double, longitude: Double, setTimeZoneOffset: Boolean -> createShootViewModel.setCoordinates(latitude, longitude, setTimeZoneOffset)},
+                        { query: String -> createShootViewModel.setLocationSearchQuery(query) },
+                        { query: String -> createShootViewModel.loadLocationSearchResults(query) },
+                        { latitude: Double, longitude: Double, setTimeZoneOffset: Boolean ->
+                            createShootViewModel.setCoordinates(
+                                latitude,
+                                longitude,
+                                setTimeZoneOffset
+                            )
+                        },
                     )
                     CalendarComponent(modifier,
                         createShootUIState.chosenDate,
@@ -125,7 +140,7 @@ fun CreateShootScreen(modifier: Modifier, navigateToNext: () -> Unit, createShoo
                     Button(onClick = {
                         //save stuff
                         createShootViewModel.saveShootInProduction()
-                        navigateToNext()
+                        navigateBack()
                     }) {
                         Text(text = "Save")
                     }
