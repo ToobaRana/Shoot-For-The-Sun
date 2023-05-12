@@ -17,15 +17,18 @@ import androidx.compose.ui.unit.sp
 fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, modifier: Modifier) {
     Surface(
         modifier = modifier
-            .fillMaxWidth().padding(0.dp, 0.dp, 8.dp, 0.dp),
+            .fillMaxWidth()
+            .padding(0.dp, 0.dp, 8.dp, 0.dp),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, Color.White)
     ) {
         Row(
-            modifier = modifier.fillMaxWidth().background(Color.White),
+            modifier = modifier
+                .fillMaxWidth()
+                .background(Color.White),
             horizontalArrangement = Arrangement.SpaceBetween,
 
-        ) {
+            ) {
 
             Text(
                 text = day,

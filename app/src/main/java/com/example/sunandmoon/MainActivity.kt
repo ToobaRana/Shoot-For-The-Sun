@@ -1,5 +1,6 @@
 package com.example.sunandmoon
 
+import android.content.Context
 import android.location.Location
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,6 +13,10 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import com.example.sunandmoon.data.localDatabase.AppDatabase
+import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
+import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.util.LocationAndDateTime
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.screens.CreateShootScreen
@@ -21,18 +26,28 @@ import com.example.sunandmoon.ui.screens.TableScreen
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.FusedLocationProviderClient
+import dagger.Component
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+//import com.example.sunandmoon.di.DaggerAppComponent
 
+
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     //initializing here to get context of activity (this) before setcontent
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        val modifier = Modifier
+
         setContent {
-            val modifier = Modifier
             SunAndMoonTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -55,7 +70,7 @@ fun MultipleScreenNavigator(modifier: Modifier) {
         composable("productionSelectionScreen") {
             ProductionSelectionScreen(
                 modifier = modifier,
-                navigateToShootInfoScreen = { shoot: Shoot -> navController.navigate("shootInfoScreen/${shoot.name}/${shoot.locationName}/${shoot.date}/${shoot.location.latitude}/${shoot.location.longitude}/${shoot.timeZoneOffset}")},
+                navigateToShootInfoScreen = { shoot: Shoot -> navController.navigate("shootInfoScreen/${shoot.name}/${shoot.locationName}/${shoot.date}/${shoot.location.latitude}/${shoot.location.longitude}/${shoot.timeZoneOffset}/${shoot.id}")},
                 navigateToNextBottomBar = { index: Int ->
                     when (index) {
                         0 -> navController.popBackStack("productionSelectionScreen", false)
@@ -63,27 +78,27 @@ fun MultipleScreenNavigator(modifier: Modifier) {
                         2 -> navController.navigate("tableScreen")
                     }
                 },
-                navigateToCreateProductionScreen = { navController.navigate("createProductionScreen") },
-                navigateToCreateShootScreen = { navController.navigate("createShootScreen") }
+                navigateToCreateShootScreen = { parentProductionId: Int?, shootToEditId: Int? -> navController.navigate("createShootScreen/$parentProductionId/$shootToEditId") },
+                navController = navController,
+                currentScreenRoute = "productionSelectionScreen"
             )
         }
-        composable("shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}") { backStackEntry ->
+        composable("shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}/{shootId}") { backStackEntry ->
             ShootInfoScreen(
                 modifier = modifier,
-                navigateToNext = { navController.navigate("tableScreen")},
-                shoot = getShootFromArgs(backStackEntry)
+                navigateBack = { navController.popBackStack("productionSelectionScreen", false) },
+                shoot = getShootFromArgs(backStackEntry),
+                navigateToCreateShootScreen = { parentProductionId: Int?, shootToEditId: Int? -> navController.navigate("createShootScreen/$parentProductionId/$shootToEditId") }
             )
         }
-        composable("createProductionScreen") {
+        composable("createShootScreen/{parentProductionId}/{shootToEditId}") { backStackEntry ->
+            val parentProductionId: Int? = backStackEntry.arguments?.getString("parentProductionId")?.toIntOrNull()
+            val shootToEditId: Int? = backStackEntry.arguments?.getString("shootToEditId")?.toIntOrNull()
             CreateShootScreen(
                 modifier = modifier,
-                navigateToNext = { navController.popBackStack("productionSelectionScreen", false)},
-            )
-        }
-        composable("createShootScreen") {
-            CreateShootScreen(
-                modifier = modifier,
-                navigateToNext = { navController.popBackStack("productionSelectionScreen", false)},
+                navigateBack = { navController.popBackStack("productionSelectionScreen", false) },
+                parentProductionId = parentProductionId,
+                shootToEditId = shootToEditId
             )
         }
         composable("tableScreen"){ backStackEntry ->
@@ -108,5 +123,12 @@ fun getShootFromArgs(backStackEntry: NavBackStackEntry): Shoot {
     location.latitude = backStackEntry.arguments?.getString("latitude")?.toDouble() ?: 0.0
     location.longitude = backStackEntry.arguments?.getString("longitude")?.toDouble() ?: 0.0
 
-    return Shoot(name = "test", locationName = "test2", location = location, date = localDateTime, timeZoneOffset = 2.0)
+    val shootName: String = backStackEntry.arguments?.getString("shootName")!!
+    val locationName: String = backStackEntry.arguments?.getString("locationName")!!
+
+    val timeZoneOffset: Double = backStackEntry.arguments?.getString("timeZoneOffset")!!.toDouble()
+
+    val shootId: Int = backStackEntry.arguments?.getString("shootId")!!.toInt()
+
+    return Shoot(name = shootName, locationName = locationName, location = location, date = localDateTime, timeZoneOffset = timeZoneOffset, id = shootId)
 }

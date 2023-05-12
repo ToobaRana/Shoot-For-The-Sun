@@ -1,6 +1,9 @@
 package com.example.sunandmoon.viewModel
 
+import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ProductionSelectionUIState
 import com.example.sunandmoon.data.util.Production
@@ -9,33 +12,178 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import com.example.sunandmoon.data.localDatabase.AppDatabase
+import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
+import com.example.sunandmoon.data.localDatabase.dao.ShootDao
+import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
+import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class ProductionSelectionViewModel : ViewModel() {
+enum class SelectionPages {
+    PRODUCTIONS, SHOOTS, PRODUCTION_SHOOTS
+}
+
+@HiltViewModel
+class ProductionSelectionViewModel @Inject constructor(
+    private val database: AppDatabase
+) : ViewModel() {
     private val dataSource = DataSource()
 
-    val testShoot1 = Shoot()
-    val testShoot2 = Shoot(name = "testTestTestTestTestTestTestTestTestTestTestTest")
-    val testProduction1 = Production(shoots = listOf(testShoot1, testShoot2))
-    val testProduction2 = Production()
+    val productionDao: ProductionDao = database.productionDao()
+    val shootDao: ShootDao = database.shootDao()
 
-    //sunDataSource.fetchSunrise3Data("sun", 59.933333, 10.716667, "2022-12-18", "+01:00" ).properties.sunrise.time
     private val _productionSelectionUIState = MutableStateFlow(
-        ProductionSelectionUIState(
-            shootsList = listOf(testShoot1, testShoot2),
-            productionsList = listOf() //listOf(testProduction1, testProduction2)
-        )
+        ProductionSelectionUIState()
     )
 
     val productionSelectionUIState: StateFlow<ProductionSelectionUIState> = _productionSelectionUIState.asStateFlow()
 
     init {
         // get previously saved productions
+        //saveProduction()
+        getAllProductions()
+        getAllIndependentShoots()
+    }
+
+    fun getAllProductions() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val allProductions = productionDao.getAll()
+                var productionList = mutableListOf<Production>()
+                allProductions.forEach() { storableProduction ->
+                    productionList.add(
+                        Production(
+                            id = storableProduction.uid,
+                            name = storableProduction.name,
+                            duration = Pair(
+                                storableProduction.startDateTime,
+                                storableProduction.endDateTime
+                            )
+                        )
+                    )
+                }
+                withContext(Dispatchers.Main) {
+                    _productionSelectionUIState.update { currentState ->
+                        currentState.copy(
+                            productionsList = productionList
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun storableShootsToNormalShoots(storableShoots: List<StorableShoot>?): List<Shoot> {
+        var shootList = mutableListOf<Shoot>()
+
+        if(storableShoots == null) return shootList
+
+        storableShoots.forEach() { storableShoot ->
+            shootList.add(
+                Shoot(
+                    id = storableShoot.uid,
+                    name = storableShoot.name,
+                    locationName = storableShoot.locationName,
+                    location = Location("").apply {
+                        latitude = storableShoot.latitude
+                        longitude = storableShoot.longitude
+                    },
+                    date = storableShoot.date,
+                    timeZoneOffset = storableShoot.timeZoneOffset
+
+                )
+            )
+        }
+
+        return shootList
+    }
+
+    fun getAllIndependentShoots() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val allIndependentShoots = shootDao.getAllIndependentShoots()
+                val shootList = storableShootsToNormalShoots(allIndependentShoots)
+                withContext(Dispatchers.Main) {
+                    _productionSelectionUIState.update { currentState ->
+                        currentState.copy(
+                            independentShootsList = shootList
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun saveProduction() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                productionDao.insert(StorableProduction(
+                    uid = 0,
+                    name = "test " + (Math.random()*1000).toInt().toString(),
+                    startDateTime = null,
+                    endDateTime = null
+                ))
+                getAllProductions()
+            }
+        }
+    }
+
+    fun deleteProduction() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val idToDelete: Int? = _productionSelectionUIState.value.selectedProduction?.id
+                Log.i("aaa12345", idToDelete.toString())
+                if(idToDelete != null) {
+                    productionDao.delete(productionDao.loadById(idToDelete))
+                    getAllProductions()
+                }
+            }
+            goOutOfProduction()
+        }
     }
 
     fun changeCurrentPageIndex() {
         _productionSelectionUIState.update { currentState ->
+            val newPageIndex = (
+                    if(_productionSelectionUIState.value.currentPageIndex == 0)
+                        SelectionPages.SHOOTS.ordinal
+                    else
+                        SelectionPages.PRODUCTIONS.ordinal
+                )
+
             currentState.copy(
-                currentPageIndex = (_productionSelectionUIState.value.currentPageIndex + 1) % 2
+                currentPageIndex = newPageIndex
+            )
+        }
+    }
+
+    fun goIntoProduction(production: Production) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val productionShoots = production.id?.let { shootDao.loadByProductionId(it) }
+                val shootList = storableShootsToNormalShoots(productionShoots)
+                withContext(Dispatchers.Main) {
+                    _productionSelectionUIState.update { currentState ->
+                        currentState.copy(
+                            selectedProduction = production,
+                            currentPageIndex = SelectionPages.PRODUCTION_SHOOTS.ordinal,
+                            productionShootsList = shootList
+                        )
+                    }
+                }
+            }
+        }
+
+    }
+
+    fun goOutOfProduction() {
+        _productionSelectionUIState.update { currentState ->
+            currentState.copy(
+                currentPageIndex = SelectionPages.PRODUCTIONS.ordinal
             )
         }
     }

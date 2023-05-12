@@ -2,6 +2,7 @@ package com.example.sunandmoon.data
 
 //import android.R
 import android.R
+import android.annotation.SuppressLint
 import android.provider.Settings.Global.getString
 import com.example.sunandmoon.BuildConfig
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
@@ -9,6 +10,8 @@ import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import com.example.sunandmoon.model.LocationTimeZoneOffsetResultModel.LocationTimeZoneOffsetResult
 import com.example.sunandmoon.model.SunriseModel.Sunrise3
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LastLocationRequest
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -84,4 +87,19 @@ class DataSource() {
 
         return apiResults
     }
+}
+@SuppressLint("MissingPermission")
+fun fetchLocation(
+    fusedLocationClient: FusedLocationProviderClient,
+    setCoordinates: (latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) -> Unit
+) {
+    val request = LastLocationRequest.Builder().build()
+    try {
+        fusedLocationClient.getLastLocation(request).addOnSuccessListener {
+            setCoordinates(it.latitude, it.longitude, true);
+        }
+    } catch (e: java.lang.IllegalStateException) {
+        println("location could not be fetched in time")
+    }
+
 }
