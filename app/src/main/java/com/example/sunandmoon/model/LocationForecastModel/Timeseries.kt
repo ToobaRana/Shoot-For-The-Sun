@@ -2,5 +2,5 @@ package com.example.sunandmoon.model.LocationForecastModel
 
 data class Timeseries(
     val time : String,
-    val data : String //Data
+    val data : Data //Data
 )

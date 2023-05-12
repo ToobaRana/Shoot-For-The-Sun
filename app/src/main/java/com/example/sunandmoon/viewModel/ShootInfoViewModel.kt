@@ -8,7 +8,9 @@ import com.example.sunandmoon.data.ShootInfoUIState
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.fetchLocation
 import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 import com.google.android.gms.location.FusedLocationProviderClient
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +27,9 @@ class ShootInfoViewModel : ViewModel() {
             shoot = Shoot(),
             sunriseTime = "05:23",
             solarNoonTime = "14:06",
-            sunsetTime = "21:02"
+            sunsetTime = "21:02",
+            weatherData = null
+
         )
     )
 
@@ -34,6 +38,7 @@ class ShootInfoViewModel : ViewModel() {
     init {
         //val sunTimes = getSunRiseNoonFall(shootInfoUIState.value.shoot.date, shootInfoUIState.value.shoot.timeZoneOffset, shootInfoUIState.value.shoot.location.latitude, shootInfoUIState.value.shoot.location.longitude)
         //setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
+        loadLocationForecast()
     }
 
     fun setSolarTimes(sunriseTime: String, solarNoonTime: String, sunsetTime: String) {
@@ -54,5 +59,18 @@ class ShootInfoViewModel : ViewModel() {
         }
         val sunTimes = getSunRiseNoonFall(shoot.date, shoot.timeZoneOffset, shoot.location.latitude, shoot.location.longitude)
         setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
+    }
+
+
+    fun loadLocationForecast(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val weatherData = dataSource.fetchWeatherAPI(shootInfoUIState.value.shoot?.location?.latitude.toString(), shootInfoUIState.value.shoot?.location?.longitude.toString())
+            _shootInfoUIState.update { currenState ->
+                currenState.copy(
+                    weatherData = weatherData
+                )
+            }
+
+        }
     }
 }

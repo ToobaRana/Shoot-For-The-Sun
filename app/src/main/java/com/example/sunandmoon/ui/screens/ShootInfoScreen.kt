@@ -82,42 +82,46 @@ fun ShootInfoScreen(modifier: Modifier, navigateToNext: () -> Unit, shootInfoVie
                 }
 
             }
-        },
-
-
-        content = {innerPadding ->
-            LazyColumn(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(top = 20.dp)
-            )
-
-            {
-                item {
-
-                    SunPositionsCard(
-                        modifier = modifier,
-                        sunriseTime = shootInfoUIState.sunriseTime,
-                        solarNoonTime = shootInfoUIState.solarNoonTime ,
-                        sunsetTime = shootInfoUIState.sunsetTime
-                    )
-
-                    WeatherCard(
-                        modifier = modifier, time)
-
-                    WindCard(
-                        modifier = modifier, time)
-
-                    UVCard(
-                        modifier = modifier, time)
-
-
-
-                }
-            }
-
         }
-    )
+
+
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(top = 20.dp)
+        )
+
+        {
+            item {
+
+                SunPositionsCard(
+                    modifier = modifier,
+                    sunriseTime = shootInfoUIState.sunriseTime,
+                    solarNoonTime = shootInfoUIState.solarNoonTime,
+                    sunsetTime = shootInfoUIState.sunsetTime
+                )
+
+                WeatherCard(
+                    modifier = modifier,
+                    time,
+                    shootInfoUIState.weatherData?.properties?.timeseries?.
+                    firstOrNull({ it -> it.toString() == "2023-05-12T10:00:00Z" })?.data?.instant?.details?.air_temperature
+                )
+
+                WindCard(
+                    modifier = modifier, time
+                )
+
+                UVCard(
+                    modifier = modifier, time
+                )
+
+
+            }
+        }
+
+    }
 
 }

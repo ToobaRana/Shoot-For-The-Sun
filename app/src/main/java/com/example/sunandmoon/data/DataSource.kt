@@ -72,7 +72,7 @@ class DataSource() {
 
     //example
     //https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=60.10&lon=10
-    suspend fun fetchWeatherAPI(lat : String, lon : String){
+    suspend fun fetchWeatherAPI(lat : String, lon : String) : LocationForecast{
         val endPoint = "$baseURLLocationForecast?lat=$lat&lon=$lon"
 
         val apiResults : LocationForecast = client.get(endPoint){
@@ -82,6 +82,6 @@ class DataSource() {
         }
             .body()
 
-
+        return apiResults
     }
 }

@@ -19,7 +19,7 @@ import java.time.LocalTime
 
 
 @Composable
-fun WeatherCard(modifier: Modifier, time : LocalTime){
+fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?){
 
     ElevatedCard(
         modifier = modifier
@@ -57,7 +57,7 @@ fun WeatherCard(modifier: Modifier, time : LocalTime){
 
                         //The temperature
                         Image(painter = painterResource(id = R.drawable.thermometer), contentDescription = "thermometer", modifier = modifier.size(35.dp))
-                        Text(text = "7°C", modifier.padding(start = 10.dp), fontSize = 20.sp)
+                        Text(text = temperature.toString(), modifier.padding(start = 10.dp), fontSize = 20.sp)
 
                     }
 
