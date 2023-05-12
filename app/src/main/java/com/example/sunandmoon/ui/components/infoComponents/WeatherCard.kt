@@ -12,7 +12,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
-import com.example.sunandmoon.ui.components.SunPositionComponent
 import com.example.sunandmoon.ui.theme.SunColor
 import com.example.sunandmoon.ui.theme.ThermometerColor
 import com.example.sunandmoon.ui.theme.WeatherBlueColor

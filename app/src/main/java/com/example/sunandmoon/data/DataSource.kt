@@ -30,7 +30,7 @@ class DataSource() {
 
     private val client = HttpClient() {
 
-    install(ContentNegotiation)
+        install(ContentNegotiation)
         {
             gson()
         }
