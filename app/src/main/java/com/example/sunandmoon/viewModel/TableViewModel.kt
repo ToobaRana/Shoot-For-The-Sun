@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.TableUIState
-import com.example.sunandmoon.data.util.LocationAndDateTime
 import com.example.sunandmoon.getSunRiseNoonFall
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,11 +17,8 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.math.sign
 
 class TableViewModel : ViewModel() {
 
@@ -55,23 +51,23 @@ class TableViewModel : ViewModel() {
     fun loadSunInformation(){
         viewModelScope.launch {
 
-            var sunRiseTime = "not loaded"
-            var sunSetTime = "not loaded"
-            var solarNoon = "not loaded"
+            var sunRiseTime: String
+            var sunSetTime: String
+            var solarNoon: String
 
-            var apiDateTableList = mutableListOf<String>()
-            var calculationsDateTableList = mutableListOf<String>()
+            val apiDateTableList = mutableListOf<String>()
+            val calculationsDateTableList = mutableListOf<String>()
 
             val sameDaysList = getSameDaysInYear(tableUIState.value.chosenDate.toLocalDate())
             val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUIState.value.chosenDate.toLocalDate())
 
 
             for (date in sameDaysListFromJanuary.sorted()){
-                var stringDate = "$date 00:00"
-                var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-                var dateTime = LocalDateTime.parse(stringDate, formatter)
+                val stringDate = "$date 00:00"
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                val dateTime = LocalDateTime.parse(stringDate, formatter)
 
-                var calculationSunTime = getSunRiseNoonFall(dateTime, tableUIState.value.timeZoneOffset, tableUIState.value.location.latitude, tableUIState.value.location.longitude)
+                val calculationSunTime = getSunRiseNoonFall(dateTime, tableUIState.value.timeZoneOffset, tableUIState.value.location.latitude, tableUIState.value.location.longitude)
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     calculationsDateTableList.add(calculationSunTime[0])
@@ -88,34 +84,20 @@ class TableViewModel : ViewModel() {
             }
 
             for (date in sameDaysList.sorted()){
-                var offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
-                var offserFromUiState = tableUIState.value.timeZoneOffset
-                var offsetString: String = ""
+                val offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
+                val offserFromUiState = tableUIState.value.timeZoneOffset
+                var offsetString: String
 
                 val offsetDecimal = offserFromUiState.toString().split(".")
 
 
-                var hours = offsetDecimal[0]
-                var hoursWithOutSign = hours.split("")[2]
-                Log.d("hoursWithOutSign", hoursWithOutSign)
-
+                val hours = offsetDecimal[0]
+                val hoursWithOutSign = hours.split("")[2]
              
 
-                var minutter = offsetDecimal[1]
+                val minutter = offsetDecimal[1]
 
-                Log.d("offset2", hours)
-
-                Log.d("decimal", minutter)
-
-
-                //startverdi
-                if (offserFromUiState == 0.0) {
-                    val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
-                    offsetString = "+0$offsetFromUiState:00"
-                }
-
-                ////hvis desimal
-                else if (offserFromUiState in -9.9..9.9) {
+                if (offserFromUiState in -9.9..9.9) {
 
 
 
@@ -176,7 +158,13 @@ class TableViewModel : ViewModel() {
                                }
                           }
 
+
                       }
+                else {
+                    val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
+                    offsetString = "+0$offsetFromUiState:00"
+                    }
+
 
                 //mangler at halvetime blir tatt hensyn paa
 
@@ -268,13 +256,6 @@ class TableViewModel : ViewModel() {
             )
         }
     }
-    fun setSignType(signType: String){
-        _tableUIState.update{ currentState ->
-            currentState.copy(
-                sign = signType,
-            )
-        }
-    }
 
     fun setTimeZone(timezone: Double){
         _tableUIState.update { currentState ->
@@ -322,7 +303,7 @@ class TableViewModel : ViewModel() {
         viewModelScope.launch {
             if(setTimeZoneOffset) {
                 val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLatitude, newLongitude)
-                setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble(), locationTimeZoneOffsetResult.timezone_id)
+                setTimeZoneOffset(locationTimeZoneOffsetResult.offset, locationTimeZoneOffsetResult.timezone_id)
             }
 
 
@@ -365,14 +346,14 @@ class TableViewModel : ViewModel() {
     }
 
     fun findOffset(location: String, date: String): Double {
-        val calendar = Calendar.getInstance()
-        val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        dateFormat.calendar = calendar
-        val dateTime = dateFormat.parse(date)
-        val timeZone = TimeZone.getTimeZone(location)
-        val offsetInMillis = timeZone.getOffset(calendar.timeInMillis)
-        val offsetHours = offsetInMillis / (1000 * 60 * 60)
-        return offsetHours.toDouble()
+       val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+           val calendar = Calendar.getInstance()
+           val dateTime = dateFormat.parse(date)
+           calendar.time = dateTime
+           val timeZone = TimeZone.getTimeZone(location)
+           val offsetInMillis = timeZone.getOffset(calendar.timeInMillis)
+           val offsetHours = offsetInMillis / (1000 * 60 * 60)
+           return offsetHours.toDouble()
     }
 
 

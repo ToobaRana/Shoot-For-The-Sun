@@ -172,7 +172,7 @@ fun TableView(
                         val elementInTableUiStateList = date.split("T")
 
 
-                        val sunriseTime = elementInTableUiStateList[1]
+                        val sunriseTime = elementInTableUiStateList[1].split("-", "+")[0]
                         val day = elementInTableUiStateList[0]
                         val monthInt = day.split("-")[1].toInt()
 
