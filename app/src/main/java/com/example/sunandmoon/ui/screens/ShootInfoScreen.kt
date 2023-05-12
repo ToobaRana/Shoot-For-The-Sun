@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
@@ -40,7 +41,7 @@ import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewModel: ShootInfoViewModel = viewModel(), shoot: Shoot){
+fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewModel: ShootInfoViewModel = hiltViewModel(), shoot: Shoot, navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit){
 
     val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
 
@@ -63,8 +64,12 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                     modifier,
                     MaterialTheme.colorScheme.secondary,
                     navigateBack,
-                    { /* TODO */ },
-                    { /* TODO */ })
+                    { navigateToCreateShootScreen(null, shoot.id) },
+                    {
+                        shootInfoViewModel.deleteShoot()
+                        navigateBack()
+                    }
+                )
 
                 //Header for shoot name
                 Text(text = shootInfoUIState.shoot!!.name, modifier = modifier.fillMaxWidth().align(CenterHorizontally), fontSize = 50.sp, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center )

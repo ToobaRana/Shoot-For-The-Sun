@@ -200,5 +200,25 @@ class CreateShootViewModel  @Inject constructor(
             }
         }
     }
+
+    fun setParentProductionId(id: Int) {
+        viewModelScope.launch {
+            _createShootUIState.update { currentState ->
+                currentState.copy(
+                    parentProductionId = id
+                )
+            }
+        }
+    }
+
+    fun setCurrentShootBeingEditedId(id: Int) {
+        viewModelScope.launch {
+            _createShootUIState.update { currentState ->
+                currentState.copy(
+                    currentShootBeingEditedId = id
+                )
+            }
+        }
+    }
 }
 

@@ -45,7 +45,7 @@ fun ProductionSelectionScreen(
     navigateToShootInfoScreen: (shoot: Shoot) -> Unit,
     productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
     navigateToNextBottomBar: (index: Int) -> Unit,
-    navigateToCreateShootScreen: () -> Unit,
+    navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
     navController: NavController,
     currentScreenRoute: String
 ) {
@@ -162,7 +162,7 @@ fun ProductionSelectionScreen(
 @Composable
 fun ProductionShootSelectionTopPart(
     modifier: Modifier,
-    navigateToCreateShootScreen: () -> Unit,
+    navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
     productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
     currentPageIndex: Int,
     productionSelectionUIState: ProductionSelectionUIState
@@ -194,7 +194,7 @@ fun ProductionShootSelectionTopPart(
         )
         TextField(
             value = "",
-            placeholder = { Text("Search...", color = MaterialTheme.colorScheme.primary) },
+            placeholder = { Text("Search...", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
             onValueChange = { query ->
             },
             singleLine = true,
@@ -236,7 +236,7 @@ fun ProductionShootSelectionTopPart(
                     if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal) {
                         productionSelectionViewModel.saveProduction()
                     } else {
-                        navigateToCreateShootScreen()
+                        navigateToCreateShootScreen(productionSelectionUIState.selectedProduction?.id, null)
                     }
                 }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
                     Row() {

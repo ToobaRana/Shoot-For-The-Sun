@@ -1,18 +1,32 @@
 package com.example.sunandmoon.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ShootInfoUIState
+import com.example.sunandmoon.data.localDatabase.AppDatabase
+import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.getSunRiseNoonFall
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class ShootInfoViewModel : ViewModel() {
+@HiltViewModel
+class ShootInfoViewModel @Inject constructor(
+    private val database: AppDatabase
+) : ViewModel() {
 
     private val dataSource = DataSource()
+
+    val shootDao: ShootDao = database.shootDao()
 
     private val _shootInfoUIState = MutableStateFlow(
         ShootInfoUIState(
@@ -47,7 +61,17 @@ class ShootInfoViewModel : ViewModel() {
         }
         val sunTimes = getSunRiseNoonFall(shoot.date, shoot.timeZoneOffset, shoot.location.latitude, shoot.location.longitude)
         setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
+    }
 
-
+    fun deleteShoot() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val idToDelete: Int? = _shootInfoUIState.value.shoot?.id
+                Log.i("aaa12345", idToDelete.toString())
+                if(idToDelete != null) {
+                    shootDao.delete(shootDao.loadById(idToDelete))
+                }
+            }
+        }
     }
 }

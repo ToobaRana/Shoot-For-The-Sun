@@ -12,8 +12,8 @@ interface ShootDao {
     @Query("SELECT * FROM shoot WHERE parent_production_id = :productionId")
     fun loadByProductionId(productionId: Int): List<StorableShoot>
 
-    @Query("SELECT * FROM shoot WHERE uid = :productionId")
-    fun loadById(productionId: Int): StorableProduction
+    @Query("SELECT * FROM shoot WHERE uid = :shootId")
+    fun loadById(shootId: Int): StorableShoot
 
     @Insert
     fun insert(vararg users: StorableShoot)

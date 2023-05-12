@@ -70,7 +70,7 @@ fun MultipleScreenNavigator(modifier: Modifier) {
         composable("productionSelectionScreen") {
             ProductionSelectionScreen(
                 modifier = modifier,
-                navigateToShootInfoScreen = { shoot: Shoot -> navController.navigate("shootInfoScreen/${shoot.name}/${shoot.locationName}/${shoot.date}/${shoot.location.latitude}/${shoot.location.longitude}/${shoot.timeZoneOffset}")},
+                navigateToShootInfoScreen = { shoot: Shoot -> navController.navigate("shootInfoScreen/${shoot.name}/${shoot.locationName}/${shoot.date}/${shoot.location.latitude}/${shoot.location.longitude}/${shoot.timeZoneOffset}/${shoot.id}")},
                 navigateToNextBottomBar = { index: Int ->
                     when (index) {
                         0 -> navController.popBackStack("productionSelectionScreen", false)
@@ -78,22 +78,27 @@ fun MultipleScreenNavigator(modifier: Modifier) {
                         2 -> navController.navigate("tableScreen")
                     }
                 },
-                navigateToCreateShootScreen = { navController.navigate("createShootScreen") },
+                navigateToCreateShootScreen = { parentProductionId: Int?, shootToEditId: Int? -> navController.navigate("createShootScreen/$parentProductionId/$shootToEditId") },
                 navController = navController,
                 currentScreenRoute = "productionSelectionScreen"
             )
         }
-        composable("shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}") { backStackEntry ->
+        composable("shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}/{shootId}") { backStackEntry ->
             ShootInfoScreen(
                 modifier = modifier,
                 navigateBack = { navController.popBackStack("productionSelectionScreen", false) },
-                shoot = getShootFromArgs(backStackEntry)
+                shoot = getShootFromArgs(backStackEntry),
+                navigateToCreateShootScreen = { parentProductionId: Int?, shootToEditId: Int? -> navController.navigate("createShootScreen/$parentProductionId/$shootToEditId") }
             )
         }
-        composable("createShootScreen") {
+        composable("createShootScreen/{parentProductionId}/{shootToEditId}") { backStackEntry ->
+            val parentProductionId: Int? = backStackEntry.arguments?.getString("parentProductionId")?.toIntOrNull()
+            val shootToEditId: Int? = backStackEntry.arguments?.getString("shootToEditId")?.toIntOrNull()
             CreateShootScreen(
                 modifier = modifier,
                 navigateBack = { navController.popBackStack("productionSelectionScreen", false) },
+                parentProductionId = parentProductionId,
+                shootToEditId = shootToEditId
             )
         }
         composable("tableScreen"){ backStackEntry ->
@@ -123,5 +128,7 @@ fun getShootFromArgs(backStackEntry: NavBackStackEntry): Shoot {
 
     val timeZoneOffset: Double = backStackEntry.arguments?.getString("timeZoneOffset")!!.toDouble()
 
-    return Shoot(name = shootName, locationName = locationName, location = location, date = localDateTime, timeZoneOffset = timeZoneOffset)
+    val shootId: Int = backStackEntry.arguments?.getString("shootId")!!.toInt()
+
+    return Shoot(name = shootName, locationName = locationName, location = location, date = localDateTime, timeZoneOffset = timeZoneOffset, id = shootId)
 }

@@ -270,7 +270,7 @@ fun CalendarComponentDisplay(
 @Composable
 fun drawWeekdays(numDays: Int) {
     for (y in 0 until numWeekdays) {
-        Text(text = weekdays[y].subSequence(0, 3).toString())
+        Text(text = weekdays[y].subSequence(0, 3).toString(), fontSize = 18.sp)
     }
 }
 

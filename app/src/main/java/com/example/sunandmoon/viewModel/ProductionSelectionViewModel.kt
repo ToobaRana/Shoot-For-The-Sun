@@ -16,6 +16,7 @@ import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
+import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -76,31 +77,40 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
+    fun storableShootsToNormalShoots(storableShoots: List<StorableShoot>?): List<Shoot> {
+        var shootList = mutableListOf<Shoot>()
+
+        if(storableShoots == null) return shootList
+
+        storableShoots.forEach() { storableShoot ->
+            shootList.add(
+                Shoot(
+                    id = storableShoot.uid,
+                    name = storableShoot.name,
+                    locationName = storableShoot.locationName,
+                    location = Location("").apply {
+                        latitude = storableShoot.latitude
+                        longitude = storableShoot.longitude
+                    },
+                    date = storableShoot.date,
+                    timeZoneOffset = storableShoot.timeZoneOffset
+
+                )
+            )
+        }
+
+        return shootList
+    }
+
     fun getAllIndependentShoots() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val allIndependentShoots = shootDao.getAllIndependentShoots()
-                var productionList = mutableListOf<Shoot>()
-                allIndependentShoots.forEach() { storableShoot ->
-                    productionList.add(
-                        Shoot(
-                            id = storableShoot.uid,
-                            name = storableShoot.name,
-                            locationName = storableShoot.locationName,
-                            location = Location("").apply {
-                                latitude = storableShoot.latitude
-                                longitude = storableShoot.longitude
-                            },
-                            date = storableShoot.date,
-                            timeZoneOffset = storableShoot.timeZoneOffset
-
-                        )
-                    )
-                }
+                val shootList = storableShootsToNormalShoots(allIndependentShoots)
                 withContext(Dispatchers.Main) {
                     _productionSelectionUIState.update { currentState ->
                         currentState.copy(
-                            independentShootsList = productionList
+                            independentShootsList = shootList
                         )
                     }
                 }
@@ -152,12 +162,22 @@ class ProductionSelectionViewModel @Inject constructor(
     }
 
     fun goIntoProduction(production: Production) {
-        _productionSelectionUIState.update { currentState ->
-            currentState.copy(
-                selectedProduction = production,
-                currentPageIndex = SelectionPages.PRODUCTION_SHOOTS.ordinal
-            )
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val productionShoots = production.id?.let { shootDao.loadByProductionId(it) }
+                val shootList = storableShootsToNormalShoots(productionShoots)
+                withContext(Dispatchers.Main) {
+                    _productionSelectionUIState.update { currentState ->
+                        currentState.copy(
+                            selectedProduction = production,
+                            currentPageIndex = SelectionPages.PRODUCTION_SHOOTS.ordinal,
+                            productionShootsList = shootList
+                        )
+                    }
+                }
+            }
         }
+
     }
 
     fun goOutOfProduction() {

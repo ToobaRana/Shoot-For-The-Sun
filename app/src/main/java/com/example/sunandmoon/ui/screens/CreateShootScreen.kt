@@ -38,10 +38,20 @@ fun CreateShootScreen(
     modifier: Modifier,
     navigateBack: () -> Unit,
     createShootViewModel: CreateShootViewModel = hiltViewModel(),
+    parentProductionId: Int?,
+    shootToEditId: Int?,
 ) {
 
     val createShootUIState by createShootViewModel.createShootUIState.collectAsState()
     checkPermissions { enabled: Boolean -> createShootViewModel.updateLocation(enabled) }
+
+    if(createShootUIState.parentProductionId == null && parentProductionId != null) {
+        createShootViewModel.setParentProductionId(parentProductionId)
+    }
+    if(createShootUIState.currentShootBeingEditedId == null && shootToEditId != null) {
+        createShootViewModel.setCurrentShootBeingEditedId(shootToEditId)
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         content = { innerPadding ->
