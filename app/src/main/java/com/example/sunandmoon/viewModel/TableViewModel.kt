@@ -22,6 +22,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.math.sign
 
 class TableViewModel : ViewModel() {
 
@@ -63,8 +64,7 @@ class TableViewModel : ViewModel() {
 
             val sameDaysList = getSameDaysInYear(tableUIState.value.chosenDate.toLocalDate())
             val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUIState.value.chosenDate.toLocalDate())
-            //println(sameDaysList)
-            //println(sameDaysListFromJanuary)
+
 
             for (date in sameDaysListFromJanuary.sorted()){
                 var stringDate = "$date 00:00"
@@ -88,40 +88,110 @@ class TableViewModel : ViewModel() {
             }
 
             for (date in sameDaysList.sorted()){
+                var offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
+                var offserFromUiState = tableUIState.value.timeZoneOffset
+                var offsetString: String = ""
 
-                var offset = findOffset(tableUIState.value.timezone_id, date.toString())
-                setTimeZone(offset.toDouble())
+                val offsetDecimal = offserFromUiState.toString().split(".")
 
-                if (tableUIState.value.sign == "-") {
-                    val signValue = "-"
-                    setSignType(signValue)
-                } else {
-                    val signValue = "+"
-                    setSignType(signValue)
-                }
 
-                if (offset.toInt() == 0){
+                var hours = offsetDecimal[0]
+                var hoursWithOutSign = hours.split("")[2]
+                Log.d("hoursWithOutSign", hoursWithOutSign)
+
+             
+
+                var minutter = offsetDecimal[1]
+
+                Log.d("offset2", hours)
+
+                Log.d("decimal", minutter)
+
+
+                //startverdi
+                if (offserFromUiState == 0.0) {
                     val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
-                    offset = "0$offsetFromUiState:00"
+                    offsetString = "+0$offsetFromUiState:00"
                 }
-               else if (offset.toInt() >= 10){
-                    offset = "$offset:00"
-                } else if(offset.toInt()<10){
-                    offset = "0$offset:00"
-                }
+
+                ////hvis desimal
+                else if (offserFromUiState in -9.9..9.9) {
+
+
+
+                    Log.d("offsetdesimal", tableUIState.value.timeZoneOffset.toString())
+
+                    if (minutter == "0") {
+
+                        //hvis minus og desimal
+                       if(offsetToFindSign.toString().split("")[1] == "-") {
+
+                           offsetString = "-0${hoursWithOutSign}:00"
+                       }
+                       //desimal og ikke minus
+                       else{
+                            offsetString = "+0${hours}:00"
+                           }
+                    }
+
+                    //desimal, men sjekk minus
+                    else{
+                          //hvis minus og desimal
+                         if(offsetToFindSign.toString().split("")[1] == "-") {
+
+                             offsetString = "-0${hoursWithOutSign}:${minutter}0"
+                         }
+                         //desimal og ikke minus
+                         else{
+                             offsetString = "+0${hours}:${minutter}0"
+
+                         }
+                    }
+
+                   //hvis offset er mellom 0 og 9, men er desimal og minus
+                } else if (offserFromUiState in 10.0..25.0 || offserFromUiState in -25.0..-10.0) {
+
+                          if (minutter.toDouble() == 0.0) {
+
+                              //hvis minus og desimal
+                              if (offsetToFindSign.toString().split("")[1] == "-") {
+                                  offsetString = "-${hoursWithOutSign}:00"
+                              }
+                              //desimal og ikke minus
+                              else {
+                                  offsetString = "+${hours}:00"
+                              }
+
+                          }
+                          //ikke desimal, men sjekk minus
+                          else{
+                                //hvis minus og desimal
+                               if(offserFromUiState.toString().split("")[1] == "-") {
+                                   offsetString = "-${hoursWithOutSign}:${minutter}0"
+                               }
+                               //desimal og ikke minus
+                               else{
+                                   offsetString = "+${hours}:${minutter}0"
+
+                               }
+                          }
+
+                      }
+
+                //mangler at halvetime blir tatt hensyn paa
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "${tableUIState.value.sign}$offset").properties.sunrise.time
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
                     apiDateTableList.add(sunRiseTime)
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "${tableUIState.value.sign}$offset").properties.solarnoon.time
+                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.solarnoon.time
                     apiDateTableList.add(solarNoon)
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), "${tableUIState.value.sign}$offset").properties.sunset.time
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunset.time
                     apiDateTableList.add(sunSetTime)
                 }
 
@@ -294,7 +364,7 @@ class TableViewModel : ViewModel() {
         loadSunInformation()
     }
 
-    fun findOffset(location: String, date: String): String {
+    fun findOffset(location: String, date: String): Double {
         val calendar = Calendar.getInstance()
         val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         dateFormat.calendar = calendar
@@ -302,8 +372,7 @@ class TableViewModel : ViewModel() {
         val timeZone = TimeZone.getTimeZone(location)
         val offsetInMillis = timeZone.getOffset(calendar.timeInMillis)
         val offsetHours = offsetInMillis / (1000 * 60 * 60)
-        println(offsetHours.toString())
-        return offsetHours.toString()
+        return offsetHours.toDouble()
     }
 
 

@@ -170,13 +170,13 @@ fun TableView(
                     items(tableUIState.apiDateTableList) { date ->
 
                         val elementInTableUiStateList = date.split("T")
-                        println(elementInTableUiStateList)
+
 
                         val sunriseTime = elementInTableUiStateList[1]
                         val day = elementInTableUiStateList[0]
                         val monthInt = day.split("-")[1].toInt()
 
-                        println("monthInt: $monthInt")
+
 
                         TableCard(
                             apiSunTime = sunriseTime,
