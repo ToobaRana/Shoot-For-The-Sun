@@ -9,5 +9,6 @@ data class ProductionSelectionUIState (
     val productionsList: List<Production> = listOf(),
     val productionShootsList: List<Shoot> = listOf(),
     val independentShootsList: List<Shoot> = listOf(),
-    val selectedProduction: Production? = null
+    val selectedProduction: Production? = null,
+    val newProductionName: String? = null
 )

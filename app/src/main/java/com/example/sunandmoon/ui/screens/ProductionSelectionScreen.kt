@@ -1,12 +1,18 @@
 package com.example.sunandmoon.ui.screens
 
 import android.graphics.drawable.Icon
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.runtime.Composable
@@ -15,11 +21,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.ImeOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -156,6 +172,17 @@ fun ProductionSelectionScreen(
             }
         }
     )
+
+    if (productionSelectionUIState.newProductionName != null) {
+        productionCreation(
+            modifier,
+            createProduction = { productionSelectionViewModel.saveProduction() },
+            setProductionName = { name: String ->
+                productionSelectionViewModel.setProductionName(name)
+            },
+            productionSelectionUIState.newProductionName!!
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -194,7 +221,13 @@ fun ProductionShootSelectionTopPart(
         )
         TextField(
             value = "",
-            placeholder = { Text("Search...", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
+            placeholder = {
+                Text(
+                    "Search...",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 18.sp
+                )
+            },
             onValueChange = { query ->
             },
             singleLine = true,
@@ -234,9 +267,12 @@ fun ProductionShootSelectionTopPart(
 
                 Button(onClick = {
                     if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal) {
-                        productionSelectionViewModel.saveProduction()
+                        productionSelectionViewModel.setProductionName("My Production");
                     } else {
-                        navigateToCreateShootScreen(productionSelectionUIState.selectedProduction?.id, null)
+                        navigateToCreateShootScreen(
+                            productionSelectionUIState.selectedProduction?.id,
+                            null
+                        )
                     }
                 }, modifier.weight(1f), shape = RoundedCornerShape(15.dp)) {
                     Row() {
@@ -260,4 +296,62 @@ fun ProductionShootSelectionTopPart(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun productionCreation(
+    modifier: Modifier,
+    createProduction: () -> Unit,
+    setProductionName: (name: String) -> Unit,
+    productionName: String
+) {
+    val focusManager = LocalFocusManager.current
+    Box(
+        modifier
+            .fillMaxSize()
+            .background(Color(0x88000000))
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+
+                })
+
+            },
+
+        contentAlignment = Alignment.Center
+    ) {
+
+        Card(
+            modifier = modifier
+                .fillMaxHeight(0.4f)
+                .fillMaxWidth(0.8f)
+                .clickable(enabled = false) { println("ja") },
+
+            ) {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Create new Production")
+                TextField(
+                    modifier = modifier.clickable {},
+                    value = productionName,
+                    onValueChange = { newName: String -> setProductionName(newName) },
+                    label = { Text("Give name") },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                )
+
+
+            }
+
+        }
+
+    }
+
+
 }

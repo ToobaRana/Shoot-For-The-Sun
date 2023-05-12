@@ -187,4 +187,11 @@ class ProductionSelectionViewModel @Inject constructor(
             )
         }
     }
+    fun setProductionName(name: String){
+        _productionSelectionUIState.update { currentState ->
+            currentState.copy(
+                newProductionName = name
+            )
+        }
+    }
 }
