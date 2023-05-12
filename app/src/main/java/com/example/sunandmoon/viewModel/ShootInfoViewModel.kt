@@ -1,5 +1,6 @@
 package com.example.sunandmoon.viewModel
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +8,7 @@ import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ShootInfoUIState
 import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
+import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.getSunRiseNoonFall
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,9 +69,43 @@ class ShootInfoViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val idToDelete: Int? = _shootInfoUIState.value.shoot?.id
-                Log.i("aaa12345", idToDelete.toString())
                 if(idToDelete != null) {
                     shootDao.delete(shootDao.loadById(idToDelete))
+                }
+            }
+        }
+    }
+
+    fun refreshShoot() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val idToRefresh: Int? = _shootInfoUIState.value.shoot?.id
+
+                var storableShoot: StorableShoot? = null
+                if(idToRefresh != null) {
+                    storableShoot = shootDao.loadById(idToRefresh)
+                }
+                if(storableShoot == null) return@withContext
+
+                val refreshedShoot: Shoot = Shoot(
+                    id = storableShoot.uid,
+                    name = storableShoot.name,
+                    locationName = storableShoot.locationName,
+                    location = Location("").apply {
+                        latitude = storableShoot.latitude
+                        longitude = storableShoot.longitude
+                    },
+                    date = storableShoot.date,
+                    timeZoneOffset = storableShoot.timeZoneOffset
+
+                )
+
+
+
+                _shootInfoUIState.update { currentState ->
+                    currentState.copy(
+                        shoot = refreshedShoot
+                    )
                 }
             }
         }

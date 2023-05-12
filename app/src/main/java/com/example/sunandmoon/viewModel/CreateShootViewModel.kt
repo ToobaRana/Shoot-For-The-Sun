@@ -183,21 +183,27 @@ class CreateShootViewModel  @Inject constructor(
     }
 
     fun saveShoot() {
-        val id: Int = if(_createShootUIState.value.currentShootBeingEditedId != null) _createShootUIState.value.currentShootBeingEditedId!! else 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                shootDao.update(
-                    StorableShoot(
-                        uid = id,
-                        parentProductionId = _createShootUIState.value.parentProductionId,
-                        name = _createShootUIState.value.name,
-                        locationName = _createShootUIState.value.locationSearchQuery,
-                        latitude = _createShootUIState.value.latitude,
-                        longitude = _createShootUIState.value.longitude,
-                        date = _createShootUIState.value.chosenDate,
-                        timeZoneOffset = _createShootUIState.value.timeZoneOffset,
-                    )
+                val id: Int = if(_createShootUIState.value.currentShootBeingEditedId != null) _createShootUIState.value.currentShootBeingEditedId!! else 0
+
+                val storableShoot = StorableShoot(
+                    uid = id,
+                    parentProductionId = _createShootUIState.value.parentProductionId,
+                    name = _createShootUIState.value.name,
+                    locationName = _createShootUIState.value.locationSearchQuery,
+                    latitude = _createShootUIState.value.latitude,
+                    longitude = _createShootUIState.value.longitude,
+                    date = _createShootUIState.value.chosenDate,
+                    timeZoneOffset = _createShootUIState.value.timeZoneOffset,
                 )
+
+                if(id != 0) {
+                    shootDao.update(storableShoot)
+                }
+                else {
+                    shootDao.insert(storableShoot)
+                }
             }
         }
     }
