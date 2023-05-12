@@ -149,7 +149,7 @@ fun CreateShootScreen(
 
                     Button(onClick = {
                         //save stuff
-                        createShootViewModel.saveShootInProduction()
+                        createShootViewModel.saveShoot()
                         navigateBack()
                     }) {
                         Text(text = "Save")

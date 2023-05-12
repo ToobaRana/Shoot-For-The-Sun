@@ -182,12 +182,13 @@ class CreateShootViewModel  @Inject constructor(
         }
     }
 
-    fun saveShootInProduction() {
+    fun saveShoot() {
+        val id: Int = if(_createShootUIState.value.currentShootBeingEditedId != null) _createShootUIState.value.currentShootBeingEditedId!! else 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                shootDao.insert(
+                shootDao.update(
                     StorableShoot(
-                        uid = 0,
+                        uid = id,
                         parentProductionId = _createShootUIState.value.parentProductionId,
                         name = _createShootUIState.value.name,
                         locationName = _createShootUIState.value.locationSearchQuery,
