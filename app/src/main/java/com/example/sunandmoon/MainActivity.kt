@@ -1,7 +1,5 @@
 package com.example.sunandmoon
 
-import android.content.Context
-import android.location.Location
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,16 +7,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
-import com.example.sunandmoon.data.localDatabase.AppDatabase
-import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
-import com.example.sunandmoon.data.localDatabase.dao.ShootDao
-import com.example.sunandmoon.data.util.LocationAndDateTime
-import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.screens.CreateShootScreen
 import com.example.sunandmoon.ui.screens.ProductionSelectionScreen
 import com.example.sunandmoon.ui.screens.ShootInfoScreen
@@ -26,12 +17,8 @@ import com.example.sunandmoon.ui.screens.TableScreen
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.FusedLocationProviderClient
-import dagger.Component
-import dagger.Module
-import dagger.Provides
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+
 //import com.example.sunandmoon.di.DaggerAppComponent
 
 

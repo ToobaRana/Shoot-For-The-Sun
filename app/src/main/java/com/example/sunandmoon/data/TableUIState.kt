@@ -1,11 +1,8 @@
 package com.example.sunandmoon.data
 
 import android.location.Location
-import com.example.sunandmoon.data.util.LocationAndDateTime
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 data class TableUIState(
     val apiDateTableList: List<String>,

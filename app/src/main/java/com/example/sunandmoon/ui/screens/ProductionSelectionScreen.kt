@@ -66,6 +66,8 @@ fun ProductionSelectionScreen(
                 // if you were inside a production. Get all the shoot within this production too
                 if(productionSelectionUIState.selectedProduction != null) {
                     productionSelectionViewModel.getShootsInProduction(productionSelectionUIState.selectedProduction!!)
+                    // We also need to get the productions again so that their date interval is correct
+                    productionSelectionViewModel.getAllProductions()
                 }
             }
         }

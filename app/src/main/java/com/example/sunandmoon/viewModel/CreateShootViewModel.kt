@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -43,8 +44,7 @@ class CreateShootViewModel  @Inject constructor(
             latitude = 59.943965,
             longitude = 10.7178129,
             chosenDate = LocalDateTime.now(),
-            timeZoneOffset = 2.0,
-            parentProductionId = null
+            timeZoneOffset = 2.0
         )
     )
 
@@ -185,10 +185,10 @@ class CreateShootViewModel  @Inject constructor(
     fun saveShoot() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val id: Int = if(_createShootUIState.value.currentShootBeingEditedId != null) _createShootUIState.value.currentShootBeingEditedId!! else 0
+                val shootId: Int = if(_createShootUIState.value.currentShootBeingEditedId != null) _createShootUIState.value.currentShootBeingEditedId!! else 0
 
                 val storableShoot = StorableShoot(
-                    uid = id,
+                    uid = shootId,
                     parentProductionId = _createShootUIState.value.parentProductionId,
                     name = _createShootUIState.value.name,
                     locationName = _createShootUIState.value.locationSearchQuery,
@@ -198,11 +198,34 @@ class CreateShootViewModel  @Inject constructor(
                     timeZoneOffset = _createShootUIState.value.timeZoneOffset,
                 )
 
-                if(id != 0) {
+                if(shootId != 0) {
                     shootDao.update(storableShoot)
                 }
                 else {
                     shootDao.insert(storableShoot)
+                }
+
+                // update the interval attributes of the parent production
+                // if this shoot is outside of the current interval of the parent production
+                val parentProductionId: Int? = _createShootUIState.value.parentProductionId
+                if(parentProductionId != null) {
+                    var parentProduction = productionDao.loadById(parentProductionId)
+
+                    val shootDate: LocalDate = storableShoot.date.toLocalDate()
+                    val productionStartDate: LocalDate? = parentProduction.startDateTime?.toLocalDate()
+                    val productionEndDate: LocalDate? = parentProduction.endDateTime?.toLocalDate()
+
+                    var intervalChanged = false
+                    if(productionStartDate == null || productionStartDate > shootDate) {
+                        parentProduction = parentProduction.copy(startDateTime = storableShoot.date)
+                        intervalChanged = true
+                    }
+                    if(productionEndDate == null || productionEndDate < shootDate) {
+                        parentProduction = parentProduction.copy(endDateTime = storableShoot.date)
+                        intervalChanged = true
+                    }
+
+                    if(intervalChanged) productionDao.update(parentProduction)
                 }
             }
         }
