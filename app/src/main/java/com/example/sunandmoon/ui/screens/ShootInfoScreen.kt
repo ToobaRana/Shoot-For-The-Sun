@@ -41,12 +41,12 @@ import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewModel: ShootInfoViewModel = hiltViewModel(), shoot: Shoot, navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit){
+fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewModel: ShootInfoViewModel = hiltViewModel(), shootId: Int, navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit){
 
     val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
 
     if (shootInfoUIState.shoot == null) {
-        shootInfoViewModel.setShoot(shoot)
+        shootInfoViewModel.getShoot(shootId)
         return
     }
 
@@ -62,9 +62,10 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
             Column(modifier.fillMaxWidth().padding(top = 10.dp)) {
                 GoBackEditDeleteBar(
                     modifier,
+                    MaterialTheme.colorScheme.primary,
                     MaterialTheme.colorScheme.secondary,
                     navigateBack,
-                    { navigateToCreateShootScreen(null, shoot.id) },
+                    { navigateToCreateShootScreen(null, shootId) },
                     {
                         shootInfoViewModel.deleteShoot()
                         navigateBack()
@@ -72,29 +73,26 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                 )
 
                 //Header for shoot name
-                Text(text = shootInfoUIState.shoot!!.name, modifier = modifier.fillMaxWidth().align(CenterHorizontally), fontSize = 50.sp, color = MaterialTheme.colorScheme.secondary, textAlign = TextAlign.Center )
+                Text(text = shootInfoUIState.shoot!!.name, modifier = modifier.fillMaxWidth().align(CenterHorizontally), fontSize = 50.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center )
 
                 //Location for shoot
                 Row(modifier = modifier.align(CenterHorizontally)) {
-                    Icon(painter = painterResource(id = R.drawable.location1), "Location Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.secondary)
-                    Text(text = shootInfoUIState.shoot!!.locationName, fontSize = 20.sp, color = MaterialTheme.colorScheme.secondary)
+                    Icon(painter = painterResource(id = R.drawable.location1), "Location Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.primary)
+                    Text(text = shootInfoUIState.shoot!!.locationName, fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
 
                 Spacer(modifier = modifier.size(40.dp))
 
                 //Calendar and time
                 Row(modifier = modifier.align(CenterHorizontally)){
-                    Icon(painter = painterResource(id = R.drawable.calendar), "Calendar Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.secondary)
-                    Text(text = date.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.secondary)
+                    Icon(painter = painterResource(id = R.drawable.calendar), "Calendar Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.primary)
+                    Text(text = date.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
 
                     Spacer(modifier = modifier.size(30.dp))
 
-                    Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.secondary)
-                    Text(text = time.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.secondary)
-
-
+                    Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.primary)
+                    Text(text = time.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
-
             }
         },
 

@@ -7,6 +7,7 @@ import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ShootInfoUIState
 import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
+import com.example.sunandmoon.data.localDatabase.storableShootToNormalShoot
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.getSunRiseNoonFall
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -59,16 +60,23 @@ class ShootInfoViewModel @Inject constructor(
         }
     }
 
-    fun setShoot(shoot: Shoot) {
-        _shootInfoUIState.update { currentState ->
-            currentState.copy(
-                shoot = shoot
-            )
-        }
-        val sunTimes = getSunRiseNoonFall(shoot.date, shoot.timeZoneOffset, shoot.location.latitude, shoot.location.longitude)
-        setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
+    fun getShoot(shootId: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val shoot = storableShootToNormalShoot(shootDao.loadById(shootId))
 
-        loadLocationForecast()
+                _shootInfoUIState.update { currentState ->
+                    currentState.copy(
+                        shoot = shoot
+                    )
+                }
+                val sunTimes = getSunRiseNoonFall(shoot.date, shoot.timeZoneOffset, shoot.location.latitude, shoot.location.longitude)
+                setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
+
+                loadLocationForecast()
+            }
+        }
+
     }
 
 

@@ -17,6 +17,7 @@ import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
+import com.example.sunandmoon.data.localDatabase.storableShootsToNormalShoots
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -75,31 +76,6 @@ class ProductionSelectionViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun storableShootsToNormalShoots(storableShoots: List<StorableShoot>?): List<Shoot> {
-        var shootList = mutableListOf<Shoot>()
-
-        if(storableShoots == null) return shootList
-
-        storableShoots.forEach() { storableShoot ->
-            shootList.add(
-                Shoot(
-                    id = storableShoot.uid,
-                    name = storableShoot.name,
-                    locationName = storableShoot.locationName,
-                    location = Location("").apply {
-                        latitude = storableShoot.latitude
-                        longitude = storableShoot.longitude
-                    },
-                    date = storableShoot.date,
-                    timeZoneOffset = storableShoot.timeZoneOffset
-
-                )
-            )
-        }
-
-        return shootList
     }
 
     fun getAllIndependentShoots() {

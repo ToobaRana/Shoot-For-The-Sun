@@ -39,7 +39,7 @@ fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?){
                 .padding(15.dp)
         ) {
 
-            Text(text = time.toString())
+            Text(text = time.toString(), fontSize = 18.sp)
 
             Row(
                 modifier

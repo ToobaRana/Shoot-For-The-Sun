@@ -33,7 +33,7 @@ fun WindCard(modifier: Modifier, time: LocalTime) {
                 .padding(15.dp)
         ) {
 
-            Text(text = time.toString())
+            Text(text = time.toString(), fontSize = 18.sp)
 
 
             Row(

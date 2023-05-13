@@ -15,13 +15,13 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
 
 @Composable
-fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shoot: Shoot) -> Unit) {
+fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -> Unit) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(35.dp, 10.dp)
             .clickable {
-                navigateToNext(shoot)
+                shoot.id?.let { navigateToNext(it) }
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 15.dp)
     ) {

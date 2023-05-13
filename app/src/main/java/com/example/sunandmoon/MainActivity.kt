@@ -70,7 +70,7 @@ fun MultipleScreenNavigator(modifier: Modifier) {
         composable("productionSelectionScreen") {
             ProductionSelectionScreen(
                 modifier = modifier,
-                navigateToShootInfoScreen = { shoot: Shoot -> navController.navigate("shootInfoScreen/${shoot.name}/${shoot.locationName}/${shoot.date}/${shoot.location.latitude}/${shoot.location.longitude}/${shoot.timeZoneOffset}/${shoot.id}")},
+                navigateToShootInfoScreen = { shootId: Int -> navController.navigate("shootInfoScreen/$shootId")},
                 navigateToNextBottomBar = { index: Int ->
                     when (index) {
                         0 -> navController.popBackStack("productionSelectionScreen", false)
@@ -83,13 +83,16 @@ fun MultipleScreenNavigator(modifier: Modifier) {
                 currentScreenRoute = "productionSelectionScreen"
             )
         }
-        composable("shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}/{shootId}") { backStackEntry ->
-            ShootInfoScreen(
-                modifier = modifier,
-                navigateBack = { navController.popBackStack("productionSelectionScreen", false) },
-                shoot = getShootFromArgs(backStackEntry),
-                navigateToCreateShootScreen = { parentProductionId: Int?, shootToEditId: Int? -> navController.navigate("createShootScreen/$parentProductionId/$shootToEditId") }
-            )
+        composable("shootInfoScreen/{shootId}") { backStackEntry ->
+            val shootId: Int? = backStackEntry.arguments?.getString("shootId")?.toIntOrNull()
+            if(shootId != null) {
+                ShootInfoScreen(
+                    modifier = modifier,
+                    navigateBack = { navController.popBackStack("productionSelectionScreen", false) },
+                    shootId = shootId,
+                    navigateToCreateShootScreen = { parentProductionId: Int?, shootToEditId: Int? -> navController.navigate("createShootScreen/$parentProductionId/$shootToEditId") }
+                )
+            }
         }
         composable("createShootScreen/{parentProductionId}/{shootToEditId}") { backStackEntry ->
             val parentProductionId: Int? = backStackEntry.arguments?.getString("parentProductionId")?.toIntOrNull()

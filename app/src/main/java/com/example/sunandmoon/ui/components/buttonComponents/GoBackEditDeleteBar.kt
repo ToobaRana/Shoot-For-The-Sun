@@ -16,13 +16,14 @@ import com.example.sunandmoon.R
 fun GoBackEditDeleteBar(
     modifier: Modifier,
     buttonColor: Color,
+    IconColor: Color,
     goBack: () -> Unit,
     editProduction: () -> Unit,
     deleteProduction: () -> Unit
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         // The go back to production selection button
-        GoBackButton(modifier, buttonColor, goBack)
+        GoBackButton(modifier, buttonColor, IconColor, goBack)
 
         // the delete and edit buttons
         Row(
@@ -37,7 +38,7 @@ fun GoBackEditDeleteBar(
                         painterResource(R.drawable.trash_icon),
                         "Delete-button",
                         modifier.size(50.dp),
-                        MaterialTheme.colorScheme.background
+                        IconColor
                     )
                 },
                 buttonColor,
@@ -50,7 +51,7 @@ fun GoBackEditDeleteBar(
                         painterResource(R.drawable.edit_icon),
                         "Edit-button",
                         modifier.size(50.dp),
-                        MaterialTheme.colorScheme.background
+                        IconColor
                     )
                 },
                 buttonColor,

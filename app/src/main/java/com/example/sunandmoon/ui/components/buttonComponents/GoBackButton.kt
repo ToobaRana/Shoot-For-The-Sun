@@ -17,7 +17,12 @@ import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
 
 @Composable
-fun GoBackButton(modifier: Modifier, buttonColor: Color, goBack: () -> Unit) {
+fun GoBackButton(
+    modifier: Modifier,
+    buttonColor: Color,
+    IconColor: Color,
+    goBack: () -> Unit
+) {
     Button(
         modifier = modifier
             .height(40.dp)
@@ -33,7 +38,7 @@ fun GoBackButton(modifier: Modifier, buttonColor: Color, goBack: () -> Unit) {
             painterResource(R.drawable.arrow_icon),
             "Delete-button",
             modifier.fillMaxSize(),
-            MaterialTheme.colorScheme.background
+            IconColor
         )
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,8 @@ fun LocationSearch(
     //var searchResults by remember { mutableStateOf<List<String>>(emptyList()) }
     var isDropdownExpanded by remember { mutableStateOf(false) }
 
+    val focusManager = LocalFocusManager.current
+
     Column(modifier = modifier.fillMaxWidth()) {
         TextField(
             value = locationSearchQuery,
@@ -51,6 +54,7 @@ fun LocationSearch(
                         loadLocationSearchResults(locationSearchQuery)
                         isDropdownExpanded = true
                     }
+                    focusManager.clearFocus()
                 }
             ),
             leadingIcon = {
@@ -79,6 +83,7 @@ fun LocationSearch(
                             .clickable {
                                 isDropdownExpanded = false
                                 setCoordinates(item.lat.toDouble(), item.lon.toDouble(), true)
+                                setLocationSearchQuery(item.display_name.split(",")[0])
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                     )

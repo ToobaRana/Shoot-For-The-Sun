@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.theme.SunColor
 
@@ -24,7 +25,7 @@ fun SunPositionComponent(modifier: Modifier, sunImage: Painter, sunTime: String)
     ) {
 
         Icon(sunImage, "Sun Image", modifier.size(80.dp), SunColor)
-        Text(text = sunTime)
+        Text(text = sunTime, fontSize = 18.sp)
     }
 }
 
