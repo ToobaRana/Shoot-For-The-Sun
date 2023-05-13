@@ -57,12 +57,16 @@ fun ProductionSelectionScreen(
 
     val productionSelectionUIState by productionSelectionViewModel.productionSelectionUIState.collectAsState()
 
-    // Add the destination changed listener in the LaunchedEffect block
+    // when you navigate back to this screen we want to get the shoots from the database again
     LaunchedEffect(navController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.route == currentScreenRoute) {
-                // do something when popped back to this screen
+                // get all the shoots from the database when popped back to this screen
                 productionSelectionViewModel.getAllIndependentShoots()
+                // if you were inside a production. Get all the shoot within this production too
+                if(productionSelectionUIState.selectedProduction != null) {
+                    productionSelectionViewModel.getShootsInProduction(productionSelectionUIState.selectedProduction!!)
+                }
             }
         }
     }

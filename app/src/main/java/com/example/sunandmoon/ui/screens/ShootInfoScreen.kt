@@ -24,6 +24,7 @@ import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
@@ -41,13 +42,23 @@ import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewModel: ShootInfoViewModel = hiltViewModel(), shootId: Int, navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit){
+fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewModel: ShootInfoViewModel = hiltViewModel(), shootId: Int, navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit, navController: NavController, currentScreenRoute: String){
 
     val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
 
     if (shootInfoUIState.shoot == null) {
         shootInfoViewModel.getShoot(shootId)
         return
+    }
+
+    // when you navigate back to this screen we want to get the shoots from the database again
+    LaunchedEffect(navController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.route == currentScreenRoute) {
+                // get all the shoots from the database when popped back to this screen
+                shootInfoViewModel.refreshShoot()
+            }
+        }
     }
 
     val dateAndTime = shootInfoUIState.shoot!!.date
@@ -93,6 +104,7 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                     Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.primary)
                     Text(text = time.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
+
             }
         },
 

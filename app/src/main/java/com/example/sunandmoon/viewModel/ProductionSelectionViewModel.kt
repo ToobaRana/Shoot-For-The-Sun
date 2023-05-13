@@ -137,7 +137,7 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
-    fun goIntoProduction(production: Production) {
+    fun getShootsInProduction(production: Production) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val productionShoots = production.id?.let { shootDao.loadByProductionId(it) }
@@ -145,8 +145,6 @@ class ProductionSelectionViewModel @Inject constructor(
                 withContext(Dispatchers.Main) {
                     _productionSelectionUIState.update { currentState ->
                         currentState.copy(
-                            selectedProduction = production,
-                            currentPageIndex = SelectionPages.PRODUCTION_SHOOTS.ordinal,
                             productionShootsList = shootList
                         )
                     }
@@ -156,10 +154,21 @@ class ProductionSelectionViewModel @Inject constructor(
 
     }
 
+    fun goIntoProduction(production: Production) {
+        _productionSelectionUIState.update { currentState ->
+            currentState.copy(
+                selectedProduction = production,
+                currentPageIndex = SelectionPages.PRODUCTION_SHOOTS.ordinal,
+            )
+        }
+        getShootsInProduction(production)
+    }
+
     fun goOutOfProduction() {
         _productionSelectionUIState.update { currentState ->
             currentState.copy(
-                currentPageIndex = SelectionPages.PRODUCTIONS.ordinal
+                currentPageIndex = SelectionPages.PRODUCTIONS.ordinal,
+                selectedProduction = null
             )
         }
     }
