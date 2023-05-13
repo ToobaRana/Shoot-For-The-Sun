@@ -21,6 +21,9 @@ interface ShootDao {
     @Delete
     fun delete(user: StorableShoot)
 
+    @Query("DELETE FROM shoot WHERE parent_production_id = :productionId")
+    fun deleteShootsInProduction(productionId: Int)
+
     @Update
     fun update(shoot: StorableShoot)
 }

@@ -114,6 +114,7 @@ class ProductionSelectionViewModel @Inject constructor(
                 val idToDelete: Int? = _productionSelectionUIState.value.selectedProduction?.id
                 Log.i("aaa12345", idToDelete.toString())
                 if(idToDelete != null) {
+                    shootDao.deleteShootsInProduction(idToDelete)
                     productionDao.delete(productionDao.loadById(idToDelete))
                     getAllProductions()
                 }

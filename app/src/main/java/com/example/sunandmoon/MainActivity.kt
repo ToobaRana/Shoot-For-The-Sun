@@ -124,20 +124,3 @@ fun MultipleScreenNavigator(modifier: Modifier) {
         }
     }
 }
-
-fun getShootFromArgs(backStackEntry: NavBackStackEntry): Shoot {
-    var localDateTime: LocalDateTime = LocalDateTime.parse(backStackEntry.arguments?.getString("localDateTime"), DateTimeFormatter.ISO_DATE_TIME)
-
-    var location: Location = Location("provider")
-    location.latitude = backStackEntry.arguments?.getString("latitude")?.toDouble() ?: 0.0
-    location.longitude = backStackEntry.arguments?.getString("longitude")?.toDouble() ?: 0.0
-
-    val shootName: String = backStackEntry.arguments?.getString("shootName")!!
-    val locationName: String = backStackEntry.arguments?.getString("locationName")!!
-
-    val timeZoneOffset: Double = backStackEntry.arguments?.getString("timeZoneOffset")!!.toDouble()
-
-    val shootId: Int = backStackEntry.arguments?.getString("shootId")!!.toInt()
-
-    return Shoot(name = shootName, locationName = locationName, location = location, date = localDateTime, timeZoneOffset = timeZoneOffset, id = shootId)
-}
