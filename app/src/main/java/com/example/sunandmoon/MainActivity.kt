@@ -84,7 +84,7 @@ fun MultipleScreenNavigator(modifier: Modifier) {
                 currentScreenRoute = routeProductionSelectionScreen
             )
         }
-        val routeShootInfoScreen = "shootInfoScreen/{shootName}/{locationName}/{localDateTime}/{latitude}/{longitude}/{timeZoneOffset}/{shootId}"
+        val routeShootInfoScreen = "shootInfoScreen/{shootId}"
         composable(routeShootInfoScreen) { backStackEntry ->
             val shootId: Int? = backStackEntry.arguments?.getString("shootId")?.toIntOrNull()
             if(shootId != null) {
