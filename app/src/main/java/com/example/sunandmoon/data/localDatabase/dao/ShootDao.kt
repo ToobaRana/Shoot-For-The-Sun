@@ -4,13 +4,33 @@ import androidx.room.*
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 
+enum class ShootOrderBy(val value: String) {
+    NAME("name"),
+    DATE_TIME("date_time"),
+    LATITUDE("latitude"),
+    LONGITUDE("longitude")
+}
+
 @Dao
 interface ShootDao {
-    @Query("SELECT * FROM shoot WHERE parent_production_id IS NULL")
-    fun getAllIndependentShoots(): List<StorableShoot>
+    // should sort by either latitude, date_time, latitude or longitude
+    @Query("SELECT * FROM shoot WHERE parent_production_id IS NULL ORDER BY CASE :orderBy " +
+            "WHEN 'name' THEN name " +
+            "WHEN 'date_time' THEN date_time " +
+            "WHEN 'latitude' THEN latitude " +
+            "WHEN 'longitude' THEN longitude " +
+            "ELSE date_time " +
+            "END ASC")
+    fun getAllIndependentShoots(orderBy: String): List<StorableShoot>
 
-    @Query("SELECT * FROM shoot WHERE parent_production_id = :productionId")
-    fun loadByProductionId(productionId: Int): List<StorableShoot>
+    @Query("SELECT * FROM shoot WHERE parent_production_id = :productionId ORDER BY CASE :orderBy " +
+            "WHEN 'name' THEN name " +
+            "WHEN 'date_time' THEN date_time " +
+            "WHEN 'latitude' THEN latitude " +
+            "WHEN 'longitude' THEN longitude " +
+            "ELSE date_time " +
+            "END ASC")
+    fun loadByProductionId(productionId: Int, orderBy: String): List<StorableShoot>
 
     @Query("SELECT * FROM shoot WHERE uid = :shootId")
     fun loadById(shootId: Int): StorableShoot

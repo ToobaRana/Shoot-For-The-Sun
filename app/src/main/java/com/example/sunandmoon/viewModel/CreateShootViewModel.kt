@@ -209,23 +209,7 @@ class CreateShootViewModel  @Inject constructor(
                 // if this shoot is outside of the current interval of the parent production
                 val parentProductionId: Int? = _createShootUIState.value.parentProductionId
                 if(parentProductionId != null) {
-                    var parentProduction = productionDao.loadById(parentProductionId)
-
-                    val shootDate: LocalDate = storableShoot.date.toLocalDate()
-                    val productionStartDate: LocalDate? = parentProduction.startDateTime?.toLocalDate()
-                    val productionEndDate: LocalDate? = parentProduction.endDateTime?.toLocalDate()
-
-                    var intervalChanged = false
-                    if(productionStartDate == null || productionStartDate > shootDate) {
-                        parentProduction = parentProduction.copy(startDateTime = storableShoot.date)
-                        intervalChanged = true
-                    }
-                    if(productionEndDate == null || productionEndDate < shootDate) {
-                        parentProduction = parentProduction.copy(endDateTime = storableShoot.date)
-                        intervalChanged = true
-                    }
-
-                    if(intervalChanged) productionDao.update(parentProduction)
+                    productionDao.updateDateInterval(parentProductionId)
                 }
             }
         }

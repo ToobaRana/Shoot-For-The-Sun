@@ -14,7 +14,8 @@ fun storableShootToNormalShoot(storableShoot: StorableShoot): Shoot {
             longitude = storableShoot.longitude
         },
         date = storableShoot.date,
-        timeZoneOffset = storableShoot.timeZoneOffset
+        timeZoneOffset = storableShoot.timeZoneOffset,
+        parentProductionId = storableShoot.parentProductionId
     )
 }
 

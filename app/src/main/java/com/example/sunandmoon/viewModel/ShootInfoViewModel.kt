@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ShootInfoUIState
 import com.example.sunandmoon.data.localDatabase.AppDatabase
+import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.storableShootToNormalShoot
 import com.example.sunandmoon.data.util.Shoot
@@ -34,6 +35,7 @@ class ShootInfoViewModel @Inject constructor(
     private val dataSource = DataSource()
 
     val shootDao: ShootDao = database.shootDao()
+    val productionDao: ProductionDao = database.productionDao()
 
     private val _shootInfoUIState = MutableStateFlow(
         ShootInfoUIState(
@@ -100,6 +102,13 @@ class ShootInfoViewModel @Inject constructor(
                 val idToDelete: Int? = _shootInfoUIState.value.shoot?.id
                 if(idToDelete != null) {
                     shootDao.delete(shootDao.loadById(idToDelete))
+
+                    // updates the date interval of the parentProduction if necessary
+                    val parentProductionId = _shootInfoUIState.value.shoot?.parentProductionId
+                    if(parentProductionId != null) {
+                        println("aaaa")
+                        productionDao.updateDateInterval(parentProductionId)
+                    }
                 }
             }
         }
@@ -116,20 +125,7 @@ class ShootInfoViewModel @Inject constructor(
                 }
                 if(storableShoot == null) return@withContext
 
-                val refreshedShoot: Shoot = Shoot(
-                    id = storableShoot.uid,
-                    name = storableShoot.name,
-                    locationName = storableShoot.locationName,
-                    location = Location("").apply {
-                        latitude = storableShoot.latitude
-                        longitude = storableShoot.longitude
-                    },
-                    date = storableShoot.date,
-                    timeZoneOffset = storableShoot.timeZoneOffset
-
-                )
-
-
+                val refreshedShoot = storableShootToNormalShoot(storableShoot)
 
                 _shootInfoUIState.update { currentState ->
                     currentState.copy(

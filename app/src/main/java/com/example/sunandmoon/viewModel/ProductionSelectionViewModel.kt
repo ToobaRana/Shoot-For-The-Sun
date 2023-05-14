@@ -53,7 +53,7 @@ class ProductionSelectionViewModel @Inject constructor(
     fun getAllProductions() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val allProductions = productionDao.getAll()
+                val allProductions = productionDao.getAll(_productionSelectionUIState.value.productionOrderBy.value)
                 var productionList = mutableListOf<Production>()
                 allProductions.forEach() { storableProduction ->
                     productionList.add(
@@ -81,7 +81,7 @@ class ProductionSelectionViewModel @Inject constructor(
     fun getAllIndependentShoots() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val allIndependentShoots = shootDao.getAllIndependentShoots()
+                val allIndependentShoots = shootDao.getAllIndependentShoots(_productionSelectionUIState.value.shootOrderBy.value)
                 val shootList = storableShootsToNormalShoots(allIndependentShoots)
                 withContext(Dispatchers.Main) {
                     _productionSelectionUIState.update { currentState ->
@@ -141,7 +141,7 @@ class ProductionSelectionViewModel @Inject constructor(
     fun getShootsInProduction(production: Production) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val productionShoots = production.id?.let { shootDao.loadByProductionId(it) }
+                val productionShoots = production.id?.let { shootDao.loadByProductionId(it, _productionSelectionUIState.value.shootOrderBy.value) }
                 val shootList = storableShootsToNormalShoots(productionShoots)
                 withContext(Dispatchers.Main) {
                     _productionSelectionUIState.update { currentState ->
