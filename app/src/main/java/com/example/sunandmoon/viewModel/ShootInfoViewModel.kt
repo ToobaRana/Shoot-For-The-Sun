@@ -115,24 +115,9 @@ class ShootInfoViewModel @Inject constructor(
     }
 
     fun refreshShoot() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val idToRefresh: Int? = _shootInfoUIState.value.shoot?.id
-
-                var storableShoot: StorableShoot? = null
-                if(idToRefresh != null) {
-                    storableShoot = shootDao.loadById(idToRefresh)
-                }
-                if(storableShoot == null) return@withContext
-
-                val refreshedShoot = storableShootToNormalShoot(storableShoot)
-
-                _shootInfoUIState.update { currentState ->
-                    currentState.copy(
-                        shoot = refreshedShoot
-                    )
-                }
-            }
+        val idToRefresh: Int? = _shootInfoUIState.value.shoot?.id
+        if(idToRefresh != null) {
+            getShoot(idToRefresh)
         }
     }
 }
