@@ -14,7 +14,7 @@ import com.example.sunandmoon.ui.theme.WeatherBlueColor
 import java.time.LocalTime
 
 @Composable
-fun WindCard(modifier: Modifier, time: LocalTime) {
+fun WindCard(modifier: Modifier, time: LocalTime, windSpeed : Double?, WindDirection : Double?) {
 
     ElevatedCard(
         modifier = modifier
@@ -55,7 +55,7 @@ fun WindCard(modifier: Modifier, time: LocalTime) {
                             .size(60.dp),
                         WeatherBlueColor
                     )
-                    Text(text = "4 m/s", fontSize = 20.sp, modifier = modifier.padding(start = 5.dp))
+                    Text(text = windSpeed.toString() + " m/s", fontSize = 20.sp, modifier = modifier.padding(start = 5.dp))
                 }
                 
                 Spacer(modifier = modifier.size(60.dp))

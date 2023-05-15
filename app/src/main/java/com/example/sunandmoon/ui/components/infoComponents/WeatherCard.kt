@@ -20,7 +20,7 @@ import java.time.LocalTime
 
 
 @Composable
-fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?){
+fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rainfall : Double?){
 
     ElevatedCard(
         modifier = modifier
@@ -84,7 +84,7 @@ fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?){
                             modifier.size(35.dp),
                             WeatherBlueColor
                         )
-                        Text(text = "3 mm", modifier.padding(start = 10.dp), fontSize = 20.sp)
+                        Text(text = rainfall.toString() + " mm", modifier.padding(start = 10.dp), fontSize = 20.sp)
                     }
                 }
             }
