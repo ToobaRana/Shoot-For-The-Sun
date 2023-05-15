@@ -1,6 +1,7 @@
 package com.example.sunandmoon.ui.screens
 
 import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,6 +29,7 @@ import androidx.navigation.NavController
 
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.model.LocationForecastModel.Timeseries
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
@@ -37,6 +39,7 @@ import com.example.sunandmoon.ui.components.infoComponents.WeatherCard
 import com.example.sunandmoon.ui.components.infoComponents.WindCard
 import com.example.sunandmoon.ui.theme.UVLowColor
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 
@@ -61,16 +64,35 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
         }
     }
 
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
     val dateAndTime = shootInfoUIState.shoot!!.date
     val date = dateAndTime.toLocalDate()
     val timeWithSeconds = dateAndTime.toLocalTime()
     val time = timeWithSeconds.truncatedTo(ChronoUnit.MINUTES)
 
+    //val test = LocalDateTime.parse("2023-05-15T12:00:00Z")
+    Log.d("shootdatoRiktig format", dateAndTime.format(formatter))
+    Log.d("shootdato", shootInfoUIState.shoot!!.date.format(formatter))
+    //Log.d("shootdato", test.toString())
+
+    val correctTimeObject : Timeseries? = shootInfoUIState.weatherData?.properties?.timeseries?.
+    firstOrNull({ it.time.toString() == dateAndTime.format(formatter) })
+
+    val temperature : Double? = correctTimeObject?.data?.instant?.details?.air_temperature
+    val rainfallInMm : Double? = correctTimeObject?.data?.next_1_hours?.details?.precipitation_amount
+
+    val windSpeed : Double? = correctTimeObject?.data?.instant?.details?.wind_speed
+    val windDirection : Double? = correctTimeObject?.data?.instant?.details?.wind_from_direction
+    val uvIndex : Double? =correctTimeObject?.data?.instant?.details?.ultraviolet_index_clear_sky
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            Column(modifier.fillMaxWidth().padding(top = 10.dp)) {
+            Column(
+                modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)) {
                 GoBackEditDeleteBar(
                     modifier,
                     MaterialTheme.colorScheme.primary,
@@ -84,11 +106,15 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                 )
 
                 //Header for shoot name
-                Text(text = shootInfoUIState.shoot!!.name, modifier = modifier.fillMaxWidth().align(CenterHorizontally), fontSize = 50.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center )
+                Text(text = shootInfoUIState.shoot!!.name, modifier = modifier
+                    .fillMaxWidth()
+                    .align(CenterHorizontally), fontSize = 50.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center )
 
                 //Location for shoot
                 Row(modifier = modifier.align(CenterHorizontally)) {
-                    Icon(painter = painterResource(id = R.drawable.location1), "Location Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.primary)
+                    Icon(painter = painterResource(id = R.drawable.location1), "Location Icon", modifier = modifier
+                        .size(35.dp)
+                        .padding(end = 5.dp), MaterialTheme.colorScheme.primary)
                     Text(text = shootInfoUIState.shoot!!.locationName, fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
 
@@ -96,12 +122,16 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
 
                 //Calendar and time
                 Row(modifier = modifier.align(CenterHorizontally)){
-                    Icon(painter = painterResource(id = R.drawable.calendar), "Calendar Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.primary)
+                    Icon(painter = painterResource(id = R.drawable.calendar), "Calendar Icon", modifier = modifier
+                        .size(35.dp)
+                        .padding(end = 5.dp), MaterialTheme.colorScheme.primary)
                     Text(text = date.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
 
                     Spacer(modifier = modifier.size(30.dp))
 
-                    Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier.size(35.dp).padding(end = 5.dp), MaterialTheme.colorScheme.primary)
+                    Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier
+                        .size(35.dp)
+                        .padding(end = 5.dp), MaterialTheme.colorScheme.primary)
                     Text(text = time.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
 
@@ -128,18 +158,16 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                 )
 
                 WeatherCard(
-                    modifier = modifier,
-                    time,
-                    shootInfoUIState.weatherData?.properties?.timeseries?.
-                    firstOrNull({ it -> it.toString() == "2023-05-12T10:00:00Z" })?.data?.instant?.details?.air_temperature
+                    modifier = modifier, time, temperature, rainfallInMm
+
                 )
 
                 WindCard(
-                    modifier = modifier, time
+                    modifier = modifier, time, windSpeed, windDirection
                 )
 
                 UVCard(
-                    modifier = modifier, time
+                    modifier = modifier, time, uvIndex
                 )
 
 
