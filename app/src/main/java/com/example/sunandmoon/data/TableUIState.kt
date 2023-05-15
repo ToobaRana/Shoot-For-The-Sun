@@ -12,5 +12,6 @@ data class TableUIState(
     val location: Location,
     val chosenDate: LocalDateTime,
     val chosenSunType: String,
-    val timeZoneOffset: Double
+    val timeZoneOffset: Double,
+    val timezone_id: String
 )
