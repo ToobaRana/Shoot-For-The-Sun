@@ -14,17 +14,14 @@ import java.time.LocalDateTime
 
 @Composable
 fun NavigationComposable(page: Int, navigateToNextBottomBar: (index: Int) -> Unit){
-    //val items = listOf("Home", "Table")
-
     val icons = listOf(R.drawable.home, R.drawable.ar, R.drawable.table)
-    val iconsContentDescriptions = listOf("home button", "find shoot button", "table button")
+    val iconsContentDescriptions = listOf("home button", "A R button", "table button") // We wrote "A R" with space between to make the text-to-speech more understandable
 
     NavigationBar(containerColor = MaterialTheme.colorScheme.tertiary) {
         icons.forEachIndexed { index, icon ->
-            val iconColor = if (page == index)  InfoBlueColor else MaterialTheme.colorScheme.onPrimary
+            val iconColor = if (page == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
             NavigationBarItem(
                 icon = { Icon(painterResource(icon), iconsContentDescriptions[index], Modifier, iconColor) },
-                //label = { Text(item) },
                 selected = page == index,
                 onClick = {
                     if(index != page){

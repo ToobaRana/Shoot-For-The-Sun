@@ -20,6 +20,7 @@ data class StorableShoot(
     @ColumnInfo(name = "time_zone_offset") val timeZoneOffset: Double
 )
 
+// this class lets us store LocalDateTime objects in the room database
 class LocalDateTimeConverter {
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 

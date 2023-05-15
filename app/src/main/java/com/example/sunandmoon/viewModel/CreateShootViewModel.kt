@@ -206,7 +206,6 @@ class CreateShootViewModel  @Inject constructor(
                 }
 
                 // update the interval attributes of the parent production
-                // if this shoot is outside of the current interval of the parent production
                 val parentProductionId: Int? = _createShootUIState.value.parentProductionId
                 if(parentProductionId != null) {
                     productionDao.updateDateInterval(parentProductionId)

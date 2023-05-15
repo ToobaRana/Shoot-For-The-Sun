@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        val modifier = Modifier
+        val modifier = Modifier // this instance of the modifier class is passed down to all our other composables
 
         setContent {
             SunAndMoonTheme {
@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// controls the navigation and communication of the different screens
 @Composable
 fun MultipleScreenNavigator(modifier: Modifier) {
     val navController = rememberNavController()
@@ -74,6 +75,7 @@ fun MultipleScreenNavigator(modifier: Modifier) {
         val routeShootInfoScreen = "shootInfoScreen/{shootId}"
         composable(routeShootInfoScreen) { backStackEntry ->
             val shootId: Int? = backStackEntry.arguments?.getString("shootId")?.toIntOrNull()
+            // we can assume that shootId never will be null, so this if-check will always be true (which we want)
             if(shootId != null) {
                 ShootInfoScreen(
                     modifier = modifier,
