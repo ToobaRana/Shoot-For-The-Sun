@@ -117,10 +117,6 @@ fun TableView(
 
                 }
 
-
-
-
-
                 Spacer(modifier = modifier.height(10.dp))
             }
 
@@ -179,7 +175,7 @@ fun TableView(
 
 
                         TableCard(
-                            apiSunTime = sunriseTime,
+                            apiSunTime = elementInTableUiStateList[1],
                             day = day,
                             calculationSunTime = tableUIState.calculationsDateTableList[monthInt - 1],
                             modifier = modifier
@@ -188,10 +184,7 @@ fun TableView(
                         )
                         Spacer(modifier = modifier.height(1.dp))
 
-
                     }
-
-
                 }
 
             }

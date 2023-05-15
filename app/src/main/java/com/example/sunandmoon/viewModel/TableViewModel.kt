@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.lang.Math.min
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -37,8 +36,7 @@ class TableViewModel : ViewModel() {
             chosenDate = LocalDateTime.now(),
             chosenSunType = "Sunrise",
             timeZoneOffset = 2.0,
-            timezone_id = "Europa/Oslo",
-            sign = ""
+            timezone_id = "Europa/Oslo"
         )
     )
 
@@ -85,88 +83,84 @@ class TableViewModel : ViewModel() {
 
             for (date in sameDaysList.sorted()){
                 val offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
-                val offserFromUiState = tableUIState.value.timeZoneOffset
+                val offsetUIState = tableUIState.value.timeZoneOffset
                 var offsetString: String
 
-                val offsetDecimal = offserFromUiState.toString().split(".")
+                Log.d("offsetToFindSign", offsetToFindSign.toString())
+                Log.d("offsetUIState", offsetUIState.toString())
 
+                val offsetList = offsetUIState.toString().split(".")
 
-                val hours = offsetDecimal[0]
+                val hours = offsetList[0]
                 val hoursWithOutSign = hours.split("")[2]
-             
 
-                val minutter = offsetDecimal[1]
+                val minutesDecimal = offsetList[1]
 
-                if (offserFromUiState in -9.9..9.9) {
+                var convertToMinutes = convertToMinutesFunction(minutesDecimal)
+
+                println(convertToMinutes)
 
 
+                if (offsetUIState in -9.9..9.9) {
 
-                    Log.d("offsetdesimal", tableUIState.value.timeZoneOffset.toString())
+                    //if it is hours and minutes
+                    if (convertToMinutes == "0") {
 
-                    if (minutter == "0") {
+                        //if negative and decimal
+                        offsetString = if(offsetUIState.toString().split("")[1] == "-") {
+                            "-0${hoursWithOutSign}:00"
+                        }
 
-                        //hvis minus og desimal
-                       if(offsetToFindSign.toString().split("")[1] == "-") {
-
-                           offsetString = "-0${hoursWithOutSign}:00"
-                       }
-                       //desimal og ikke minus
-                       else{
-                            offsetString = "+0${hours}:00"
-                           }
+                        //not negative
+                        else{
+                            "+0${hours}:00"
+                        }
                     }
 
-                    //desimal, men sjekk minus
+                    //not minutes, only hours
                     else{
-                          //hvis minus og desimal
-                         if(offsetToFindSign.toString().split("")[1] == "-") {
+                          //if negative
+                        offsetString = if(offsetUIState.toString().split("")[1] == "-") {
 
-                             offsetString = "-0${hoursWithOutSign}:${minutter}0"
-                         }
-                         //desimal og ikke minus
-                         else{
-                             offsetString = "+0${hours}:${minutter}0"
+                            "-0${hoursWithOutSign}:${convertToMinutes}"
+                        }
+                        //not negative
+                        else{
+                            "+0${hours}:${convertToMinutes}"
 
-                         }
+                        }
                     }
 
-                   //hvis offset er mellom 0 og 9, men er desimal og minus
-                } else if (offserFromUiState in 10.0..25.0 || offserFromUiState in -25.0..-10.0) {
+                   //same as above, but checks for values over 10 og under -10
+                } else if (offsetUIState in 10.0..25.0 || offsetUIState in -25.0..-10.0) {
 
-                          if (minutter.toDouble() == 0.0) {
+                          if (convertToMinutes.toString() == "0") {
 
-                              //hvis minus og desimal
-                              if (offsetToFindSign.toString().split("")[1] == "-") {
-                                  offsetString = "-${hoursWithOutSign}:00"
+                              offsetString = if (offsetUIState.toString().split("")[1] == "-") {
+                                  "-${hoursWithOutSign}:00"
                               }
-                              //desimal og ikke minus
+
                               else {
-                                  offsetString = "+${hours}:00"
+                                  "+${hours}:00"
                               }
 
                           }
-                          //ikke desimal, men sjekk minus
+
                           else{
-                                //hvis minus og desimal
-                               if(offserFromUiState.toString().split("")[1] == "-") {
-                                   offsetString = "-${hoursWithOutSign}:${minutter}0"
-                               }
-                               //desimal og ikke minus
-                               else{
-                                   offsetString = "+${hours}:${minutter}0"
-
-                               }
+                              offsetString = if(offsetUIState.toString().split("")[1] == "-") {
+                                  "-${hoursWithOutSign}:${convertToMinutes}"
+                              }
+                              else{
+                                  "+${hours}:${convertToMinutes}"
+                              }
                           }
-
 
                       }
+
                 else {
                     val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
                     offsetString = "+0$offsetFromUiState:00"
                     }
-
-
-                //mangler at halvetime blir tatt hensyn paa
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
@@ -196,7 +190,7 @@ class TableViewModel : ViewModel() {
         }
     }
 
-    fun getSameDaysInYear(date: LocalDate): List<LocalDate> {
+    private fun getSameDaysInYear(date: LocalDate): List<LocalDate> {
 
         val daysInMonth = listOf(31, 28, 31, 30, 31, 30, 31, 31 ,30, 31, 30, 31)
 
@@ -205,7 +199,7 @@ class TableViewModel : ViewModel() {
 
         for (month in 1..12) {
             val daysInThisMonth = daysInMonth[month-1]
-            val dayToUse = min(daysInThisMonth, date.dayOfMonth)
+            val dayToUse = daysInThisMonth.coerceAtMost(date.dayOfMonth)
             if (month < date.month.value){
                 val nextYear = year+1
 
@@ -226,7 +220,7 @@ class TableViewModel : ViewModel() {
 
         return sameDays.sorted()
     }
-    fun getSameDaysInYearFromJanuary(date: LocalDate): List<LocalDate> {
+    private fun getSameDaysInYearFromJanuary(date: LocalDate): List<LocalDate> {
 
         val daysInMonth = listOf(31, 28, 31, 30, 31, 30, 31, 31 ,30, 31, 30, 31)
 
@@ -235,7 +229,7 @@ class TableViewModel : ViewModel() {
 
         for (month in 1..12) {
             val daysInThisMonth = daysInMonth[month-1]
-            val dayToUse = min(daysInThisMonth, date.dayOfMonth)
+            val dayToUse = daysInThisMonth.coerceAtMost(date.dayOfMonth)
 
 
 
@@ -256,7 +250,7 @@ class TableViewModel : ViewModel() {
             )
         }
     }
-
+/*
     fun setTimeZone(timezone: Double){
         _tableUIState.update { currentState ->
             currentState.copy(
@@ -264,6 +258,8 @@ class TableViewModel : ViewModel() {
             )
         }
     }
+
+ */
 
     fun setLocationSearchQuery(inputQuery: String) {
         _tableUIState.update { currentState ->
@@ -285,12 +281,13 @@ class TableViewModel : ViewModel() {
                 }
 
             } catch (e: Throwable) {
-                Log.d("error", "uh oh" + e.toString())
+                Log.d("error", "uh oh$e")
             }
         }
     }
 
-    fun setTimeZoneOffset(timeZoneOffset: Double, timezone_id: String) {
+
+    private fun setTimeZoneOffset(timeZoneOffset: Double, timezone_id: String) {
         _tableUIState.update { currentState ->
             currentState.copy(
                 timeZoneOffset = timeZoneOffset,
@@ -335,7 +332,7 @@ class TableViewModel : ViewModel() {
         setNewDate(year, _tableUIState.value.chosenDate.monthValue, _tableUIState.value.chosenDate.dayOfMonth)
     }
 
-    fun setNewDate(year: Int, month: Int, day: Int){
+    private fun setNewDate(year: Int, month: Int, day: Int){
         _tableUIState.update { currentState ->
             currentState.copy(
                 chosenDate = LocalDateTime.of(year, month, day, 12, 0, 0)
@@ -345,16 +342,30 @@ class TableViewModel : ViewModel() {
         loadSunInformation()
     }
 
-    fun findOffset(location: String, date: String): Double {
+    private fun findOffset(location: String, date: String): Double {
        val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
            val calendar = Calendar.getInstance()
            val dateTime = dateFormat.parse(date)
-           calendar.time = dateTime
+        if (dateTime != null) {
+            calendar.time = dateTime
+        }
            val timeZone = TimeZone.getTimeZone(location)
            val offsetInMillis = timeZone.getOffset(calendar.timeInMillis)
            val offsetHours = offsetInMillis / (1000 * 60 * 60)
            return offsetHours.toDouble()
     }
+
+
+    fun convertToMinutesFunction(minutes: String): String{
+        var doubleMinutes = "0.$minutes".toDouble()
+        var minutes = doubleMinutes * 60
+        return minutes.toString().split(".")[0]
+
+
+
+    }
+
+
 
 
 
