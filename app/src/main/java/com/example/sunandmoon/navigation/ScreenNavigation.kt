@@ -1,11 +1,6 @@
-package com.example.sunandmoon
+package com.example.sunandmoon.navigation
 
 import android.content.pm.PackageManager
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -17,39 +12,6 @@ import com.example.sunandmoon.ui.screens.CreateShootScreen
 import com.example.sunandmoon.ui.screens.ProductionSelectionScreen
 import com.example.sunandmoon.ui.screens.ShootInfoScreen
 import com.example.sunandmoon.ui.screens.TableScreen
-import com.example.sunandmoon.ui.theme.SunAndMoonTheme
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.FusedLocationProviderClient
-import dagger.hilt.android.AndroidEntryPoint
-
-//import com.example.sunandmoon.di.DaggerAppComponent
-
-
-
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    //initializing here to get context of activity (this) before setcontent
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        val modifier = Modifier // this instance of the modifier class is passed down to all our other composables
-
-        setContent {
-            SunAndMoonTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = modifier,
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MultipleScreenNavigator(modifier, packageManager)
-                }
-            }
-        }
-    }
-}
 
 // controls the navigation and communication of the different screens
 @Composable
