@@ -43,7 +43,7 @@ fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, lat
 
     val dayOfYear: Double = localDateTime.toLocalDate().dayOfYear.toDouble()
     val hourDecimal: Double = hour + minutes / 60 + seconds / 60 / 60 + timeZoneOffset
-    val isLeapYear: Boolean = false
+    val isLeapYear: Boolean = (localDateTime.toLocalDate().year % 4) == 0
 
     val daysInYear: Double = if(isLeapYear) 366.0 else 365.0
 
