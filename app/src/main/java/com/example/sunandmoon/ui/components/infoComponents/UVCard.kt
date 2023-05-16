@@ -6,17 +6,36 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
-import com.example.sunandmoon.ui.theme.UVLowColor
-import com.example.sunandmoon.ui.theme.WeatherBlueColor
+import com.example.sunandmoon.ui.theme.*
 import java.time.LocalTime
 
 @Composable
 fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
+    val uvColor = when(uvIndex?.toInt()){
+        in 1..2 -> UVLowColor
+        in 3..5 -> UVModerateColor
+        in 6..7 -> UVHighColor
+        in 8..10 -> UVVeryHighColor
+        in 11.. Int.MAX_VALUE-> UVExtremeColor
+        else -> SecondaryColor //in principle will not get to this stage
+    }
 
+    val uvDescriptionsArray: Array<String> = stringArrayResource(R.array.uv_description)
+
+    val uvDescription = when(uvIndex?.toInt()){
+        in 1..2 -> uvDescriptionsArray[0]
+        in 3..5 -> uvDescriptionsArray[1]
+        in 6..7 -> uvDescriptionsArray[2]
+        in 8..10 -> uvDescriptionsArray[3]
+        in 11.. Int.MAX_VALUE-> uvDescriptionsArray[4]
+        else -> "No weather data" //in principle will not get to this stage
+    }
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -51,7 +70,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
                     painter = painterResource(id = R.drawable.sun),
                     "UV-Intensity Based Image",
                     modifier.size(100.dp),
-                    UVLowColor
+                    uvColor
                 )
 
 
@@ -63,7 +82,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
                     //UV info
                     Text(text = "UV-index: " + uvIndex.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier.size(10.dp))
-                    Text(text = "No need for protection", fontSize = 18.sp)
+                    Text(text = uvDescription, fontSize = 18.sp)
                 }
             }
         }

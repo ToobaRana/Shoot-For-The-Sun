@@ -33,10 +33,7 @@ import com.example.sunandmoon.model.LocationForecastModel.Timeseries
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
-import com.example.sunandmoon.ui.components.infoComponents.SunPositionsCard
-import com.example.sunandmoon.ui.components.infoComponents.UVCard
-import com.example.sunandmoon.ui.components.infoComponents.WeatherCard
-import com.example.sunandmoon.ui.components.infoComponents.WindCard
+import com.example.sunandmoon.ui.components.infoComponents.*
 import com.example.sunandmoon.ui.theme.UVLowColor
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -67,17 +64,18 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
     val dateAndTime = shootInfoUIState.shoot!!.date
+    val formattedDateAndTime : String = dateAndTime.format(formatter)
     val date = dateAndTime.toLocalDate()
     val timeWithSeconds = dateAndTime.toLocalTime()
     val time = timeWithSeconds.truncatedTo(ChronoUnit.MINUTES)
 
     //val test = LocalDateTime.parse("2023-05-15T12:00:00Z")
-    Log.d("shootdatoRiktig format", dateAndTime.format(formatter))
-    Log.d("shootdato", shootInfoUIState.shoot!!.date.format(formatter))
+    //Log.d("shootdatoRiktig format", dateAndTime.format(formatter))
+    //Log.d("shootdato", shootInfoUIState.shoot!!.date.format(formatter))
     //Log.d("shootdato", test.toString())
 
     val correctTimeObject : Timeseries? = shootInfoUIState.weatherData?.properties?.timeseries?.
-    firstOrNull({ it.time.toString() == dateAndTime.format(formatter) })
+    firstOrNull({ it.time.toString() == formattedDateAndTime })
 
     val temperature : Double? = correctTimeObject?.data?.instant?.details?.air_temperature
     val rainfallInMm : Double? = correctTimeObject?.data?.next_1_hours?.details?.precipitation_amount
@@ -157,18 +155,23 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                     sunsetTime = shootInfoUIState.sunsetTime
                 )
 
-                WeatherCard(
-                    modifier = modifier, time, temperature, rainfallInMm
+                if(dateAndTime < LocalDateTime.now()){
+                    NoDataCard(modifier)
+                } else{
+                    WeatherCard(
+                        modifier = modifier, time, temperature, rainfallInMm
 
-                )
+                    )
 
-                WindCard(
-                    modifier = modifier, time, windSpeed, windDirection
-                )
+                    WindCard(
+                        modifier = modifier, time, windSpeed, windDirection
+                    )
 
-                UVCard(
-                    modifier = modifier, time, uvIndex
-                )
+                    UVCard(
+                        modifier = modifier, time, uvIndex
+                    )
+                }
+
 
 
             }
