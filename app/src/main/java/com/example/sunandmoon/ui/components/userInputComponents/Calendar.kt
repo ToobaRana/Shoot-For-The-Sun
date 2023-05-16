@@ -28,10 +28,10 @@ import java.time.format.TextStyle
 import java.util.*
 
 
-val numWeekdays = 7
-val sumMonths = 12
+const val numWeekdays = 7
 
-val months = listOf<String>(
+
+val months = listOf(
     "January",
     "February",
     "March",
@@ -46,22 +46,11 @@ val months = listOf<String>(
     "December"
 )
 
-val amountDays: HashMap<String, Int> = hashMapOf<String, Int>(
-    "January" to 31,
-    "February" to 28,
-    "March" to 31,
-    "April" to 30,
-    "May" to 31,
-    "June" to 30,
-    "July" to 31,
-    "August" to 31,
-    "September" to 30,
-    "October" to 31,
-    "November" to 30,
-    "December" to 31
-)
+
+
+
 val weekdays =
-    listOf<String>("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+    listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
 
 @Composable
@@ -74,6 +63,9 @@ fun CalendarComponent(
 ) {
 
     var showCalendar by remember { mutableStateOf(false) }
+
+
+
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
 
         Button(onClick = { showCalendar = !showCalendar}) {
@@ -142,7 +134,7 @@ fun CalendarComponentDisplay(
             ) {
                 Spacer(modifier.size(30.dp))
                 Box {
-                    monthDropDown(modifier, chosenDate.monthValue, updateMonth)
+                    MonthDropDown(modifier, chosenDate.monthValue, chosenDate.year, updateMonth)
                 }
                 Spacer(modifier.size(30.dp))
                 Box(modifier = modifier.wrapContentSize(Alignment.Center, false)) {
@@ -157,13 +149,13 @@ fun CalendarComponentDisplay(
 
                                     currentYearText = year.replace("\\D".toRegex(), "")
 
-                                    Log.v("ÅR", year);
+                                    Log.v("ÅR", year)
 
                                 }
                             } else {
                                 currentYearText = ""
                             }
-                            Log.v("ÅR", year);
+                            Log.v("ÅR", year)
                         },
 
                         placeholder = { Text(text = "0") },
@@ -180,6 +172,7 @@ fun CalendarComponentDisplay(
                                 } else {
                                     updateYear(currentYearText.toInt())
                                     focusManager.clearFocus()
+
                                 }
 
 
@@ -208,7 +201,7 @@ fun CalendarComponentDisplay(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                drawWeekdays(numWeekdays)
+                DrawWeekdays()
             }
             val daysBeforeFirst = weekdays.indexOf(
                 getDayOfFirst(
@@ -217,7 +210,7 @@ fun CalendarComponentDisplay(
                 )
             )
             val calenderDayHeight =
-                (amountDays[months[chosenDate.monthValue - 1]]!! + daysBeforeFirst - 1) / 7
+                (chosenDate.toLocalDate().lengthOfMonth() + daysBeforeFirst - 1) / 7
 
 
             for (i in 0..calenderDayHeight) {
@@ -242,7 +235,7 @@ fun CalendarComponentDisplay(
                         for (y in 0 until numWeekdays) {
                             val day = (y + (i * 7) + 1) - daysBeforeFirst
 
-                            if (day > amountDays[months[chosenDate.monthValue - 1]]!!) {
+                            if (day > chosenDate.toLocalDate().lengthOfMonth()) {
                                 Spacer(
                                     modifier = modifier
                                         .size(50.dp)
@@ -268,7 +261,7 @@ fun CalendarComponentDisplay(
 }
 
 @Composable
-fun drawWeekdays(numDays: Int) {
+fun DrawWeekdays() {
     for (y in 0 until numWeekdays) {
         Text(text = weekdays[y].subSequence(0, 3).toString(), fontSize = 18.sp)
     }
@@ -277,9 +270,10 @@ fun drawWeekdays(numDays: Int) {
 //dropdown-menu for choosing month
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun monthDropDown(
+fun MonthDropDown(
     modifier: Modifier,
     currentMonth: Int,
+    currentYear: Int,
     updateMonth: (month: Int, maxDays: Int) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -321,10 +315,11 @@ fun monthDropDown(
 
                     onClick = {
 
-
+                        val maxDay = LocalDate.of(currentYear, months.indexOf(selectionOption) + 1, 1).lengthOfMonth()
                         updateMonth(
                             months.indexOf(selectionOption) + 1,
-                            amountDays[selectionOption]!!
+                            maxDay
+                             //amountDays[selectionOption]!!
                         )
                         //fetch date, update month in uistate
 
@@ -373,7 +368,7 @@ fun DrawDayBox(modifier: Modifier, day: Int, chosenDay: Int, updateDay: () -> Un
         modifier = usedModifier
             .size(50.dp)
             .padding(1.dp)
-            .clickable() { updateDay(); },
+            .clickable() { updateDay() },
         contentAlignment = Alignment.Center
     ) {
         Text(

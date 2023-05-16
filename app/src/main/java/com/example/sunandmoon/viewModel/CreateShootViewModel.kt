@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -158,10 +159,11 @@ class CreateShootViewModel  @Inject constructor(
         )
     }
 
-    fun updateMonth(month: Int, maxDate: Int) {
+    fun updateMonth(month: Int, maxDay: Int) {
         var day = _createShootUIState.value.chosenDate.dayOfMonth
-        if (maxDate < day) {
-            day = maxDate
+
+        if (maxDay < day) {
+            day = maxDay
         }
         setNewDate(_createShootUIState.value.chosenDate.year, month, day)
     }
