@@ -1,11 +1,8 @@
 package com.example.sunandmoon.data
 
 import android.location.Location
-import com.example.sunandmoon.data.util.LocationAndDateTime
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 data class TableUIState(
     val apiDateTableList: List<String>,
@@ -15,5 +12,6 @@ data class TableUIState(
     val location: Location,
     val chosenDate: LocalDateTime,
     val chosenSunType: String,
-    val timeZoneOffset: Double
+    val timeZoneOffset: Double,
+    val timezone_id: String
 )

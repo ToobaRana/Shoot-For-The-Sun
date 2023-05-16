@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 
+// Not used
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFFD9D9D9),
     secondary = Color(0xFF222831),
@@ -32,7 +33,7 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = SecondaryColor,
-    secondary = InfoBlueColor, // Never used yet
+    secondary = InfoBlueColor,
     tertiary = TernaryColor,
 
     background = PrimaryColor,
@@ -51,14 +52,14 @@ fun SunAndMoonTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
+    val colorScheme = LightColorScheme /*when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
-    }
+    }*/
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {

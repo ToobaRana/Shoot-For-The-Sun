@@ -17,6 +17,7 @@ import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
+import com.example.sunandmoon.data.localDatabase.storableShootsToNormalShoots
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,7 +53,7 @@ class ProductionSelectionViewModel @Inject constructor(
     fun getAllProductions() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val allProductions = productionDao.getAll()
+                val allProductions = productionDao.getAll(_productionSelectionUIState.value.productionOrderBy.value)
                 var productionList = mutableListOf<Production>()
                 allProductions.forEach() { storableProduction ->
                     productionList.add(
@@ -77,35 +78,10 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
-    fun storableShootsToNormalShoots(storableShoots: List<StorableShoot>?): List<Shoot> {
-        var shootList = mutableListOf<Shoot>()
-
-        if(storableShoots == null) return shootList
-
-        storableShoots.forEach() { storableShoot ->
-            shootList.add(
-                Shoot(
-                    id = storableShoot.uid,
-                    name = storableShoot.name,
-                    locationName = storableShoot.locationName,
-                    location = Location("").apply {
-                        latitude = storableShoot.latitude
-                        longitude = storableShoot.longitude
-                    },
-                    date = storableShoot.date,
-                    timeZoneOffset = storableShoot.timeZoneOffset
-
-                )
-            )
-        }
-
-        return shootList
-    }
-
     fun getAllIndependentShoots() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val allIndependentShoots = shootDao.getAllIndependentShoots()
+                val allIndependentShoots = shootDao.getAllIndependentShoots(_productionSelectionUIState.value.shootOrderBy.value)
                 val shootList = storableShootsToNormalShoots(allIndependentShoots)
                 withContext(Dispatchers.Main) {
                     _productionSelectionUIState.update { currentState ->
@@ -138,6 +114,7 @@ class ProductionSelectionViewModel @Inject constructor(
                 val idToDelete: Int? = _productionSelectionUIState.value.selectedProduction?.id
                 Log.i("aaa12345", idToDelete.toString())
                 if(idToDelete != null) {
+                    shootDao.deleteShootsInProduction(idToDelete)
                     productionDao.delete(productionDao.loadById(idToDelete))
                     getAllProductions()
                 }
@@ -161,16 +138,14 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
-    fun goIntoProduction(production: Production) {
+    fun getShootsInProduction(production: Production) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val productionShoots = production.id?.let { shootDao.loadByProductionId(it) }
+                val productionShoots = production.id?.let { shootDao.loadByProductionId(it, _productionSelectionUIState.value.shootOrderBy.value) }
                 val shootList = storableShootsToNormalShoots(productionShoots)
                 withContext(Dispatchers.Main) {
                     _productionSelectionUIState.update { currentState ->
                         currentState.copy(
-                            selectedProduction = production,
-                            currentPageIndex = SelectionPages.PRODUCTION_SHOOTS.ordinal,
                             productionShootsList = shootList
                         )
                     }
@@ -180,10 +155,21 @@ class ProductionSelectionViewModel @Inject constructor(
 
     }
 
+    fun goIntoProduction(production: Production) {
+        _productionSelectionUIState.update { currentState ->
+            currentState.copy(
+                selectedProduction = production,
+                currentPageIndex = SelectionPages.PRODUCTION_SHOOTS.ordinal,
+            )
+        }
+        getShootsInProduction(production)
+    }
+
     fun goOutOfProduction() {
         _productionSelectionUIState.update { currentState ->
             currentState.copy(
-                currentPageIndex = SelectionPages.PRODUCTIONS.ordinal
+                currentPageIndex = SelectionPages.PRODUCTIONS.ordinal,
+                selectedProduction = null
             )
         }
     }

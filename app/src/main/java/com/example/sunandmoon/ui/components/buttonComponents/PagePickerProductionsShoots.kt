@@ -41,16 +41,18 @@ fun PagePickerProductionsShoots(
             Button(
                 onClick = { if (currentPageIndex != SelectionPages.PRODUCTIONS.ordinal) productionSelectionViewModel.changeCurrentPageIndex() },
                 modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = colors[currentPageIndex])
+                colors = ButtonDefaults.buttonColors(containerColor = colors[currentPageIndex]),
+                contentPadding = PaddingValues(vertical = 4.dp)
             ) {
-                Text("Productions", color = colors[(currentPageIndex + 1) % 2], fontSize = 14.sp)
+                Text("Productions", color = colors[(currentPageIndex + 1) % 2], fontSize = 18.sp)
             }
             Button(
                 onClick = { if (currentPageIndex != SelectionPages.SHOOTS.ordinal) productionSelectionViewModel.changeCurrentPageIndex() },
                 modifier.weight(1f),
-                colors = ButtonDefaults.buttonColors(containerColor = colors[(currentPageIndex + 1) % 2])
+                colors = ButtonDefaults.buttonColors(containerColor = colors[(currentPageIndex + 1) % 2]),
+                contentPadding = PaddingValues(vertical = 4.dp)
             ) {
-                Text("Solo shoots", color = colors[currentPageIndex], fontSize = 14.sp)
+                Text("Solo shoots", color = colors[currentPageIndex], fontSize = 18.sp)
             }
         }
     }

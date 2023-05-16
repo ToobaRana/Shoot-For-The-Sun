@@ -1,7 +1,6 @@
 package com.example.sunandmoon.ui.screens
 
 import android.annotation.SuppressLint
-import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,13 +20,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.data.TableUIState
-import com.example.sunandmoon.data.util.LocationAndDateTime
-import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.TableViewModel
-import java.time.LocalDateTime
 
 
 @Composable
@@ -117,10 +113,6 @@ fun TableView(
 
                 }
 
-
-
-
-
                 Spacer(modifier = modifier.height(10.dp))
             }
 
@@ -128,9 +120,6 @@ fun TableView(
 
             Box{
 
-            //Spacer(modifier = modifier.height(10.dp))
-
-                //modifier.padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)
                 Box(modifier.fillMaxSize().padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)) {
                 // Render the header row
 
@@ -174,16 +163,15 @@ fun TableView(
 
                         val elementInTableUiStateList = date.split("T")
 
-                        val sunriseTime = elementInTableUiStateList[1]
+
+                        val sunriseTime = elementInTableUiStateList[1].split("-", "+")[0]
                         val day = elementInTableUiStateList[0]
                         val monthInt = day.split("-")[1].toInt()
-
-                        println("monthInt: $monthInt")
 
 
 
                         TableCard(
-                            apiSunTime = sunriseTime,
+                            apiSunTime = elementInTableUiStateList[1],
                             day = day,
                             calculationSunTime = tableUIState.calculationsDateTableList[monthInt - 1],
                             modifier = modifier
@@ -192,10 +180,7 @@ fun TableView(
                         )
                         Spacer(modifier = modifier.height(1.dp))
 
-
                     }
-
-
                 }
 
             }

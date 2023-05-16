@@ -3,11 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    //id 'com.google.devtools.ksp' version '1.8.0-1.0.8'
-    //id 'com.google.dagger.hilt.android' version '2.41' apply false
     id 'com.google.dagger.hilt.android'
-    //id 'com.google.dagger.hilt.android' version '2.42' apply false
-    //id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -163,6 +159,15 @@ dependencies {
     //implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
     kapt 'androidx.hilt:hilt-compiler:1.0.0'
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+
+    androidTestImplementation 'androidx.test:core:1.5.0'
+
+    // camera stuff
+    implementation "com.google.accompanist:accompanist-permissions:0.18.0"
+    implementation "androidx.camera:camera-camera2:1.2.1"
+    implementation "androidx.camera:camera-lifecycle:1.2.1"
+
+    implementation 'androidx.camera:camera-view:1.2.1'
 
 }
 

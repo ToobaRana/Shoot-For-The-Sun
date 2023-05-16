@@ -15,7 +15,7 @@ import com.example.sunandmoon.ui.theme.WeatherBlueColor
 import java.time.LocalTime
 
 @Composable
-fun UVCard(modifier: Modifier, time: LocalTime) {
+fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
 
     ElevatedCard(
         modifier = modifier
@@ -35,7 +35,7 @@ fun UVCard(modifier: Modifier, time: LocalTime) {
                 .padding(15.dp)
         ) {
 
-            Text(text = time.toString())
+            Text(text = time.toString(), fontSize = 18.sp)
 
             Row(
                 modifier
@@ -61,9 +61,9 @@ fun UVCard(modifier: Modifier, time: LocalTime) {
                 ) {
 
                     //UV info
-                    Text(text = "UV-index: 1", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "UV-index: " + uvIndex.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier.size(10.dp))
-                    Text(text = "No need for protection", fontSize = 15.sp)
+                    Text(text = "No need for protection", fontSize = 18.sp)
                 }
             }
         }

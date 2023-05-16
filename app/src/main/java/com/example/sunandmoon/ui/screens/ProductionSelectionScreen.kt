@@ -5,8 +5,10 @@ import android.graphics.drawable.Icon
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -46,19 +48,22 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.ProductionSelectionUIState
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.NavigationComposable
+import com.example.sunandmoon.ui.components.ProductionShootSelectionTopPart
+import com.example.sunandmoon.ui.components.buttonComponents.AddNewOrderByButtons
 import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
 import com.example.sunandmoon.ui.components.buttonComponents.PagePickerProductionsShoots
 import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
 import com.example.sunandmoon.ui.components.infoComponents.ShootCard
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductionSelectionScreen(
     modifier: Modifier,
-    navigateToShootInfoScreen: (shoot: Shoot) -> Unit,
+    navigateToShootInfoScreen: (shootId: Int) -> Unit,
     productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
     navigateToNextBottomBar: (index: Int) -> Unit,
     navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
@@ -68,12 +73,18 @@ fun ProductionSelectionScreen(
 
     val productionSelectionUIState by productionSelectionViewModel.productionSelectionUIState.collectAsState()
 
-    // Add the destination changed listener in the LaunchedEffect block
+    // when you navigate back to this screen we want to get the shoots from the database again
     LaunchedEffect(navController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.route == currentScreenRoute) {
-                // do something when popped back to this screen
+                // get all the shoots from the database when popped back to this screen
                 productionSelectionViewModel.getAllIndependentShoots()
+                // if you were inside a production. Get all the shoot within this production too
+                if(productionSelectionUIState.selectedProduction != null) {
+                    productionSelectionViewModel.getShootsInProduction(productionSelectionUIState.selectedProduction!!)
+                    // We also need to get the productions again so that their date interval is correct
+                    productionSelectionViewModel.getAllProductions()
+                }
             }
         }
     }
@@ -102,7 +113,18 @@ fun ProductionSelectionScreen(
             }
         },
         content = { innerPadding ->
+            var emptyAddSomethingText: String? = null
             if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal && productionSelectionUIState.productionsList.isEmpty()) {
+                emptyAddSomethingText = "Empty...\n\n(Add a production)"
+            }
+            else if (currentPageIndex == SelectionPages.SHOOTS.ordinal && productionSelectionUIState.independentShootsList.isEmpty()) {
+                emptyAddSomethingText = "Empty...\n\n(Add a shoot)"
+            }
+            else if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal && productionSelectionUIState.productionShootsList.isEmpty()) {
+                emptyAddSomethingText = "Empty...\n\n(Add a shoot to this production)"
+            }
+
+            if(emptyAddSomethingText != null) {
                 Box(modifier = modifier.fillMaxSize()) {
                     Text(
                         "Empty...\n\n(Add a production)",
@@ -111,25 +133,8 @@ fun ProductionSelectionScreen(
                         textAlign = TextAlign.Center
                     )
                 }
-            } else if (currentPageIndex == SelectionPages.SHOOTS.ordinal && productionSelectionUIState.independentShootsList.isEmpty()) {
-                Box(modifier = modifier.fillMaxSize()) {
-                    Text(
-                        "Empty...\n\n(Add a shoot)",
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = modifier.align(Alignment.Center),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            } else if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal && productionSelectionUIState.productionShootsList.isEmpty()) {
-                Box(modifier = modifier.fillMaxSize()) {
-                    Text(
-                        "Empty...\n\n(Add a shoot to this production)",
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = modifier.align(Alignment.Center),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            } else {
+            }
+             else {
                 LazyColumn(
                     modifier = modifier
                         .fillMaxSize()
@@ -145,20 +150,24 @@ fun ProductionSelectionScreen(
                             productionSelectionUIState
                         )
                     }
-                    if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal) {
-                        items(productionSelectionUIState.productionsList) { production ->
-                            ProductionCard(
-                                modifier,
-                                production
-                            ) { productionSelectionViewModel.goIntoProduction(production) }
+                    when (currentPageIndex) {
+                        SelectionPages.PRODUCTIONS.ordinal -> {
+                            items(productionSelectionUIState.productionsList) { production ->
+                                ProductionCard(
+                                    modifier,
+                                    production
+                                ) { productionSelectionViewModel.goIntoProduction(production) }
+                            }
                         }
-                    } else if (currentPageIndex == SelectionPages.SHOOTS.ordinal) {
-                        items(productionSelectionUIState.independentShootsList) { shoot ->
-                            ShootCard(modifier, shoot, navigateToShootInfoScreen)
+                        SelectionPages.SHOOTS.ordinal -> {
+                            items(productionSelectionUIState.independentShootsList) { shoot ->
+                                ShootCard(modifier, shoot, navigateToShootInfoScreen)
+                            }
                         }
-                    } else {
-                        items(productionSelectionUIState.productionShootsList) { shoot ->
-                            ShootCard(modifier, shoot, navigateToShootInfoScreen)
+                        else -> {
+                            items(productionSelectionUIState.productionShootsList) { shoot ->
+                                ShootCard(modifier, shoot, navigateToShootInfoScreen)
+                            }
                         }
                     }
                 }
