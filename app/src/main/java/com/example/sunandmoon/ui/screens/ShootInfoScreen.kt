@@ -155,7 +155,7 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                     sunsetTime = shootInfoUIState.sunsetTime
                 )
 
-                if(dateAndTime < LocalDateTime.now()){
+                if(dateAndTime < LocalDateTime.now() || dateAndTime >= LocalDateTime.now().plusDays(10)){
                     NoDataCard(modifier)
                 } else{
                     WeatherCard(
