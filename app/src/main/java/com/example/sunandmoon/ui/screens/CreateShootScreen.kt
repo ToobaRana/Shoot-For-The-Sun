@@ -3,6 +3,7 @@ package com.example.sunandmoon.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -164,7 +165,8 @@ fun CreateShootScreen(
 
 
                         ),
-                        fieldShape =  RectangleShape
+                        fieldShape =  RectangleShape,
+                        containerShape = RoundedCornerShape(10.dp)
                     )
                     Text(modifier = modifier.size(100.dp), text = createShootUIState.chosenDate.toLocalTime().toString())
                 }
