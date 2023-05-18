@@ -6,6 +6,7 @@
     <string name="SolarNoon">SolarNoon</string>
     <string name="NoData">No weather data available</string>
 
+    <string name="defaultProductionName">My Production</string>
 
 
     <string-array name="suntype">
@@ -21,6 +22,7 @@
         <item>Extra protection is needed</item>
         <item>Stay inside</item>
     </string-array>
+
 
 
 

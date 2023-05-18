@@ -51,7 +51,7 @@ fun AddNewOrderByButtons(
                     .background(MaterialTheme.colorScheme.primary)
                     .clickable {
                         if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal) {
-                            productionSelectionViewModel.saveProduction()
+                            productionSelectionViewModel.setProductionName("")
                         } else {
                             navigateToCreateShootScreen(
                                 productionSelectionUIState.selectedProduction?.id,
