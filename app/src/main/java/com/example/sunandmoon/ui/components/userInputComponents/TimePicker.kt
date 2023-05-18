@@ -14,7 +14,7 @@ import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import java.time.LocalTime
 import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
-@OptIn(ExperimentalMaterial3Api::class)
+//Composable for choosing time for user
 @Composable
 fun TimepickerComponent(
     modifier: Modifier,
@@ -31,8 +31,10 @@ fun TimepickerComponent(
         shape = fieldShape
     )
     {
+        //for centering Fields
         Row(modifier = modifier.wrapContentSize()) {
 
+            //puts string for InputField
             val hourText =
                 if (currentTime.hour != 0) {
                     currentTime.hour.toString()
@@ -50,6 +52,7 @@ fun TimepickerComponent(
                 max = 23,
                 updateTime = { hour: Int -> currentTime.withHour(hour) }
             )
+            //puts string for InputField
             val minuteText =
                 if (currentTime.minute != 0) {
                     currentTime.minute.toString()
@@ -77,7 +80,7 @@ fun TimepickerComponent(
 
 }
 
-//checks if number is within range an
+//checks if number is within range and returns null if not
 fun validateNumber(value: String, min: Int, max: Int): Int? {
     if (value == "") return 0
     if (value.isDigitsOnly()) {
@@ -87,6 +90,7 @@ fun validateNumber(value: String, min: Int, max: Int): Int? {
 
 }
 
+//used for input-fields in Timepicker
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputField(

@@ -20,6 +20,9 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.checkPermissions
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
+import com.example.sunandmoon.ui.components.buttonComponents.CreateShootSunPositionCard
+import com.example.sunandmoon.ui.components.infoComponents.SunPositionsCard
+import com.example.sunandmoon.ui.components.userInputComponents.SunPositionTime
 import com.example.sunandmoon.ui.components.userInputComponents.TimepickerComponent
 
 import com.example.sunandmoon.viewModel.CreateShootViewModel
@@ -141,6 +144,29 @@ fun CreateShootScreen(
                         updateDay = { day: Int -> createShootViewModel.updateDay(day) })
 
 
+
+                    TimepickerComponent(
+                        modifier = modifier.wrapContentSize(),
+                        onValueChange = { time: LocalTime ->
+                            createShootViewModel.updateTime(time)
+                        },
+                        currentTime = createShootUIState.chosenDate.toLocalTime(),
+                        colors = TimePickerColors(
+                            //cursorColor = MaterialTheme.colorScheme.primary,
+                            textColor = MaterialTheme.colorScheme.onSurface,
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                            placeholderColor = MaterialTheme.colorScheme.secondary,
+                        ),
+                        fieldShape = RectangleShape
+                    )
+                    Spacer(modifier = modifier.size(20.dp))
+                    SunPositionTime(
+                        modifier = modifier,
+                        updateTime = { time: LocalTime -> createShootViewModel.updateTime(time) }
+                    )
+
                     Button(onClick = {
                         //save stuff
                         createShootViewModel.saveShoot()
@@ -148,25 +174,6 @@ fun CreateShootScreen(
                     }) {
                         Text(text = "Save")
                     }
-                    TimepickerComponent(
-                        modifier = modifier.wrapContentSize(),
-                        onValueChange = {time: LocalTime ->
-                            createShootViewModel.updateTime(time)
-                        },
-                        currentTime = createShootUIState.chosenDate.toLocalTime(),
-                        colors = TimePickerColors(
-                            //cursorColor = MaterialTheme.colorScheme.primary,
-                            textColor = MaterialTheme.colorScheme.onSurface,
-                            containerColor =  MaterialTheme.colorScheme.tertiary,
-                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                            placeholderColor = MaterialTheme.colorScheme.secondary,
-
-
-                        ),
-                        fieldShape =  RectangleShape
-                    )
-                    Text(modifier = modifier.size(100.dp), text = createShootUIState.chosenDate.toLocalTime().toString())
                 }
             }
         }
