@@ -206,7 +206,7 @@ fun TableView(
 
         },
         bottomBar = {
-            NavigationComposable(page = 2, navigateToNextBottomBar)
+            NavigationComposable(modifier = modifier, page = 2, navigateToNextBottomBar)
         }
 
 

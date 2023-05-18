@@ -17,14 +17,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -34,6 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.camera.CameraPreview
 import com.example.sunandmoon.util.Permission
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -41,12 +37,22 @@ import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.sqrt
 import com.example.sunandmoon.R
+import com.example.sunandmoon.data.ARUIState
+import com.example.sunandmoon.ui.components.NavigationComposable
+import com.example.sunandmoon.viewModel.ARViewModel
 
 
 @Composable
-fun SunAR(modifier: Modifier, navigateToNextBottomBar: (index: Int) -> Unit, packageManager: PackageManager) {
+fun SunAR(
+    modifier: Modifier,
+    navigateToNextBottomBar: (index: Int) -> Unit,
+    packageManager: PackageManager,
+    arViewModel: ARViewModel = hiltViewModel()
+) {
+    val arUIState by arViewModel.arUIState.collectAsState()
+
     Surface() {
-        MainContent(Modifier.fillMaxSize())
+        CameraContent(Modifier.fillMaxSize())
     }
 
     val hasMagnetometer = packageManager.hasSystemFeature(PackageManager.FEATURE_SENSOR_COMPASS)
@@ -125,7 +131,7 @@ fun SunAR(modifier: Modifier, navigateToNextBottomBar: (index: Int) -> Unit, pac
         )
     }
 
-    TheApp(Modifier, sensorStatus, hasMagnetometer)
+    TheApp(Modifier, sensorStatus, hasMagnetometer, navigateToNextBottomBar, arUIState)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,19 +140,31 @@ fun TheApp(
     modifier: Modifier,
     sensorStatus: MutableState<FloatArray>,
     hasMagnetometer: Boolean,
+    navigateToNextBottomBar: (index: Int) -> Unit,
+    arUIState: ARUIState,
 ) {
+    // for the AR functionality
+    val sunZenith = arUIState.sunZenith
+    val sunAzimuth = arUIState.sunAzimuth
+    if(sunZenith != null && sunAzimuth != null) {
+        SunFinder(modifier, sensorStatus.value, sunZenith, sunAzimuth)
+    }
 
-    SunFinder(modifier, sensorStatus.value)
-
+    // for the non-AR UI part for this screen
+    Scaffold(
+        containerColor = Color.Transparent,
+        bottomBar = { NavigationComposable(modifier = modifier, page = 1, navigateToNextBottomBar = navigateToNextBottomBar)}
+    ) { val p = it /* just to remove the error message */ }
 }
 
 @Composable
-fun SunFinder(modifier: Modifier, sensorStatus: FloatArray) {
+fun SunFinder(modifier: Modifier, sensorStatus: FloatArray, sunZenith: Double, sunAzimuth: Double) {
 
     if(sensorStatus.size < 2 || sensorStatus[0].isNaN() || sensorStatus[1].isNaN()) return
 
-    val sunZenith: Double = 55.17 //41.19
-    val sunAzimuth: Double = 301.52 //137.87
+    // sunZenith and sunAzimuth are in degrees
+    val sunZenith: Double = sunZenith //41.19
+    val sunAzimuth: Double = sunAzimuth //137.87
 
     val sun1ImagePos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(sunZenith), Math.toRadians(-sunAzimuth))
     val xPos1 = sun1ImagePos[0]
@@ -369,7 +387,7 @@ fun SkyDirection(modifier: Modifier, sensorStatus: FloatArray, pos: List<Dp>, di
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MainContent(modifier: Modifier = Modifier) {
+fun CameraContent(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     Permission(
         permission = Manifest.permission.CAMERA,

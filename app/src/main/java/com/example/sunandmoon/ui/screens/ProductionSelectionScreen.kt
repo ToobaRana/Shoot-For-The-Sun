@@ -178,7 +178,7 @@ fun ProductionSelectionScreen(
         bottomBar = {
             if (currentPageIndex != SelectionPages.PRODUCTION_SHOOTS.ordinal) {
                 Column(modifier.fillMaxWidth()) {
-                    NavigationComposable(page = 0, navigateToNextBottomBar)
+                    NavigationComposable(modifier = modifier, page = 0, navigateToNextBottomBar)
                 }
             }
         }

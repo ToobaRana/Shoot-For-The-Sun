@@ -28,12 +28,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    //initializing here to get context of activity (this) before setcontent
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val modifier = Modifier // this instance of the modifier class is passed down to all our other composables
 
