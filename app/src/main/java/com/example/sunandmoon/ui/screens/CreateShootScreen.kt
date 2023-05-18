@@ -14,18 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.checkPermissions
+import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
-import com.example.sunandmoon.ui.components.buttonComponents.CreateShootSunPositionCard
-import com.example.sunandmoon.ui.components.infoComponents.SunPositionsCard
 import com.example.sunandmoon.ui.components.userInputComponents.SunPositionTime
 import com.example.sunandmoon.ui.components.userInputComponents.TimepickerComponent
-
 import com.example.sunandmoon.viewModel.CreateShootViewModel
 import java.time.LocalTime
 
@@ -133,6 +133,8 @@ fun CreateShootScreen(
                             )
                         },
                     )
+                }
+                item {
                     CalendarComponent(modifier,
                         createShootUIState.chosenDate,
                         updateYear = { year: Int -> createShootViewModel.updateYear(year) },
@@ -143,8 +145,14 @@ fun CreateShootScreen(
                             )
                         },
                         updateDay = { day: Int -> createShootViewModel.updateDay(day) })
-
-
+                }
+                item {
+                    Text(
+                        modifier = modifier,
+                        text = stringResource(R.string.Time),
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
 
                     TimepickerComponent(
                         modifier = modifier.wrapContentSize(),
@@ -163,12 +171,44 @@ fun CreateShootScreen(
                         fieldShape = RectangleShape,
                         containerShape = RoundedCornerShape(10.dp)
                     )
+                }
+                item {
                     Spacer(modifier = modifier.size(20.dp))
-                    SunPositionTime(
+                    Text(
                         modifier = modifier,
-                        updateTime = { time: LocalTime -> createShootViewModel.updateTime(time) }
+                        text = stringResource(R.string.SunPosition),
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                item {
+                    Row(
+                        modifier
+                            .fillMaxWidth()
+                            .wrapContentSize()) {
+                        SunPositionTime(
+                            modifier = modifier,
+                            updateTime = { time: LocalTime -> createShootViewModel.updateTime(time) },
+                            getSunRiseNoonFall(
+                                localDateTime = createShootUIState.chosenDate,
+                                timeZoneOffset = createShootUIState.timeZoneOffset,
+                                latitude = createShootUIState.latitude,
+                                longitude = createShootUIState.longitude
+                            )
+                        )
+                    }
+
+                }
+                item {
+                    Text(
+                        modifier = modifier,
+                        text = stringResource(R.string.PreferredWeather),
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.primary
                     )
 
+                }
+                item {
                     Button(onClick = {
                         //save stuff
                         createShootViewModel.saveShoot()

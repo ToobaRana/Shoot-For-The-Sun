@@ -1,6 +1,7 @@
 package com.example.sunandmoon.ui.components.buttonComponents
 
 import android.graphics.drawable.Icon
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -18,15 +19,20 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.SunPositionComponent
 import com.example.sunandmoon.ui.theme.SunColor
 import java.time.LocalTime
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Local
 
 @Composable
 fun CreateShootSunPositionCard(
     modifier: Modifier,
     containerColor: Color,
-    updateTime: (time: LocalTime)->Unit,
-    painter: Painter
-){
-    Card(modifier = modifier, colors = CardDefaults.cardColors(containerColor = containerColor)){
+    updateTime:  ()->Unit,
+    painter: Painter,
+
+) {
+    Card(
+        modifier = modifier.clickable { updateTime()},
+        colors = CardDefaults.cardColors(containerColor = containerColor)
+    ) {
         Icon(painter, "Sun Image", modifier.size(80.dp), SunColor)
 
     }
