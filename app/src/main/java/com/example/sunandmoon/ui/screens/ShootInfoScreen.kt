@@ -64,7 +64,7 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
     val dateAndTime = shootInfoUIState.shoot!!.date
-    val formattedDateAndTime : String = dateAndTime.format(formatter)
+
     val date = dateAndTime.toLocalDate()
     val timeWithSeconds = dateAndTime.toLocalTime()
     val time = timeWithSeconds.truncatedTo(ChronoUnit.MINUTES)
@@ -74,6 +74,11 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
     //Log.d("shootdato", shootInfoUIState.shoot!!.date.format(formatter))
     //Log.d("shootdato", test.toString())
 
+    //need if statement for shoottime if it isnt a round number
+    var dateTimeObjectForApiUse : LocalDateTime = dateAndTime.withMinute(0)
+
+
+    val formattedDateAndTime : String = dateTimeObjectForApiUse.format(formatter)
     val correctTimeObject : Timeseries? = shootInfoUIState.weatherData?.properties?.timeseries?.
     firstOrNull({ it.time.toString() == formattedDateAndTime })
 
@@ -82,7 +87,7 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
 
     val windSpeed : Double? = correctTimeObject?.data?.instant?.details?.wind_speed
     val windDirection : Double? = correctTimeObject?.data?.instant?.details?.wind_from_direction
-    val uvIndex : Double? =correctTimeObject?.data?.instant?.details?.ultraviolet_index_clear_sky
+    val uvIndex : Double? = correctTimeObject?.data?.instant?.details?.ultraviolet_index_clear_sky
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -155,6 +160,7 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                     sunsetTime = shootInfoUIState.sunsetTime
                 )
 
+                //if statement added because weatherapi doesnt have data from before todays data and after 10 days
                 if(dateAndTime < LocalDateTime.now() || dateAndTime >= LocalDateTime.now().plusDays(10)){
                     NoDataCard(modifier)
                 } else{
