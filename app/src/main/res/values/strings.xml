@@ -5,6 +5,7 @@
     <string name="Sunrise">Sunrise</string>
     <string name="SolarNoon">SolarNoon</string>
 
+    <string name="defaultProductionName">My Production</string>
 
 
     <string-array name="suntype">
@@ -12,6 +13,7 @@
         <item>@string/Sunset</item>
         <item>@string/SolarNoon</item>
     </string-array>
+
 
 
 

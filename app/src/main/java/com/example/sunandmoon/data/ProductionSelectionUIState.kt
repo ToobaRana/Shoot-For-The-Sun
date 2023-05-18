@@ -13,8 +13,8 @@ data class ProductionSelectionUIState (
     val productionShootsList: List<Shoot> = listOf(),
     val independentShootsList: List<Shoot> = listOf(),
     val selectedProduction: Production? = null,
-    val newProductionName: String? = null
-    val selectedProduction: Production? = null,
+    val newProductionName: String? = null,
+
     val productionOrderBy: ProductionOrderBy = ProductionOrderBy.START_DATE_TIME,
     val shootOrderBy: ShootOrderBy = ShootOrderBy.DATE_TIME,
 )

@@ -1,9 +1,13 @@
 package com.example.sunandmoon.viewModel
 
+import android.content.res.Resources
 import android.location.Location
+
+
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sunandmoon.R
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ProductionSelectionUIState
 import com.example.sunandmoon.data.util.Production
@@ -32,6 +36,7 @@ enum class SelectionPages {
 class ProductionSelectionViewModel @Inject constructor(
     private val database: AppDatabase
 ) : ViewModel() {
+
     private val dataSource = DataSource()
 
     val productionDao: ProductionDao = database.productionDao()
@@ -41,6 +46,7 @@ class ProductionSelectionViewModel @Inject constructor(
         ProductionSelectionUIState()
     )
 
+
     val productionSelectionUIState: StateFlow<ProductionSelectionUIState> = _productionSelectionUIState.asStateFlow()
 
     init {
@@ -48,7 +54,9 @@ class ProductionSelectionViewModel @Inject constructor(
         //saveProduction()
         getAllProductions()
         getAllIndependentShoots()
+
     }
+
 
     fun getAllProductions() {
         viewModelScope.launch {
@@ -94,12 +102,13 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
-    fun saveProduction() {
+    fun saveProduction(name: String) {
+
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 productionDao.insert(StorableProduction(
                     uid = 0,
-                    name = "test " + (Math.random()*1000).toInt().toString(),
+                    name = name,
                     startDateTime = null,
                     endDateTime = null
                 ))
@@ -173,11 +182,12 @@ class ProductionSelectionViewModel @Inject constructor(
             )
         }
     }
-    fun setProductionName(name: String){
+    fun setProductionName(name: String?){
         _productionSelectionUIState.update { currentState ->
             currentState.copy(
                 newProductionName = name
             )
+
         }
     }
 }
