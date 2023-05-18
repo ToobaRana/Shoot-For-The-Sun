@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -230,6 +231,16 @@ class CreateShootViewModel  @Inject constructor(
             _createShootUIState.update { currentState ->
                 currentState.copy(
                     currentShootBeingEditedId = id
+                )
+            }
+        }
+    }
+    fun updateTime(time: LocalTime){
+        val newDateTime = _createShootUIState.value.chosenDate.withHour(time.hour).withMinute(time.minute)
+        viewModelScope.launch {
+            _createShootUIState.update { currentState ->
+                currentState.copy(
+                    chosenDate = newDateTime
                 )
             }
         }

@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -17,8 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.checkPermissions
+import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
+import com.example.sunandmoon.ui.components.userInputComponents.TimepickerComponent
+
 import com.example.sunandmoon.viewModel.CreateShootViewModel
+import java.time.LocalTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -143,6 +148,25 @@ fun CreateShootScreen(
                     }) {
                         Text(text = "Save")
                     }
+                    TimepickerComponent(
+                        modifier = modifier.wrapContentSize(),
+                        onValueChange = {time: LocalTime ->
+                            createShootViewModel.updateTime(time)
+                        },
+                        currentTime = createShootUIState.chosenDate.toLocalTime(),
+                        colors = TimePickerColors(
+                            //cursorColor = MaterialTheme.colorScheme.primary,
+                            textColor = MaterialTheme.colorScheme.onSurface,
+                            containerColor =  MaterialTheme.colorScheme.tertiary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                            placeholderColor = MaterialTheme.colorScheme.secondary,
+
+
+                        ),
+                        fieldShape =  RectangleShape
+                    )
+                    Text(modifier = modifier.size(100.dp), text = createShootUIState.chosenDate.toLocalTime().toString())
                 }
             }
         }
