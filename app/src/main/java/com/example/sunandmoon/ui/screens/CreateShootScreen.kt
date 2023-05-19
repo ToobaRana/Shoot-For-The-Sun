@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.checkPermissions
+import com.example.sunandmoon.data.fetchLocation
 import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
@@ -135,6 +136,22 @@ fun CreateShootScreen(
                         },
                     )
                 }
+
+                item{
+                    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                        Button(
+                            onClick = {
+
+                                //createShootViewModel.getCurrentPosition()
+                            },
+                            enabled = createShootUIState.locationEnabled
+
+                        ) {
+                            Text(stringResource(R.string.UseCurrentLocation), fontSize = 18.sp)
+                        }
+                    }
+                }
+
                 item {
                     CalendarComponent(modifier,
                         createShootUIState.chosenDate,

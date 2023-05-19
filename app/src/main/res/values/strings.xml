@@ -8,9 +8,12 @@
 
     <string name="defaultProductionName">My Production</string>
 
+
     <string name="Time">Time:</string>
     <string name="SunPosition">Sun position:</string>
     <string name="PreferredWeather">Preferred Weather:</string>
+
+    <string name="UseCurrentLocation">Use current location</string>
 
 
 

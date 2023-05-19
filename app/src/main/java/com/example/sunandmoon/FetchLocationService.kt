@@ -19,12 +19,12 @@ import io.ktor.client.request.*
 //checks if app has permissions to use location.
 
 @Composable
-fun checkPermissions(setPermission: (permissions: Boolean)->Unit):Boolean {
+fun checkPermissions(setPermission: (permissions: Boolean)->Unit) {
     val context = LocalContext.current
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { value ->
-        setPermission(value);
+        setPermission(value)
     }
     val granted = ContextCompat.checkSelfPermission(
         context,
@@ -32,7 +32,8 @@ fun checkPermissions(setPermission: (permissions: Boolean)->Unit):Boolean {
     )
     if (granted == PackageManager.PERMISSION_GRANTED) {
         Log.v("location","Location enabled");
-        return true
+        setPermission(true)
+        return
     } else {
         println(granted)
         SideEffect {
@@ -41,7 +42,8 @@ fun checkPermissions(setPermission: (permissions: Boolean)->Unit):Boolean {
             )
         }
     }
-    return false
+    setPermission(false)
+
 }
 
 //send a request to use last know location, waits 200 ms, then returns it
