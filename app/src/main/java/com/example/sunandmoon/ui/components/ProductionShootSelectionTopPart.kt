@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.ProductionSelectionUIState
+import com.example.sunandmoon.ui.components.buttonComponents.AboutButton
 import com.example.sunandmoon.ui.components.buttonComponents.AddNewOrderByButtons
 import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
 import com.example.sunandmoon.ui.components.buttonComponents.PagePickerProductionsShoots
@@ -27,7 +28,8 @@ fun ProductionShootSelectionTopPart(
     navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
     productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
     currentPageIndex: Int,
-    productionSelectionUIState: ProductionSelectionUIState
+    productionSelectionUIState: ProductionSelectionUIState,
+    goToAboutScreen: () -> Unit
 ) {
     val pageTitleTexts = listOf("Your productions", "Solo shoots", "My production")
     var titleTextToUse: String = pageTitleTexts[currentPageIndex]
@@ -46,6 +48,15 @@ fun ProductionShootSelectionTopPart(
                 { /* TODO */ },
                 { productionSelectionViewModel.deleteProduction() })
         }
+        else {
+            AboutButton(
+                modifier,
+                MaterialTheme.colorScheme.primary,
+                MaterialTheme.colorScheme.background,
+                goToAboutScreen
+            )
+        }
+
         Text(
             text = titleTextToUse,
             fontSize = 35.sp,
