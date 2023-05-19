@@ -50,7 +50,7 @@ fun PreferredWeatherCard(
                 contentDescription,
                 modifier
                     .size(60.dp),
-                SunColor
+                //SunColor
             )
         }
     }
