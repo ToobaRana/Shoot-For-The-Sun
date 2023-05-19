@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -22,7 +23,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.checkPermissions
-import com.example.sunandmoon.data.fetchLocation
 import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
@@ -61,7 +61,8 @@ fun CreateShootScreen(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(top = 8.dp)
+                    .padding(top = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             )
 
             {
@@ -137,7 +138,7 @@ fun CreateShootScreen(
                     )
                 }
 
-                item{
+                item {
                     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                         Button(
                             onClick = {
@@ -153,6 +154,7 @@ fun CreateShootScreen(
                 }
 
                 item {
+
                     CalendarComponent(modifier,
                         createShootUIState.chosenDate,
                         updateYear = { year: Int -> createShootViewModel.updateYear(year) },
@@ -205,7 +207,8 @@ fun CreateShootScreen(
                     Row(
                         modifier
                             .fillMaxWidth()
-                            .wrapContentSize()) {
+                            .wrapContentSize()
+                    ) {
                         SunPositionTime(
                             modifier = modifier,
                             updateTime = { time: LocalTime -> createShootViewModel.updateTime(time) },
@@ -215,7 +218,17 @@ fun CreateShootScreen(
                                 latitude = createShootUIState.latitude,
                                 longitude = createShootUIState.longitude
                             ),
-                            updateTimePicker = {enabled: Boolean -> createShootViewModel.timePickerSwitch(enabled)}
+                            updateTimePicker = { enabled: Boolean ->
+                                createShootViewModel.timePickerSwitch(
+                                    enabled
+                                )
+                            },
+                            chosenSunIndex = createShootUIState.chosenSunPositionIndex,
+                            updateChosenIndex = { index: Int ->
+                                createShootViewModel.updateSunPositionIndex(
+                                    index
+                                )
+                            }
                         )
                     }
 

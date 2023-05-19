@@ -15,4 +15,5 @@ data class CreateShootUIState (
     val timeZoneOffset: Double,
     val parentProductionId: Int? = null,
     val currentShootBeingEditedId: Int? = null,
+    val chosenSunPositionIndex: Int
 )

@@ -68,7 +68,7 @@ fun TimepickerComponent(
                 max = 23,
                 updateTime = { hour: Int -> currentTime.withHour(hour) }
             )
-            Text(modifier = modifier.weight(1f), text = ":")
+            Text(modifier = modifier.weight(1f).align(Alignment.CenterVertically), text = ":", color = colors.textColor )
             //puts string for InputField
             val minuteText =
                 if (currentTime.minute != 0) {
