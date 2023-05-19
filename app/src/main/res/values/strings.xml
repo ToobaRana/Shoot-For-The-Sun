@@ -15,7 +15,7 @@
 
     <string name="UseCurrentLocation">Use current location</string>
 
-
+    <string name="Date">Date:</string>
 
     <string-array name="suntype">
         <item>@string/Sunrise</item>

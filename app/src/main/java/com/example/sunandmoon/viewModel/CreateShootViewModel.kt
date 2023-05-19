@@ -42,7 +42,8 @@ class CreateShootViewModel  @Inject constructor(
             longitude = 10.7178129,
             chosenDate = LocalDateTime.now().withSecond(0).withNano(0),
             timeZoneOffset = 2.0,
-            timeEnabled = true
+            timeEnabled = true,
+            chosenSunPositionIndex = 0
         )
     )
 
@@ -90,7 +91,7 @@ class CreateShootViewModel  @Inject constructor(
             if (setTimeZoneOffset) {
                 val locationTimeZoneOffsetResult =
                     dataSource.fetchLocationTimezoneOffset(latitude, longitude)
-                setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
+                setTimeZoneOffset(locationTimeZoneOffsetResult.offset)
             }
             _createShootUIState.update { currentState ->
                 currentState.copy(
@@ -263,6 +264,16 @@ class CreateShootViewModel  @Inject constructor(
                 )
             }
         }
+    }
+    fun updateSunPositionIndex(newIndex: Int){
+        viewModelScope.launch {
+            _createShootUIState.update { currentState ->
+                currentState.copy(
+                    chosenSunPositionIndex = newIndex
+                )
+            }
+        }
+
     }
 }
 

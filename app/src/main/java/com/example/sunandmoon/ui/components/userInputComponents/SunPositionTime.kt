@@ -21,8 +21,11 @@ fun SunPositionTime(
     modifier: Modifier,
     updateTime: (time: LocalTime) -> Unit,
     sunTimes: List<String>,
-    updateTimePicker: (enabled: Boolean) -> Unit
+    updateTimePicker: (enabled: Boolean) -> Unit,
+    chosenSunIndex: Int,
+    updateChosenIndex: (index: Int) -> Unit
 ) {
+
     Card(
         modifier.fillMaxWidth(0.95f),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
@@ -30,12 +33,12 @@ fun SunPositionTime(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(15.dp),
+                .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            val color = MaterialTheme.colorScheme.tertiary
+            val color = MaterialTheme.colorScheme.secondary
 
             CreateShootSunPositionCard(
                 modifier = modifier,
@@ -48,8 +51,9 @@ fun SunPositionTime(
                     R.drawable.sunset
                 ),
                 containerColor = color,
-
-                updateTimePicker = {updateTimePicker(true)}
+                chosen = chosenSunIndex==0 ,
+                updateTimePicker = {updateTimePicker(true)},
+                updatePositionIndex = {updateChosenIndex(0)}
                 )
 
             CreateShootSunPositionCard(
@@ -59,7 +63,9 @@ fun SunPositionTime(
                     R.drawable.sunrise
                 ),
                 containerColor = color,
-                updateTimePicker = {updateTimePicker(false)}
+                chosen = chosenSunIndex==1 ,
+                updateTimePicker = {updateTimePicker(false)},
+                updatePositionIndex = {updateChosenIndex(1)}
 
                 )
             CreateShootSunPositionCard(
@@ -69,7 +75,9 @@ fun SunPositionTime(
                     R.drawable.solarnoon
                 ),
                 containerColor = color,
-                updateTimePicker = {updateTimePicker(false)}
+                chosen = chosenSunIndex==2 ,
+                updateTimePicker = {updateTimePicker(false)},
+                updatePositionIndex = {updateChosenIndex(2)}
             )
             CreateShootSunPositionCard(
                 modifier = modifier,
@@ -78,7 +86,9 @@ fun SunPositionTime(
                     R.drawable.sunset
                 ),
                 containerColor = color,
-                updateTimePicker = {updateTimePicker(false)}
+                chosen = chosenSunIndex==3 ,
+                updateTimePicker = {updateTimePicker(false)},
+                updatePositionIndex = {updateChosenIndex(3)}
             )
         }
     }

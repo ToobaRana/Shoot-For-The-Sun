@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -74,9 +75,16 @@ fun CalendarComponent(
     ) {
 
         TextField(
-            value = "${chosenDate.dayOfMonth}.${chosenDate.month}.${chosenDate.year}",
+            value = "${chosenDate.dayOfMonth}.${chosenDate.month} ${chosenDate.year}",
             onValueChange = {},
             enabled = false,
+            label = {
+                Text(
+                    text = stringResource(id = R.string.Date),
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
             modifier = modifier
                 .fillMaxWidth(0.8f)
                 .align(Alignment.CenterHorizontally)
