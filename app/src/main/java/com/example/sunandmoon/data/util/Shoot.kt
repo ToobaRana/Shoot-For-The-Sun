@@ -12,7 +12,7 @@ data class Shoot(
         latitude = 59.943965
         longitude = 10.7178129
     },
-    val date: LocalDateTime = LocalDateTime.now(),
+    val date: LocalDateTime = LocalDateTime.now().withSecond(0).withNano(0),
     val timeZoneOffset: Double = 2.0,
     val parentProductionId: Int? = null
 )

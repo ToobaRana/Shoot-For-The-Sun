@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 
@@ -40,8 +41,8 @@ fun LocationSearch(
             onValueChange = { query ->
                 setLocationSearchQuery(query)
             },
-            label = { Text("Search for a location") },
-            placeholder = { Text("Enter a location") },
+            label = { Text("Search for a location", fontSize = 18.sp) },
+            placeholder = { Text("Enter a location", fontSize = 18.sp) },
             singleLine = true,
             modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
             keyboardOptions = KeyboardOptions(

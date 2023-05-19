@@ -40,7 +40,7 @@ class CreateShootViewModel  @Inject constructor(
             locationEnabled = false,
             latitude = 59.943965,
             longitude = 10.7178129,
-            chosenDate = LocalDateTime.now(),
+            chosenDate = LocalDateTime.now().withSecond(0).withNano(0),
             timeZoneOffset = 2.0,
             timeEnabled = true
         )

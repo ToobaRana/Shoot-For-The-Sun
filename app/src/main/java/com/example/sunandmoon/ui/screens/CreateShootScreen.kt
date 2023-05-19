@@ -73,7 +73,7 @@ fun CreateShootScreen(
 
 
                         TextField(value = createShootUIState.name,
-                            label = { Text("Title") },
+                            label = { Text("Title", fontSize = 18.sp) },
                             onValueChange = { name ->
                                 createShootViewModel.updateShootName(name)
                             },

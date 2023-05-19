@@ -18,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sunandmoon.R
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.TextStyle
@@ -47,12 +49,11 @@ val months = listOf(
 )
 
 
-
-
 val weekdays =
     listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarComponent(
     modifier: Modifier,
@@ -66,11 +67,41 @@ fun CalendarComponent(
 
 
 
-    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
-        Button(onClick = { showCalendar = !showCalendar}) {
-            Text(text = "Choose date", )
-        }
+        TextField(
+            value = "${chosenDate.dayOfMonth}.${chosenDate.month}.${chosenDate.year}",
+            onValueChange = {},
+            enabled = false,
+            modifier = modifier
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally)
+                .clickable { showCalendar = !showCalendar },
+            singleLine = true,
+            colors = TextFieldDefaults.textFieldColors(
+                //cursorColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.onSurface,
+                containerColor = MaterialTheme.colorScheme.background,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                disabledTextColor = MaterialTheme.colorScheme.primary,
+                disabledIndicatorColor = MaterialTheme.colorScheme.primary
+            ),
+            leadingIcon = {
+                Icon(
+                    painterResource(R.drawable.calendar),
+                    "Calendar symbol",
+                    modifier,
+                    MaterialTheme.colorScheme.primary
+                )
+            },
+
+
+            )
         if (showCalendar) {
             CalendarComponentDisplay(modifier, chosenDate, updateYear, updateDay, updateMonth)
         }
@@ -132,11 +163,11 @@ fun CalendarComponentDisplay(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(modifier.size(30.dp))
+
                 Box {
                     MonthDropDown(modifier, chosenDate.monthValue, chosenDate.year, updateMonth)
                 }
-                Spacer(modifier.size(30.dp))
+                Spacer(modifier.size(20.dp))
                 Box(modifier = modifier.wrapContentSize(Alignment.Center, false)) {
 
 
@@ -315,11 +346,13 @@ fun MonthDropDown(
 
                     onClick = {
 
-                        val maxDay = LocalDate.of(currentYear, months.indexOf(selectionOption) + 1, 1).lengthOfMonth()
+                        val maxDay =
+                            LocalDate.of(currentYear, months.indexOf(selectionOption) + 1, 1)
+                                .lengthOfMonth()
                         updateMonth(
                             months.indexOf(selectionOption) + 1,
                             maxDay
-                             //amountDays[selectionOption]!!
+                            //amountDays[selectionOption]!!
                         )
                         //fetch date, update month in uistate
 
