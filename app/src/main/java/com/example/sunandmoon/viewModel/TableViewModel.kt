@@ -16,6 +16,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -36,7 +37,8 @@ class TableViewModel : ViewModel() {
             chosenDate = LocalDateTime.now(),
             chosenSunType = "Sunrise",
             timeZoneOffset = 2.0,
-            timezone_id = "Europa/Oslo"
+            timezone_id = "Europe/Oslo",
+            offsetStringForApi = "02:00"
         )
     )
 
@@ -61,7 +63,8 @@ class TableViewModel : ViewModel() {
 
 
             for (date in sameDaysListFromJanuary.sorted()){
-                val stringDate = "$date 00:00"
+                val stringDate = date.toString() + " 12:00"
+                Log.d("stringDate", stringDate)
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                 val dateTime = LocalDateTime.parse(stringDate, formatter)
 
@@ -83,13 +86,11 @@ class TableViewModel : ViewModel() {
 
             for (date in sameDaysList.sorted()){
                 val offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
-                val offsetUIState = tableUIState.value.timeZoneOffset
+                //val offsetUIState = tableUIState.value.timeZoneOffset
                 var offsetString: String
 
-                Log.d("offsetToFindSign", offsetToFindSign.toString())
-                Log.d("offsetUIState", offsetUIState.toString())
 
-                val offsetList = offsetUIState.toString().split(".")
+                val offsetList = offsetToFindSign.toString().split(".")
 
                 val hours = offsetList[0]
                 val hoursWithOutSign = hours.split("")[2]
@@ -98,60 +99,58 @@ class TableViewModel : ViewModel() {
 
                 var convertToMinutes = convertToMinutesFunction(minutesDecimal)
 
-                println(convertToMinutes)
 
-
-                if (offsetUIState in -9.9..9.9) {
+                if (offsetToFindSign in -9.9..9.9) {
 
                     //if it is hours and minutes
                     if (convertToMinutes == "0") {
 
                         //if negative and decimal
-                        offsetString = if(offsetUIState.toString().split("")[1] == "-") {
-                            "-0${hoursWithOutSign}:00"
+                        offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
+                            "-0" + hoursWithOutSign  + ":00"
                         }
 
                         //not negative
                         else{
-                            "+0${hours}:00"
+                            "+0" + hours + ":00"
                         }
                     }
 
                     //not minutes, only hours
                     else{
                           //if negative
-                        offsetString = if(offsetUIState.toString().split("")[1] == "-") {
+                        offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
 
-                            "-0${hoursWithOutSign}:${convertToMinutes}"
+                            "-0" + hoursWithOutSign + ":" + convertToMinutes
                         }
                         //not negative
                         else{
-                            "+0${hours}:${convertToMinutes}"
+                            "+0" + hours + ":" + convertToMinutes
 
                         }
                     }
 
                    //same as above, but checks for values over 10 og under -10
-                } else if (offsetUIState in 10.0..25.0 || offsetUIState in -25.0..-10.0) {
+                } else if (offsetToFindSign in 10.0..25.0 || offsetToFindSign in -25.0..-10.0) {
 
-                          if (convertToMinutes.toString() == "0") {
+                          if (convertToMinutes == "0") {
 
-                              offsetString = if (offsetUIState.toString().split("")[1] == "-") {
-                                  "-${hoursWithOutSign}:00"
+                              offsetString = if (offsetToFindSign.toString().split("")[1] == "-") {
+                                  "-" + hoursWithOutSign + ":00"
                               }
 
                               else {
-                                  "+${hours}:00"
+                                  "+" + hoursWithOutSign + ":00"
                               }
 
                           }
 
                           else{
-                              offsetString = if(offsetUIState.toString().split("")[1] == "-") {
-                                  "-${hoursWithOutSign}:${convertToMinutes}"
+                              offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
+                                  "-" + hoursWithOutSign + ":" + convertToMinutes
                               }
                               else{
-                                  "+${hours}:${convertToMinutes}"
+                                  "+" + hoursWithOutSign + ":" + convertToMinutes
                               }
                           }
 
@@ -159,21 +158,25 @@ class TableViewModel : ViewModel() {
 
                 else {
                     val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
-                    offsetString = "+0$offsetFromUiState:00"
+                    offsetString = "+0" + offsetFromUiState + ":00"
                     }
 
+                //update UiState
+
+                println(tableUIState.value.offsetStringForApi)
+
                 if (tableUIState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.sunrise.time
                     apiDateTableList.add(sunRiseTime)
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.solarnoon.time
+                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.solarnoon.time
                     apiDateTableList.add(solarNoon)
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunset.time
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.sunset.time
                     apiDateTableList.add(sunSetTime)
                 }
 
@@ -193,7 +196,6 @@ class TableViewModel : ViewModel() {
     private fun getSameDaysInYear(date: LocalDate): List<LocalDate> {
 
         val daysInMonth = listOf(31, 28, 31, 30, 31, 30, 31, 31 ,30, 31, 30, 31)
-
         val year = date.year
         val sameDays = mutableListOf<LocalDate>()
 
@@ -202,20 +204,14 @@ class TableViewModel : ViewModel() {
             val dayToUse = daysInThisMonth.coerceAtMost(date.dayOfMonth)
             if (month < date.month.value){
                 val nextYear = year+1
-
-
-
                 val sameDayOfMonth = LocalDate.of(nextYear, month, dayToUse)
                 sameDays.add(sameDayOfMonth)
-
             }
-            else{
 
+            else{
                 val sameDayOfMonth = LocalDate.of(year, month, dayToUse)
                 sameDays.add(sameDayOfMonth)
-
             }
-
         }
 
         return sameDays.sorted()
@@ -230,13 +226,8 @@ class TableViewModel : ViewModel() {
         for (month in 1..12) {
             val daysInThisMonth = daysInMonth[month-1]
             val dayToUse = daysInThisMonth.coerceAtMost(date.dayOfMonth)
-
-
-
             val sameDayOfMonth = LocalDate.of(year, month, dayToUse)
             sameDays.add(sameDayOfMonth)
-
-
 
         }
 
@@ -247,6 +238,13 @@ class TableViewModel : ViewModel() {
         _tableUIState.update{ currentState ->
             currentState.copy(
                 chosenSunType = sunType,
+            )
+        }
+    }
+    private fun setTimeZoneString(offsetStringForApi: String){
+        _tableUIState.update{ currentState ->
+            currentState.copy(
+                offsetStringForApi = offsetStringForApi
             )
         }
     }
@@ -343,27 +341,34 @@ class TableViewModel : ViewModel() {
     }
 
     private fun findOffset(location: String, date: String): Double {
-       val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-           val calendar = Calendar.getInstance()
-           val dateTime = dateFormat.parse(date)
-        if (dateTime != null) {
-            calendar.time = dateTime
-        }
-           val timeZone = TimeZone.getTimeZone(location)
-           val offsetInMillis = timeZone.getOffset(calendar.timeInMillis)
-           val offsetHours = offsetInMillis / (1000 * 60 * 60)
-           return offsetHours.toDouble()
+        val dateTime = LocalDateTime.of(convertStringToLocalDate(date), LocalDateTime.now().toLocalTime())
+        val zoneId = ZoneId.of(location)
+        val zoneOffset = zoneId.rules.getOffset(dateTime)
+
+        val offsetHours = zoneOffset.totalSeconds / 3600
+        val offsetMinutes = (zoneOffset.totalSeconds % 3600) / 60
+
+        val offset = offsetHours + (offsetMinutes.toDouble() / 60)
+        return offset
+
     }
 
 
-    fun convertToMinutesFunction(minutes: String): String{
-        var doubleMinutes = "0.$minutes".toDouble()
+    private fun convertToMinutesFunction(minutes: String): String{
+        var doubleMinutes = ("0." + minutes).toDouble()
         var minutes = doubleMinutes * 60
         return minutes.toString().split(".")[0]
 
 
 
     }
+
+    private fun convertStringToLocalDate(dateString: String): LocalDate {
+
+        return LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE)
+    }
+
+
 
 
 
