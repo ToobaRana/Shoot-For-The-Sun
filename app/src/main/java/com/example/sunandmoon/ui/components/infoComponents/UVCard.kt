@@ -23,7 +23,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
         in 6..7 -> UVHighColor
         in 8..10 -> UVVeryHighColor
         in 11.. Int.MAX_VALUE-> UVExtremeColor
-        else -> SecondaryColor //in principle will not get to this stage
+        else -> SecondaryColor
     }
 
     val uvDescriptionsArray: Array<String> = stringArrayResource(R.array.uv_description)
@@ -34,7 +34,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
         in 6..7 -> uvDescriptionsArray[2]
         in 8..10 -> uvDescriptionsArray[3]
         in 11.. Int.MAX_VALUE-> uvDescriptionsArray[4]
-        else -> "No weather data" //in principle will not get to this stage
+        else -> uvDescriptionsArray[5]
     }
     ElevatedCard(
         modifier = modifier
