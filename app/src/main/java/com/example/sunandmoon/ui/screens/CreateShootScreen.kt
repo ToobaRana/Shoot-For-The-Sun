@@ -1,6 +1,7 @@
 package com.example.sunandmoon.ui.screens
 
 
+import android.location.Location
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -212,8 +213,10 @@ fun CreateShootScreen(
                             getSunRiseNoonFall(
                                 localDateTime = createShootUIState.chosenDate,
                                 timeZoneOffset = createShootUIState.timeZoneOffset,
-                                latitude = createShootUIState.latitude,
-                                longitude = createShootUIState.longitude
+                                location = Location("").apply {
+                                    latitude = createShootUIState.latitude
+                                    longitude = createShootUIState.longitude
+                                }
                             ),
                             updateTimePicker = {enabled: Boolean -> createShootViewModel.timePickerSwitch(enabled)}
                         )

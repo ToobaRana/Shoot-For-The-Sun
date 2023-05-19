@@ -153,7 +153,13 @@ fun calculateSunPosition(localDateTime: LocalDateTime, timeZoneOffset: Double, l
     val zenithAngle: Radian = (acos(sin(latitude.toRadian()) * sin(decl) + cos(latitude.toRadian()) * cos(decl) * cos(ha.toRadian())) - Math.PI / 2 ) * -1
 
     // Degrees clockwise from north
-    val azimuthAngle: Degree =  -(acos(-( (sin(latitude.toRadian()) * cos(zenithAngle) - sin(decl)) / cos(latitude.toRadian()) * sin(zenithAngle) )) - 180)
+    /*val azimuthAngle: Degree =
+        -(acos(-(
+            (sin(latitude.toRadian()) * cos(zenithAngle) - sin(decl)) /
+            (cos(latitude.toRadian()) * sin(zenithAngle))
+        )) - 180)*/
+
+    val azimuthAngle: Degree = (atan2(sin(ha.toRadian()), cos(ha.toRadian()) * sin(latitude.toRadian()) - tan(decl) * cos(latitude.toRadian()))).toDegree() + 180
 
     Log.i("matte", localDateTime.toString())
     Log.i("matte", "timeZoneOffset $timeZoneOffset")
