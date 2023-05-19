@@ -1,6 +1,5 @@
 package com.example.sunandmoon.viewModel
 
-import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,9 +9,7 @@ import com.example.sunandmoon.data.fetchLocation
 import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
-import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
-import com.example.sunandmoon.data.util.Shoot
 import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +19,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
@@ -45,7 +41,8 @@ class CreateShootViewModel  @Inject constructor(
             latitude = 59.943965,
             longitude = 10.7178129,
             chosenDate = LocalDateTime.now(),
-            timeZoneOffset = 2.0
+            timeZoneOffset = 2.0,
+            timeEnabled = true
         )
     )
 
@@ -134,7 +131,7 @@ class CreateShootViewModel  @Inject constructor(
                 val locationTimeZoneOffsetResult =
                     dataSource.fetchLocationTimezoneOffset(latitude, longitude)
 
-                setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
+                setTimeZoneOffset(locationTimeZoneOffsetResult.offset)
 
             } catch (e: Throwable) {
                 Log.d("error", "uh oh" + e.toString())
@@ -240,10 +237,21 @@ class CreateShootViewModel  @Inject constructor(
         viewModelScope.launch {
             _createShootUIState.update { currentState ->
                 currentState.copy(
-                    chosenDate = newDateTime
+                    chosenDate  = newDateTime
                 )
             }
         }
+    }
+    //activates and deactivates timepicker
+    fun timePickerSwitch(enabled: Boolean){
+        viewModelScope.launch {
+            _createShootUIState.update { currentState ->
+                currentState.copy(
+                    timeEnabled = enabled
+                )
+            }
+        }
+
     }
 }
 
