@@ -38,7 +38,8 @@ class TableViewModel : ViewModel() {
             chosenSunType = "Sunrise",
             timeZoneOffset = 2.0,
             timezone_id = "Europe/Oslo",
-            offsetStringForApi = "02:00"
+            offsetStringForApi = "02:00",
+            timeZoneListTableScreen = listOf("", "", "", "", "", "", "", "", "", "", "", "")
         )
     )
 
@@ -57,18 +58,111 @@ class TableViewModel : ViewModel() {
 
             val apiDateTableList = mutableListOf<String>()
             val calculationsDateTableList = mutableListOf<String>()
+            val timeZoneListTableScreen = mutableListOf<String>()
 
             val sameDaysList = getSameDaysInYear(tableUIState.value.chosenDate.toLocalDate())
             val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUIState.value.chosenDate.toLocalDate())
 
 
             for (date in sameDaysListFromJanuary.sorted()){
+                val offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
+                var offsetString: String
+
+                Log.d("offsetToFindSign", offsetToFindSign.toString())
+
+
+                val offsetList = offsetToFindSign.toString().split(".")
+                Log.d("offsetList", offsetList.toString())
+
+                val hours = offsetList[0]
+
+                Log.d("hours", hours)
+                val hoursWithOutSign = hours.split("")[2]
+                Log.d("hoursWithOutSign", hoursWithOutSign)
+                val minutes = offsetList[1]
+                Log.d("minutesDecimal", minutes)
+
+                var convertToMinutes = convertToMinutesFunction(minutes)
+                Log.d("convertToMinutes", convertToMinutes)
+
+
+                if (offsetToFindSign in -9.9..9.9) {
+
+                    //if it is hours and minutes
+                    if (convertToMinutes == "0") {
+
+
+                        //if negative and decimal
+                        offsetString = if(hours.split("")[1] == "-") {
+                            "-0" + hoursWithOutSign  + ":00"
+                        }
+
+                        //not negative
+                        else{
+                            "+0" + hours + ":00"
+                        }
+                    }
+
+                    //not minutes, only hours
+                    else{
+                        //if negative
+                        offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
+
+                            "-0" + hours + ":" + convertToMinutes
+                        }
+                        //not negative
+                        else{
+                            "+0" + hours + ":" + convertToMinutes
+
+                        }
+                    }
+
+
+                    //same as above, but checks for values over 10 og under -10
+                } else if (offsetToFindSign in 10.0..25.0 || offsetToFindSign in -25.0..-10.0) {
+
+                    if (convertToMinutes == "0") {
+
+                        offsetString = if (offsetToFindSign.toString().split("")[1] == "-") {
+                            "-" + hours + ":00"
+                        }
+
+                        else {
+                            "+" + hours + ":00"
+                        }
+
+                    }
+
+                    else{
+                        offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
+                            "-" + hours + ":" + convertToMinutes
+                        }
+                        else{
+                            "+" + hours + ":" + convertToMinutes
+                        }
+                    }
+
+                }
+
+                else {
+                    val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
+                    offsetString = "+0" + offsetFromUiState + ":00"
+                }
+
+                //update UiState
+                setTimeZoneStringApi(offsetString)
+                timeZoneListTableScreen.add(offsetString)
+
+                Log.d("offsetString", offsetString + date,)
+
+
+
                 val stringDate = date.toString() + " 12:00"
                 Log.d("stringDate", stringDate)
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                 val dateTime = LocalDateTime.parse(stringDate, formatter)
 
-                val calculationSunTime = getSunRiseNoonFall(dateTime, tableUIState.value.timeZoneOffset, tableUIState.value.location)
+                val calculationSunTime = getSunRiseNoonFall(dateTime, tableUIState.value.timeZoneOffset, tableUIState.value.location.latitude, tableUIState.value.location.longitude)
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     calculationsDateTableList.add(calculationSunTime[0])
@@ -85,109 +179,31 @@ class TableViewModel : ViewModel() {
             }
 
             for (date in sameDaysList.sorted()){
-                val offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
-                //val offsetUIState = tableUIState.value.timeZoneOffset
-                var offsetString: String
-
-
-                val offsetList = offsetToFindSign.toString().split(".")
-
-                val hours = offsetList[0]
-                val hoursWithOutSign = hours.split("")[2]
-
-                val minutesDecimal = offsetList[1]
-
-                var convertToMinutes = convertToMinutesFunction(minutesDecimal)
-
-
-                if (offsetToFindSign in -9.9..9.9) {
-
-                    //if it is hours and minutes
-                    if (convertToMinutes == "0") {
-
-                        //if negative and decimal
-                        offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
-                            "-0" + hoursWithOutSign  + ":00"
-                        }
-
-                        //not negative
-                        else{
-                            "+0" + hours + ":00"
-                        }
-                    }
-
-                    //not minutes, only hours
-                    else{
-                          //if negative
-                        offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
-
-                            "-0" + hoursWithOutSign + ":" + convertToMinutes
-                        }
-                        //not negative
-                        else{
-                            "+0" + hours + ":" + convertToMinutes
-
-                        }
-                    }
-
-                   //same as above, but checks for values over 10 og under -10
-                } else if (offsetToFindSign in 10.0..25.0 || offsetToFindSign in -25.0..-10.0) {
-
-                          if (convertToMinutes == "0") {
-
-                              offsetString = if (offsetToFindSign.toString().split("")[1] == "-") {
-                                  "-" + hoursWithOutSign + ":00"
-                              }
-
-                              else {
-                                  "+" + hoursWithOutSign + ":00"
-                              }
-
-                          }
-
-                          else{
-                              offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
-                                  "-" + hoursWithOutSign + ":" + convertToMinutes
-                              }
-                              else{
-                                  "+" + hoursWithOutSign + ":" + convertToMinutes
-                              }
-                          }
-
-                      }
-
-                else {
-                    val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
-                    offsetString = "+0" + offsetFromUiState + ":00"
-                    }
-
-                //update UiState
-                setTimeZoneString(offsetString)
-
-
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.sunrise.time
                     apiDateTableList.add(sunRiseTime)
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.solarnoon.time
+                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.solarnoon.time
                     apiDateTableList.add(solarNoon)
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunset.time
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.sunset.time
                     apiDateTableList.add(sunSetTime)
                 }
 
             }
 
 
+
             _tableUIState.update{currentState ->
                 currentState.copy(
                     apiDateTableList = apiDateTableList,
-                    calculationsDateTableList = calculationsDateTableList
+                    calculationsDateTableList = calculationsDateTableList,
+                    timeZoneListTableScreen = timeZoneListTableScreen
 
                 )
             }
@@ -235,6 +251,7 @@ class TableViewModel : ViewModel() {
         return sameDays.sorted()
     }
 
+
     fun setSunType(sunType: String){
         _tableUIState.update{ currentState ->
             currentState.copy(
@@ -242,12 +259,23 @@ class TableViewModel : ViewModel() {
             )
         }
     }
-    fun setTimeZoneString(offsetStringForApi: String){
+    fun setTimeZoneStringApi(offsetStringForApi: String){
         _tableUIState.update { currentState ->
             currentState.copy(
-                offsetStringForApi = offsetStringForApi
+                offsetStringForApi = offsetStringForApi,
+
             )
         }
+    }
+
+    fun setTheSunset(month: String): List<String>{
+
+        val sortedElements1 = tableUIState.value.timeZoneListTableScreen.subList(4, 12).sorted()
+// Sort elements from index 1 to 3
+        val sortedElements2 = tableUIState.value.timeZoneListTableScreen.subList(1, 4).sorted()
+
+// Combine the sorted elements into a new list
+        return sortedElements1 + sortedElements2
     }
 
 

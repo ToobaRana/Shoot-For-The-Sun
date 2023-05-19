@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offset: String, modifier: Modifier) {
+fun TableCard(sunType: String, apiSunTime: String, calculationSunTime: String, day: String, offset: String, modifier: Modifier) {
     Surface(
         modifier = modifier
             .fillMaxWidth(),
@@ -32,23 +32,37 @@ fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offse
             Text(
                 text = day,
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 color = Color.Black,
                 modifier = modifier.padding(8.dp)
             )
+            if (sunType == "SolarNoon"){
+                Text(
+                    text = apiSunTime,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = Color.Black,
+                    modifier = modifier.padding(8.dp)
+                )
 
-            Text(
-                text = apiSunTime,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.Black,
-                modifier = modifier.padding(8.dp)
-            )
+            }
+            if (sunType == "Sunset" || sunType == "Sunrise"){
+                Text(
+                    text = apiSunTime,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = Color.Black,
+                    modifier = modifier.padding(8.dp)
+                )
+
+            }
+
+
 
             Text(
                 text = calculationSunTime,
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 color = Color.Black,
                 modifier = modifier.padding(8.dp)
             )
@@ -56,7 +70,7 @@ fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offse
             Text(
                 text = offset,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
+                fontSize = 18.sp,
                 color = Color.Black,
                 modifier = modifier.padding(top= 8.dp, start = 4.dp)
             )
