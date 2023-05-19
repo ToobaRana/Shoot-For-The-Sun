@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,7 +45,7 @@ fun PagePickerProductionsShoots(
                 colors = ButtonDefaults.buttonColors(containerColor = colors[currentPageIndex]),
                 contentPadding = PaddingValues(vertical = 4.dp)
             ) {
-                Text("Productions", color = colors[(currentPageIndex + 1) % 2], fontSize = 18.sp)
+                Text(stringResource(com.example.sunandmoon.R.string.Productions), color = colors[(currentPageIndex + 1) % 2], fontSize = 18.sp)
             }
             Button(
                 onClick = { if (currentPageIndex != SelectionPages.SHOOTS.ordinal) productionSelectionViewModel.changeCurrentPageIndex() },
@@ -52,7 +53,7 @@ fun PagePickerProductionsShoots(
                 colors = ButtonDefaults.buttonColors(containerColor = colors[(currentPageIndex + 1) % 2]),
                 contentPadding = PaddingValues(vertical = 4.dp)
             ) {
-                Text("Solo shoots", color = colors[currentPageIndex], fontSize = 18.sp)
+                Text(stringResource(com.example.sunandmoon.R.string.SoloShoots), color = colors[currentPageIndex], fontSize = 18.sp)
             }
         }
     }

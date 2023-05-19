@@ -16,6 +16,8 @@
     <string name="UseCurrentLocation">Use current location</string>
 
     <string name="Date">Date:</string>
+    <string name ="Productions">Productions</string>
+    <string name ="SoloShoots">Solo Shoots</string>
 
     <string-array name="suntype">
         <item>@string/Sunrise</item>
