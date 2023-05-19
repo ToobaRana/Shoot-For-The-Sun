@@ -17,7 +17,7 @@ data class StorableShoot(
     @ColumnInfo(name = "location_name") val locationName: String,
     @ColumnInfo(name = "latitude") val latitude: Double,
     @ColumnInfo(name = "longitude") val longitude: Double,
-    @ColumnInfo(name = "date_time") val date: LocalDateTime,
+    @ColumnInfo(name = "date_time") val dateTime: LocalDateTime,
     @ColumnInfo(name = "time_zone_offset") val timeZoneOffset: Double,
     @ColumnInfo(name = "preferred_weather") val preferredWeather: List<PreferableWeather>
 )

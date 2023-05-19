@@ -200,7 +200,7 @@ class CreateShootViewModel  @Inject constructor(
                     locationName = _createShootUIState.value.locationSearchQuery,
                     latitude = _createShootUIState.value.latitude,
                     longitude = _createShootUIState.value.longitude,
-                    date = _createShootUIState.value.chosenDate,
+                    dateTime = _createShootUIState.value.chosenDate,
                     timeZoneOffset = _createShootUIState.value.timeZoneOffset,
                     preferredWeather = _createShootUIState.value.preferredWeather
                 )

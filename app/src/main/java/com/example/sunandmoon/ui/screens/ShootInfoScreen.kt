@@ -63,7 +63,7 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
 
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
-    val dateAndTime = shootInfoUIState.shoot!!.date
+    val dateAndTime = shootInfoUIState.shoot!!.dateTime
 
     val date = dateAndTime.toLocalDate()
     val timeWithSeconds = dateAndTime.toLocalTime()

@@ -1,13 +1,10 @@
 package com.example.sunandmoon.viewModel
 
-import android.content.res.Resources
+
 import android.location.Location
-
-
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sunandmoon.R
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ProductionSelectionUIState
 import com.example.sunandmoon.data.util.Production
@@ -20,12 +17,16 @@ import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
-import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import com.example.sunandmoon.data.localDatabase.storableShootsToNormalShoots
+import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
+import com.example.sunandmoon.model.LocationForecastModel.Timeseries
+import com.example.sunandmoon.ui.components.infoComponents.weatherIcons
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 enum class SelectionPages {
@@ -46,6 +47,8 @@ class ProductionSelectionViewModel @Inject constructor(
         ProductionSelectionUIState()
     )
 
+    // to reduce the amount of API-calls needed
+    val retrievedWeatherData: Map<Location, LocationForecast> = mutableMapOf()
 
     val productionSelectionUIState: StateFlow<ProductionSelectionUIState> = _productionSelectionUIState.asStateFlow()
 
@@ -91,19 +94,12 @@ class ProductionSelectionViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 val allIndependentShoots = shootDao.getAllIndependentShoots(_productionSelectionUIState.value.shootOrderBy.value)
                 val shootList = storableShootsToNormalShoots(allIndependentShoots)
-                withContext(Dispatchers.Main) {
-                    _productionSelectionUIState.update { currentState ->
-                        currentState.copy(
-                            independentShootsList = shootList
-                        )
-                    }
-                }
+                checkIfWeatherMatchesPreferences(shootList, SelectionPages.SHOOTS)
             }
         }
     }
 
     fun saveProduction(name: String) {
-
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 productionDao.insert(StorableProduction(
@@ -152,16 +148,9 @@ class ProductionSelectionViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 val productionShoots = production.id?.let { shootDao.loadByProductionId(it, _productionSelectionUIState.value.shootOrderBy.value) }
                 val shootList = storableShootsToNormalShoots(productionShoots)
-                withContext(Dispatchers.Main) {
-                    _productionSelectionUIState.update { currentState ->
-                        currentState.copy(
-                            productionShootsList = shootList
-                        )
-                    }
-                }
+                checkIfWeatherMatchesPreferences(shootList, SelectionPages.PRODUCTION_SHOOTS)
             }
         }
-
     }
 
     fun goIntoProduction(production: Production) {
@@ -197,6 +186,69 @@ class ProductionSelectionViewModel @Inject constructor(
                 showPreferredWeatherDialog = bool
             )
 
+        }
+    }
+
+    fun checkIfWeatherMatchesPreferences(shoots: List<Shoot>, selectionPage: SelectionPages) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val updatedShoots = shoots.toMutableList()
+
+            shoots.forEach { shoot ->
+
+                var weatherData: LocationForecast?
+                if(shoot.location !in retrievedWeatherData) {
+                    weatherData = dataSource.fetchWeatherAPI(shoot.location.latitude.toString(), shoot.location.longitude.toString())
+                }
+                else {
+                    weatherData = retrievedWeatherData[shoot.location]
+                }
+
+                if(weatherData != null) {
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+                    val dateTimeObjectForApiUse : LocalDateTime = shoot.dateTime.withMinute(0).withSecond(0).withNano(0)
+
+                    val formattedDateAndTime : String = dateTimeObjectForApiUse.format(formatter)
+                    val correctTimeObject : Timeseries? = weatherData.properties?.timeseries?.
+                    firstOrNull { it.time == formattedDateAndTime }
+
+                    var weatherIconCode : String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
+                    if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
+
+                    val weatherIconString = weatherIconCode?.split("_")?.get(0)
+
+                    if(weatherIconString != null) {
+                        Log.i("weatherPrefrences", weatherIconString)
+                        var matchesPreferredWeather: Boolean = shoot.preferredWeather.isEmpty()
+                        shoot.preferredWeather.forEach {
+                            if(weatherIconString.contains(it.name.lowercase().replace("_", ""))) {
+                                matchesPreferredWeather = true
+                            }
+                        }
+
+                        val indexToReplace = updatedShoots.indexOf(shoot)
+                        if (indexToReplace != -1) {
+                            updatedShoots[indexToReplace] = shoot.copy(weatherMatchesPreferences = matchesPreferredWeather)
+                        }
+                    }
+                }
+            }
+
+            if(selectionPage == SelectionPages.SHOOTS) {
+                _productionSelectionUIState.update { currentState ->
+                    currentState.copy(
+                        independentShootsList = updatedShoots
+                    )
+                }
+            }
+            else {
+                _productionSelectionUIState.update { currentState ->
+                    currentState.copy(
+                        productionShootsList = updatedShoots
+                    )
+                }
+            }
         }
     }
 }
