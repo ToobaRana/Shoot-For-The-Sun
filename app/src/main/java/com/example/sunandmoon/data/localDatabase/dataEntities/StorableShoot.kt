@@ -37,6 +37,7 @@ class LocalDateTimeConverter {
     }
 }
 
+// this class lets us store lists of PreferableWeather in the room database
 class PreferredWeatherConverter {
     @TypeConverter
     fun fromPreferredWeather(value: List<PreferableWeather>?): String? {
