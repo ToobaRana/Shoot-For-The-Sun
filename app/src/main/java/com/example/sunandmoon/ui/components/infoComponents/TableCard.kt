@@ -25,7 +25,7 @@ fun TableCard(sunType: String, apiSunTime: String, calculationSunTime: String, d
             modifier = modifier
                 .fillMaxWidth()
                 .background(Color.White),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Start,
 
             ) {
 
@@ -52,7 +52,7 @@ fun TableCard(sunType: String, apiSunTime: String, calculationSunTime: String, d
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = Color.Black,
-                    modifier = modifier.padding(8.dp)
+                    modifier = modifier.padding(top =8.dp)
                 )
 
             }
@@ -64,7 +64,7 @@ fun TableCard(sunType: String, apiSunTime: String, calculationSunTime: String, d
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = modifier.padding(8.dp)
+                modifier = modifier.padding(top= 8.dp, start = 20.dp)
             )
 
             Text(
@@ -72,7 +72,7 @@ fun TableCard(sunType: String, apiSunTime: String, calculationSunTime: String, d
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = modifier.padding(top= 8.dp, start = 4.dp)
+                modifier = modifier.padding(top= 8.dp, start = 45.dp)
             )
 
         }

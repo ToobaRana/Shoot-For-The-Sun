@@ -125,7 +125,7 @@ fun TableView(
                     item { Row(
                         modifier.background(MaterialTheme.colorScheme.tertiary).padding(top= 5.dp, bottom=5.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.Start
                     ) {
                         Text(
                             text = "Day",
@@ -141,7 +141,7 @@ fun TableView(
                             fontSize = 19.sp,
                             modifier = modifier
                                 .weight(1f)
-                                .padding(start = 2.dp),
+                                .padding(start = 50.dp),
                             color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
@@ -187,7 +187,7 @@ fun TableView(
                             offset = tableUIState.timeZoneListTableScreen[monthInt-1],
                             modifier = modifier
                                 .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
-                                .padding(3.dp)
+                                .padding(2.dp)
                         )
 
                         Spacer(modifier = modifier.height(1.dp))
