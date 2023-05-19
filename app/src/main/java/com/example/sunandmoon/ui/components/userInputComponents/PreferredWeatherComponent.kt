@@ -45,7 +45,7 @@ fun PreferredWeatherComponent(
                 modifier = modifier,
 
                 painter = painterResource(
-                    R.drawable.sunset
+                    R.drawable.clearsun
                 ),
                 contentDescription = stringResource(id =R.string.ClearSky),
                 containerColor = color,
@@ -56,7 +56,7 @@ fun PreferredWeatherComponent(
             PreferredWeatherCard(
                 modifier = modifier,
                 painter = painterResource(
-                    R.drawable.sunrise
+                    R.drawable.fairsun
                 ),
                 contentDescription = stringResource(id =R.string.Fair),
                 containerColor = color,
@@ -67,7 +67,7 @@ fun PreferredWeatherComponent(
             PreferredWeatherCard(
                 modifier = modifier,
                 painter = painterResource(
-                    R.drawable.solarnoon
+                    R.drawable.cloudy
                 ),
                 contentDescription = stringResource(id =R.string.Cloudy),
                 containerColor = color,
@@ -90,7 +90,7 @@ fun PreferredWeatherComponent(
                 modifier = modifier,
 
                 painter = painterResource(
-                    R.drawable.sunset
+                    R.drawable.rain2
                 ),
                 contentDescription = stringResource(id =R.string.Rain),
                 containerColor = color,
@@ -101,7 +101,7 @@ fun PreferredWeatherComponent(
             PreferredWeatherCard(
                 modifier = modifier,
                 painter = painterResource(
-                    R.drawable.sunrise
+                    R.drawable.rainthunder
                 ),
                 contentDescription = stringResource(id =R.string.Thunderstorm),
                 containerColor = color,
@@ -112,7 +112,7 @@ fun PreferredWeatherComponent(
             PreferredWeatherCard(
                 modifier = modifier,
                 painter = painterResource(
-                    R.drawable.solarnoon
+                    R.drawable.snow
                 ),
                 contentDescription = stringResource(id =R.string.Snow),
                 containerColor = color,
