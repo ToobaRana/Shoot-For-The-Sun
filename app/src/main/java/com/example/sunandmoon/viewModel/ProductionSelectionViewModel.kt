@@ -190,4 +190,13 @@ class ProductionSelectionViewModel @Inject constructor(
 
         }
     }
+
+    fun setShowPreferredWeatherDialog(bool: Boolean){
+        _productionSelectionUIState.update { currentState ->
+            currentState.copy(
+                showPreferredWeatherDialog = bool
+            )
+
+        }
+    }
 }

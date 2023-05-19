@@ -17,4 +17,6 @@ data class ProductionSelectionUIState (
 
     val productionOrderBy: ProductionOrderBy = ProductionOrderBy.START_DATE_TIME,
     val shootOrderBy: ShootOrderBy = ShootOrderBy.DATE_TIME,
+
+    val showPreferredWeatherDialog: Boolean = false,
 )
