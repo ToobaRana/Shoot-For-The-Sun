@@ -39,7 +39,8 @@ class TableViewModel : ViewModel() {
             timeZoneOffset = 2.0,
             timezone_id = "Europe/Oslo",
             offsetStringForApi = "02:00",
-            timeZoneListTableScreen = listOf("", "", "", "", "", "", "", "", "", "", "", "")
+            timeZoneListTableScreen = listOf("", "", "", "", "", "", "", "", "", "", "", ""),
+            setSameDaysFromJanuaryList = listOf()
         )
     )
 
@@ -62,7 +63,7 @@ class TableViewModel : ViewModel() {
 
             val sameDaysList = getSameDaysInYear(tableUIState.value.chosenDate.toLocalDate())
             val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUIState.value.chosenDate.toLocalDate())
-
+            setSameDaysFromJanuaryList(sameDaysListFromJanuary)
 
             for (date in sameDaysListFromJanuary.sorted()){
                 val offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
@@ -145,8 +146,8 @@ class TableViewModel : ViewModel() {
                 }
 
                 else {
-                    val offsetFromUiState = tableUIState.value.timeZoneOffset.toString().split(".")[0]
-                    offsetString = "+0" + offsetFromUiState + ":00"
+                    val offsetFromUiState = tableUIState.value.offsetStringForApi
+                    offsetString = offsetFromUiState
                 }
 
                 //update UiState
@@ -162,7 +163,7 @@ class TableViewModel : ViewModel() {
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                 val dateTime = LocalDateTime.parse(stringDate, formatter)
 
-                val calculationSunTime = getSunRiseNoonFall(dateTime, tableUIState.value.timeZoneOffset, tableUIState.value.location)
+                val calculationSunTime = getSunRiseNoonFall(dateTime, offsetToFindSign, tableUIState.value.location)
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     calculationsDateTableList.add(calculationSunTime[0])
@@ -179,6 +180,9 @@ class TableViewModel : ViewModel() {
             }
 
             for (date in sameDaysList.sorted()){
+                var offset = findOffset(tableUIState.value.timezone_id, date.toString())
+                println(offset)
+                println(tableUIState.value.offsetStringForApi)
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.sunrise.time
@@ -194,6 +198,7 @@ class TableViewModel : ViewModel() {
                     sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.sunset.time
                     apiDateTableList.add(sunSetTime)
                 }
+
 
             }
 
@@ -284,6 +289,14 @@ class TableViewModel : ViewModel() {
         _tableUIState.update { currentState ->
             currentState.copy(
                 locationSearchQuery = inputQuery
+            )
+        }
+    }
+
+    fun setSameDaysFromJanuaryList(setSameDaysFromJanuaryList: List<LocalDate>) {
+        _tableUIState.update { currentState ->
+            currentState.copy(
+                setSameDaysFromJanuaryList = setSameDaysFromJanuaryList
             )
         }
     }

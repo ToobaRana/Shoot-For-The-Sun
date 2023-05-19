@@ -2,6 +2,7 @@ package com.example.sunandmoon.data
 
 import android.location.Location
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class TableUIState(
@@ -15,5 +16,6 @@ data class TableUIState(
     val timeZoneOffset: Double,
     val timezone_id: String,
     val offsetStringForApi: String,
-    val timeZoneListTableScreen: List<String>
+    val timeZoneListTableScreen: List<String>,
+    val setSameDaysFromJanuaryList: List<LocalDate>
 )
