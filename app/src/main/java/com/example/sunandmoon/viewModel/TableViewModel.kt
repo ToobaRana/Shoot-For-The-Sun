@@ -162,21 +162,22 @@ class TableViewModel : ViewModel() {
                     }
 
                 //update UiState
+                setTimeZoneString(offsetString)
 
-                println(tableUIState.value.offsetStringForApi)
+
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.sunrise.time
+                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
                     apiDateTableList.add(sunRiseTime)
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.solarnoon.time
+                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.solarnoon.time
                     apiDateTableList.add(solarNoon)
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), tableUIState.value.offsetStringForApi).properties.sunset.time
+                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunset.time
                     apiDateTableList.add(sunSetTime)
                 }
 
@@ -241,23 +242,15 @@ class TableViewModel : ViewModel() {
             )
         }
     }
-    private fun setTimeZoneString(offsetStringForApi: String){
-        _tableUIState.update{ currentState ->
+    fun setTimeZoneString(offsetStringForApi: String){
+        _tableUIState.update { currentState ->
             currentState.copy(
                 offsetStringForApi = offsetStringForApi
             )
         }
     }
-/*
-    fun setTimeZone(timezone: Double){
-        _tableUIState.update { currentState ->
-            currentState.copy(
-                timeZoneOffset = timezone
-            )
-        }
-    }
 
- */
+
 
     fun setLocationSearchQuery(inputQuery: String) {
         _tableUIState.update { currentState ->
@@ -279,7 +272,7 @@ class TableViewModel : ViewModel() {
                 }
 
             } catch (e: Throwable) {
-                Log.d("error", "uh oh$e")
+                Log.d("error", "uh oh")
             }
         }
     }

@@ -150,7 +150,7 @@ fun TableView(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Our $chosenSunType",
+                            text = "Our" + chosenSunType,
                             fontSize = 20.sp,
                             modifier = modifier
                                 .weight(1f)
