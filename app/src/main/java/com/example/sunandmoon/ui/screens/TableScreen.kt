@@ -74,8 +74,6 @@ fun TableView(
         content = { innerPadding ->
             innerPadding
 
-
-
             Column(
                 modifier.padding(top = 120.dp, end= 3.dp, start = 3.dp),
                 verticalArrangement = Arrangement.Center,
@@ -110,7 +108,6 @@ fun TableView(
                     )
                     chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
                 }
-
                 Spacer(modifier = modifier.height(10.dp))
             }
 
@@ -159,7 +156,7 @@ fun TableView(
                         )
 
                         Text(
-                            text = "+Offset",
+                            text = "+-Offset",
                             fontSize = 19.sp,
                             modifier = modifier
                                 .padding(1.dp, end = 4.dp),
@@ -173,7 +170,6 @@ fun TableView(
                     items(tableUIState.apiDateTableList) { date ->
 
                         val elementInTableUiStateList = date.split("T")
-
                         val sunriseTimeListWithOffset = elementInTableUiStateList[1].split("-", "+")
                         val sunriseTime = sunriseTimeListWithOffset[0]
                         val day = elementInTableUiStateList[0]
