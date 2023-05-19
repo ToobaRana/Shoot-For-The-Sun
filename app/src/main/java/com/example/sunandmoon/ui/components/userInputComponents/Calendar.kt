@@ -69,7 +69,7 @@ fun CalendarComponent(
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
 
         Button(onClick = { showCalendar = !showCalendar}) {
-            Text(text = "Choose date")
+            Text(text = "Choose date", )
         }
         if (showCalendar) {
             CalendarComponentDisplay(modifier, chosenDate, updateYear, updateDay, updateMonth)

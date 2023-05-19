@@ -99,6 +99,7 @@ class CreateShootViewModel  @Inject constructor(
                 )
             }
         }
+        //setLocationQuery()
     }
 
     //calls fetchLocation method with provider client, then updates latitude and longitude in uiState with return value
@@ -252,6 +253,16 @@ class CreateShootViewModel  @Inject constructor(
             }
         }
 
+    }
+    private fun setLocationQuery(){
+        val newPlace = //reverseApi-call
+        viewModelScope.launch {
+            _createShootUIState.update { currentState ->
+                currentState.copy(
+                    //locationSearchQuery = newPlace
+                )
+            }
+        }
     }
 }
 
