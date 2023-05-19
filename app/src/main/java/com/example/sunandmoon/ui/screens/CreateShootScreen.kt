@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -73,7 +74,7 @@ fun CreateShootScreen(
                         TextField(value = createShootUIState.name,
                             label = { Text("Title") },
                             onValueChange = { name ->
-                                createShootViewModel.updateShootName(name);
+                                createShootViewModel.updateShootName(name)
                             },
                             placeholder = { Text("My Shoot") },
                             modifier = modifier.fillMaxWidth(0.9f),
@@ -159,6 +160,7 @@ fun CreateShootScreen(
                         onValueChange = { time: LocalTime ->
                             createShootViewModel.updateTime(time)
                         },
+                        enabled = createShootUIState.timeEnabled,
                         currentTime = createShootUIState.chosenDate.toLocalTime(),
                         colors = TimePickerColors(
                             //cursorColor = MaterialTheme.colorScheme.primary,
@@ -166,7 +168,8 @@ fun CreateShootScreen(
                             containerColor = MaterialTheme.colorScheme.tertiary,
                             unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
                             unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                            placeholderColor = MaterialTheme.colorScheme.secondary,
+                            placeholderColor = MaterialTheme.colorScheme.onSurface,
+                            disabledTextColor = Color.Black
                         ),
                         fieldShape = RectangleShape,
                         containerShape = RoundedCornerShape(10.dp)
@@ -194,7 +197,8 @@ fun CreateShootScreen(
                                 timeZoneOffset = createShootUIState.timeZoneOffset,
                                 latitude = createShootUIState.latitude,
                                 longitude = createShootUIState.longitude
-                            )
+                            ),
+                            updateTimePicker = {enabled: Boolean -> createShootViewModel.timePickerSwitch(enabled)}
                         )
                     }
 

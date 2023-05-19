@@ -20,7 +20,8 @@ import java.time.LocalTime
 fun SunPositionTime(
     modifier: Modifier,
     updateTime: (time: LocalTime) -> Unit,
-    sunTimes: List<String>
+    sunTimes: List<String>,
+    updateTimePicker: (enabled: Boolean) -> Unit
 ) {
     Card(
         modifier.fillMaxWidth(0.95f),
@@ -37,15 +38,19 @@ fun SunPositionTime(
             val color = MaterialTheme.colorScheme.tertiary
 
             CreateShootSunPositionCard(
-                modifier = modifier, updateTime = {
+                modifier = modifier,
+                updateTime = {
                     updateTime(
                         LocalTime.now()
                     )
-                }, painter = painterResource(
+                },
+                painter = painterResource(
                     R.drawable.sunset
-                ), containerColor = color
+                ),
+                containerColor = color,
 
-            )
+                updateTimePicker = {updateTimePicker(true)}
+                )
 
             CreateShootSunPositionCard(
                 modifier = modifier,
@@ -54,6 +59,7 @@ fun SunPositionTime(
                     R.drawable.sunrise
                 ),
                 containerColor = color,
+                updateTimePicker = {updateTimePicker(false)}
 
                 )
             CreateShootSunPositionCard(
@@ -62,7 +68,8 @@ fun SunPositionTime(
                 painter = painterResource(
                     R.drawable.solarnoon
                 ),
-                containerColor = color
+                containerColor = color,
+                updateTimePicker = {updateTimePicker(false)}
             )
             CreateShootSunPositionCard(
                 modifier = modifier,
@@ -70,7 +77,8 @@ fun SunPositionTime(
                 painter = painterResource(
                     R.drawable.sunset
                 ),
-                containerColor = color
+                containerColor = color,
+                updateTimePicker = {updateTimePicker(false)}
             )
         }
     }

@@ -28,6 +28,7 @@ fun TimepickerComponent(
     modifier: Modifier,
     onValueChange: (chosenTime: LocalTime) -> Unit,
     currentTime: LocalTime,
+    enabled:Boolean,
     colors: TimePickerColors,
     fieldShape: Shape,
     containerShape: Shape
@@ -61,6 +62,7 @@ fun TimepickerComponent(
                 displayText = hourText,
                 onValueChange = { hour: LocalTime -> onValueChange(hour) },
                 colors = colors,
+                enabled = enabled,
                 shape = fieldShape,
                 min = 0,
                 max = 23,
@@ -80,6 +82,7 @@ fun TimepickerComponent(
                 displayText = minuteText,
                 onValueChange = { minute: LocalTime -> onValueChange(minute) },
                 shape = fieldShape,
+                enabled = enabled,
                 colors = colors,
                 min = 0,
                 max = 59,
@@ -114,12 +117,14 @@ fun InputField(
     onValueChange: (chosenTime: LocalTime) -> Unit,
     colors: TimePickerColors,
     shape: Shape,
+    enabled: Boolean,
     min: Int,
     max: Int,
     updateTime: (chosenTime: Int) -> LocalTime,
 
     ) {
     val focusManager = LocalFocusManager.current
+
     TextField(
         modifier = modifier
             .size(70.dp)
@@ -133,7 +138,8 @@ fun InputField(
             }
         },
         shape = shape,
-        placeholder = { Text("00") },
+        enabled = enabled,
+        placeholder = {Text("00") },
         textStyle = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Center),
         colors = TextFieldDefaults.textFieldColors(
             textColor = colors.textColor,
@@ -141,11 +147,12 @@ fun InputField(
             unfocusedIndicatorColor = Color.Transparent,
             unfocusedLabelColor = colors.unfocusedLabelColor,
             placeholderColor = colors.placeholderColor,
+            disabledTextColor = colors.disabledTextColor
 
 
         ),
         keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Number,
+            keyboardType = KeyboardType.NumberPassword,
             imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })

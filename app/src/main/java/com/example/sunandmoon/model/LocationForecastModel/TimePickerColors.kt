@@ -9,5 +9,6 @@ data class TimePickerColors (
     val unfocusedIndicatorColor: Color,
     val unfocusedLabelColor: Color,
     val placeholderColor: Color,
+    val disabledTextColor: Color
 
 )
