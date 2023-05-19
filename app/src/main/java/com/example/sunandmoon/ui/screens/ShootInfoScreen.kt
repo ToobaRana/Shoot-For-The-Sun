@@ -82,8 +82,12 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
     val correctTimeObject : Timeseries? = shootInfoUIState.weatherData?.properties?.timeseries?.
     firstOrNull({ it.time.toString() == formattedDateAndTime })
 
+    var weatherIconCode : String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
+    if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
+    Log.d("symbolCode: ", weatherIconCode.toString())
     val temperature : Double? = correctTimeObject?.data?.instant?.details?.air_temperature
-    val rainfallInMm : Double? = correctTimeObject?.data?.next_1_hours?.details?.precipitation_amount
+    var rainfallInMm : Double? = correctTimeObject?.data?.next_1_hours?.details?.precipitation_amount
+    if(rainfallInMm == null) rainfallInMm = correctTimeObject?.data?.next_6_hours?.details?.precipitation_amount
 
     val windSpeed : Double? = correctTimeObject?.data?.instant?.details?.wind_speed
     val windDirection : Double? = correctTimeObject?.data?.instant?.details?.wind_from_direction
@@ -164,10 +168,11 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                 if(dateAndTime < LocalDateTime.now() || dateAndTime >= LocalDateTime.now().plusDays(10)){
                     NoDataCard(modifier)
                 } else{
-                    WeatherCard(
-                        modifier = modifier, time, temperature, rainfallInMm
-
-                    )
+                    if(weatherIconCode != null) {
+                        WeatherCard(
+                            modifier = modifier, time, temperature, rainfallInMm, weatherIconCode
+                        )
+                    }
 
                     WindCard(
                         modifier = modifier, time, windSpeed, windDirection
