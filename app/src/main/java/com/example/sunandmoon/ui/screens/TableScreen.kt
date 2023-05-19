@@ -48,9 +48,6 @@ fun TableView(
     navigateToNextBottomBar: (index: Int) -> Unit
 ) {
 
-
-    //tableViewModel.loadDateTableList(sunType = "Sunrise")
-    //tableViewModel.loadDateTableList(sunType = tableUIState.chosenSunType)
     var chosenSunType = ""
 
     Scaffold(
@@ -132,16 +129,16 @@ fun TableView(
                     ) {
                         Text(
                             text = "Day",
-                            fontSize = 20.sp,
+                            fontSize = 19.sp,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = modifier
-                                .weight(1f)
                                 .padding(start = 20.dp),
                             fontWeight = FontWeight.Bold
                         )
+
                         Text(
                             text = chosenSunType,
-                            fontSize = 20.sp,
+                            fontSize = 19.sp,
                             modifier = modifier
                                 .weight(1f)
                                 .padding(start = 2.dp),
@@ -149,9 +146,10 @@ fun TableView(
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
+
                         Text(
-                            text = "Our" + chosenSunType,
-                            fontSize = 20.sp,
+                            text = "Our " + chosenSunType,
+                            fontSize = 19.sp,
                             modifier = modifier
                                 .weight(1f)
                                 .padding(2.dp),
@@ -159,37 +157,39 @@ fun TableView(
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
+
                         Text(
                             text = "+Offset",
-                            fontSize = 14.sp,
+                            fontSize = 19.sp,
                             modifier = modifier
                                 .padding(1.dp, end = 4.dp),
                             color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
+
                     } }
+
                     items(tableUIState.apiDateTableList) { date ->
 
                         val elementInTableUiStateList = date.split("T")
 
                         val sunriseTimeListWithOffset = elementInTableUiStateList[1].split("-", "+")
                         val sunriseTime = sunriseTimeListWithOffset[0]
-                        val offset = sunriseTimeListWithOffset[1]
                         val day = elementInTableUiStateList[0]
                         val monthInt = day.split("-")[1].toInt()
 
-
-                        println(tableUIState.offsetStringForApi)
                         TableCard(
+                            sunType = chosenSunType,
                             apiSunTime = sunriseTime,
                             day = day,
-                            calculationSunTime = tableUIState.calculationsDateTableList[monthInt - 1],
-                            offset = tableUIState.offsetStringForApi,
+                            calculationSunTime = tableUIState.calculationsDateTableList[monthInt-1],
+                            offset = tableUIState.timeZoneListTableScreen[monthInt-1],
                             modifier = modifier
                                 .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
                                 .padding(3.dp)
                         )
+
                         Spacer(modifier = modifier.height(1.dp))
 
                     }
@@ -248,7 +248,7 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
-            label = { Text("Type", color = MaterialTheme.colorScheme.primary, fontSize = 13.sp) },
+            label = { Text("Type", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(
                 placeholderColor = MaterialTheme.colorScheme.primary,

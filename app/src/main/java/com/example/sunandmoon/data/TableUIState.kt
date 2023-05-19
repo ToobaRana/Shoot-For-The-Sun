@@ -14,5 +14,6 @@ data class TableUIState(
     val chosenSunType: String,
     val timeZoneOffset: Double,
     val timezone_id: String,
-    val offsetStringForApi: String
+    val offsetStringForApi: String,
+    val timeZoneListTableScreen: List<String>
 )
