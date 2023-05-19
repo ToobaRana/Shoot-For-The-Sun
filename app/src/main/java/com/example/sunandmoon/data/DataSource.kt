@@ -4,6 +4,7 @@ package com.example.sunandmoon.data
 import android.R
 import android.annotation.SuppressLint
 import android.provider.Settings.Global.getString
+import android.util.Log
 import com.example.sunandmoon.BuildConfig
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 
@@ -88,18 +89,25 @@ class DataSource() {
         return apiResults
     }
 }
-@SuppressLint("MissingPermission")
+
+
 fun fetchLocation(
     fusedLocationClient: FusedLocationProviderClient,
     setCoordinates: (latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) -> Unit
 ) {
-    val request = LastLocationRequest.Builder().build()
     try {
-        fusedLocationClient.getLastLocation(request).addOnSuccessListener {
-            setCoordinates(it.latitude, it.longitude, true);
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                setCoordinates(location.latitude, location.longitude, true)
+            } else {
+                Log.d("Location", "Last known location is not available")
+                // Handle the case where location is null
+                // You can perform additional actions or set default coordinates here
+            }
         }
-    } catch (e: java.lang.IllegalStateException) {
-        println("location could not be fetched in time")
+    } catch (e: SecurityException) {
+        Log.e("Location", "Location permission is not granted", e)
+    } catch (e: Exception) {
+        Log.e("Location", "Error fetching last known location: ${e.message}", e)
     }
-
 }

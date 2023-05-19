@@ -50,16 +50,10 @@ fun TimepickerComponent(
         ) {
 
             //puts string for InputField
-            val hourText =
-                if (currentTime.hour != 0) {
-                    currentTime.hour.toString()
 
-                } else {
-                    ""
-                }
             InputField(
                 modifier = modifier.align(Alignment.CenterVertically),
-                displayText = hourText,
+                displayTextInfo = currentTime.hour,
                 onValueChange = { hour: LocalTime -> onValueChange(hour) },
                 colors = colors,
                 enabled = enabled,
@@ -70,16 +64,10 @@ fun TimepickerComponent(
             )
             Text(modifier = modifier.weight(1f).align(Alignment.CenterVertically), text = ":", color = colors.textColor )
             //puts string for InputField
-            val minuteText =
-                if (currentTime.minute != 0) {
-                    currentTime.minute.toString()
 
-                } else {
-                    ""
-                }
             InputField(
                 modifier = modifier.align(Alignment.CenterVertically),
-                displayText = minuteText,
+                displayTextInfo = currentTime.minute,
                 onValueChange = { minute: LocalTime -> onValueChange(minute) },
                 shape = fieldShape,
                 enabled = enabled,
@@ -113,7 +101,7 @@ fun validateNumber(value: String, min: Int, max: Int): Int? {
 @Composable
 fun InputField(
     modifier: Modifier,
-    displayText: String,
+    displayTextInfo: Int,
     onValueChange: (chosenTime: LocalTime) -> Unit,
     colors: TimePickerColors,
     shape: Shape,
@@ -124,12 +112,18 @@ fun InputField(
 
     ) {
     val focusManager = LocalFocusManager.current
+    val valueText =
+        if (displayTextInfo != 0) {
+            displayTextInfo.toString()
 
+        } else {
+            ""
+        }
     TextField(
         modifier = modifier
             .size(70.dp)
             .padding(vertical = 8.dp),
-        value = displayText,
+        value = valueText,
         onValueChange = { time: String ->
             val newTimeUnit = validateNumber(time, min, max)
             if (newTimeUnit != null) {
