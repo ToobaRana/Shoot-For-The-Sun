@@ -8,10 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.sunandmoon.ar.SunAR
-import com.example.sunandmoon.ui.screens.CreateShootScreen
-import com.example.sunandmoon.ui.screens.ProductionSelectionScreen
-import com.example.sunandmoon.ui.screens.ShootInfoScreen
-import com.example.sunandmoon.ui.screens.TableScreen
+import com.example.sunandmoon.ui.screens.*
 
 // controls the navigation and communication of the different screens
 @Composable
@@ -29,7 +26,8 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
                 },
                 navigateToCreateShootScreen = { parentProductionId: Int?, shootToEditId: Int? -> navController.navigate("createShootScreen/$parentProductionId/$shootToEditId") },
                 navController = navController,
-                currentScreenRoute = routeProductionSelectionScreen
+                currentScreenRoute = routeProductionSelectionScreen,
+                goToAboutScreen = { navController.navigate("aboutScreen") },
             )
         }
         val routeShootInfoScreen = "shootInfoScreen/{shootId}"
@@ -74,6 +72,12 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
                     bottomBarNavigation(index, navController)
                 },
                 packageManager = packageManager
+            )
+        }
+        composable("aboutScreen"){
+            AboutScreen(
+                modifier = modifier,
+                navigateBack = { navController.popBackStack("productionSelectionScreen", false) }
             )
         }
     }

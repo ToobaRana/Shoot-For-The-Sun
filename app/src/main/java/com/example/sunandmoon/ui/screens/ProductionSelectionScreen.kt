@@ -73,7 +73,8 @@ fun ProductionSelectionScreen(
     navigateToNextBottomBar: (index: Int) -> Unit,
     navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
     navController: NavController,
-    currentScreenRoute: String
+    currentScreenRoute: String,
+    goToAboutScreen: () -> Unit
 ) {
 
     val productionSelectionUIState by productionSelectionViewModel.productionSelectionUIState.collectAsState()
@@ -113,7 +114,8 @@ fun ProductionSelectionScreen(
                     navigateToCreateShootScreen,
                     productionSelectionViewModel,
                     currentPageIndex,
-                    productionSelectionUIState
+                    productionSelectionUIState,
+                    goToAboutScreen
                 )
             }
         },
@@ -149,7 +151,8 @@ fun ProductionSelectionScreen(
                             navigateToCreateShootScreen,
                             productionSelectionViewModel,
                             currentPageIndex,
-                            productionSelectionUIState
+                            productionSelectionUIState,
+                            goToAboutScreen
                         )
                     }
                     when (currentPageIndex) {
