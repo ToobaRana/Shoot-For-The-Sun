@@ -14,11 +14,10 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, modifier: Modifier) {
+fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offset: String, modifier: Modifier) {
     Surface(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(0.dp, 0.dp, 8.dp, 0.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, Color.White)
     ) {
@@ -52,6 +51,14 @@ fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, modif
                 fontSize = 16.sp,
                 color = Color.Black,
                 modifier = modifier.padding(8.dp)
+            )
+
+            Text(
+                text = offset,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                color = Color.Black,
+                modifier = modifier.padding(top= 8.dp, start = 4.dp)
             )
 
         }

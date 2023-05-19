@@ -66,7 +66,10 @@ fun TableView(
                 modifier = modifier
                     .padding(top = 2.dp, end = 5.dp, start = 5.dp),
                 color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight(400)
+                fontWeight = FontWeight(400),
+                minLines = 2,
+                lineHeight =35.sp
+                
             )
 
         },
@@ -77,7 +80,7 @@ fun TableView(
 
 
             Column(
-                modifier.padding(start = 8.dp, end = 8.dp, top = 90.dp),
+                modifier.padding(top = 120.dp, end= 3.dp, start = 3.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -87,7 +90,7 @@ fun TableView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     LocationSearch(
-                        modifier = modifier.width(200.dp),
+                        modifier = modifier.width(215.dp),
                         locationSearchQuery = tableUIState.locationSearchQuery,
                         locationSearchResults = tableUIState.locationSearchResults,
                         setLocationSearchQuery = { query: String ->
@@ -109,35 +112,31 @@ fun TableView(
                         }
                     )
                     chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
-
-
                 }
 
                 Spacer(modifier = modifier.height(10.dp))
             }
 
+            Box(modifier.padding(top=35.dp)){
 
+                Box(modifier
+                        .fillMaxSize()
+                        .padding(top = 220.dp, start = 2.5.dp, end = 2.5.dp, bottom = 84.dp)) {
 
-            Box{
+                LazyColumn(modifier.padding(top = 15.dp)) {
 
-                Box(modifier.fillMaxSize().padding(top = 220.dp, start = 4.dp, end = 4.dp, bottom = 84.dp)) {
-                // Render the header row
-
-                Spacer(modifier = modifier.height(1.dp))
-                LazyColumn(
-                ) {
                     item { Row(
-
-                        modifier.background(Color.LightGray)
+                        modifier.background(MaterialTheme.colorScheme.tertiary).padding(top= 5.dp, bottom=5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = "Day",
                             fontSize = 20.sp,
-
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = modifier
                                 .weight(1f)
-                                .padding(3.dp),
-                            textAlign = TextAlign.Center,
+                                .padding(start = 20.dp),
                             fontWeight = FontWeight.Bold
                         )
                         Text(
@@ -145,7 +144,8 @@ fun TableView(
                             fontSize = 20.sp,
                             modifier = modifier
                                 .weight(1f)
-                                .padding(3.dp),
+                                .padding(start = 2.dp),
+                            color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
@@ -154,7 +154,17 @@ fun TableView(
                             fontSize = 20.sp,
                             modifier = modifier
                                 .weight(1f)
-                                .padding(3.dp),
+                                .padding(2.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "+Offset",
+                            fontSize = 14.sp,
+                            modifier = modifier
+                                .padding(1.dp, end = 4.dp),
+                            color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
@@ -163,20 +173,22 @@ fun TableView(
 
                         val elementInTableUiStateList = date.split("T")
 
-
-                        val sunriseTime = elementInTableUiStateList[1].split("-", "+")[0]
+                        val sunriseTimeListWithOffset = elementInTableUiStateList[1].split("-", "+")
+                        val sunriseTime = sunriseTimeListWithOffset[0]
+                        val offset = sunriseTimeListWithOffset[1]
                         val day = elementInTableUiStateList[0]
                         val monthInt = day.split("-")[1].toInt()
 
 
-
+                        println(tableUIState.offsetStringForApi)
                         TableCard(
-                            apiSunTime = elementInTableUiStateList[1],
+                            apiSunTime = sunriseTime,
                             day = day,
                             calculationSunTime = tableUIState.calculationsDateTableList[monthInt - 1],
+                            offset = tableUIState.offsetStringForApi,
                             modifier = modifier
                                 .background(if (date.indexOf(day) % 2 == 0) Color.White else Color.LightGray)
-                                .padding(8.dp)
+                                .padding(3.dp)
                         )
                         Spacer(modifier = modifier.height(1.dp))
 
@@ -184,10 +196,11 @@ fun TableView(
                 }
 
             }
-                Box(modifier
-                    .fillMaxWidth()
-                    .padding(top = 165.dp)
-                    .zIndex(1f), contentAlignment = Alignment.Center)   {
+                Box(
+                    modifier
+                        .fillMaxWidth()
+                        .padding(top = 165.dp)
+                        .zIndex(1f), contentAlignment = Alignment.Center)   {
                     CalendarComponent(
                         modifier,
                         tableUIState.chosenDate,
@@ -235,7 +248,7 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
-            label = { Text("Type", color = MaterialTheme.colorScheme.primary) },
+            label = { Text("Type", color = MaterialTheme.colorScheme.primary, fontSize = 13.sp) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(
                 placeholderColor = MaterialTheme.colorScheme.primary,
@@ -247,9 +260,7 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
                 textColor = MaterialTheme.colorScheme.primary,
                 containerColor = MaterialTheme.colorScheme.onBackground,
                 focusedLabelColor = MaterialTheme.colorScheme.onPrimary
-
-
-            ),
+            ), maxLines = 1
         )
         ExposedDropdownMenu(
             expanded = expanded,

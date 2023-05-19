@@ -66,7 +66,8 @@ fun LocationSearch(
                 containerColor = MaterialTheme.colorScheme.background,
                 unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
-            )
+            ),
+            maxLines = 1
         )
 
         if (isDropdownExpanded) {
