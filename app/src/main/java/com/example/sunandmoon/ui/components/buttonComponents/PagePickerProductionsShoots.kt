@@ -33,11 +33,11 @@ fun PagePickerProductionsShoots(
             modifier
                 .width(320.dp)
                 .height(35.dp)
-                .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(15.dp)),
+                .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(15.dp)),
             horizontalArrangement = Arrangement.Start
         ) {
             val colors =
-                listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary)
+                listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
             Button(
                 onClick = { if (currentPageIndex != SelectionPages.PRODUCTIONS.ordinal) productionSelectionViewModel.changeCurrentPageIndex() },
                 modifier.weight(1f),
