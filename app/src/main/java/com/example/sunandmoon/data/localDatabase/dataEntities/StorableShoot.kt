@@ -2,12 +2,13 @@ package com.example.sunandmoon.data.localDatabase.dataEntities
 
 import android.location.Location
 import androidx.room.*
+import com.example.sunandmoon.data.PreferableWeather
 import com.example.sunandmoon.data.util.Shoot
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Entity(tableName = "shoot")
-@TypeConverters(LocalDateTimeConverter::class)
+@TypeConverters(LocalDateTimeConverter::class, PreferredWeatherConverter::class)
 data class StorableShoot(
     @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo(name = "parent_production_id") val parentProductionId: Int?,
@@ -17,7 +18,8 @@ data class StorableShoot(
     @ColumnInfo(name = "latitude") val latitude: Double,
     @ColumnInfo(name = "longitude") val longitude: Double,
     @ColumnInfo(name = "date_time") val date: LocalDateTime,
-    @ColumnInfo(name = "time_zone_offset") val timeZoneOffset: Double
+    @ColumnInfo(name = "time_zone_offset") val timeZoneOffset: Double,
+    @ColumnInfo(name = "preferred_weather") val preferredWeather: List<PreferableWeather>
 )
 
 // this class lets us store LocalDateTime objects in the room database
@@ -32,5 +34,22 @@ class LocalDateTimeConverter {
     @TypeConverter
     fun toLocalDateTime(value: String?): LocalDateTime? {
         return value?.let { LocalDateTime.parse(it, formatter) }
+    }
+}
+
+// this class lets us store lists of PreferableWeather in the room database
+class PreferredWeatherConverter {
+    @TypeConverter
+    fun fromPreferredWeather(value: List<PreferableWeather>?): String? {
+        if(value == null) return ""
+
+        return value.joinToString(",")
+    }
+
+    @TypeConverter
+    fun toPreferredWeather(value: String?): List<PreferableWeather>? {
+        if(value == null || value == "") return listOf()
+
+        return value.split(",").map { PreferableWeather.valueOf(it) }
     }
 }
