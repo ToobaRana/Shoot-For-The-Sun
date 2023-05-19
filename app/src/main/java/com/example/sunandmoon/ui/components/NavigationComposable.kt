@@ -13,7 +13,7 @@ import com.example.sunandmoon.ui.theme.InfoBlueColor
 import java.time.LocalDateTime
 
 @Composable
-fun NavigationComposable(page: Int, navigateToNextBottomBar: (index: Int) -> Unit){
+fun NavigationComposable(modifier: Modifier, page: Int, navigateToNextBottomBar: (index: Int) -> Unit){
     val icons = listOf(R.drawable.home, R.drawable.ar, R.drawable.table)
     val iconsContentDescriptions = listOf("home button", "A R button", "table button") // We wrote "A R" with space between to make the text-to-speech more understandable
 
@@ -21,7 +21,7 @@ fun NavigationComposable(page: Int, navigateToNextBottomBar: (index: Int) -> Uni
         icons.forEachIndexed { index, icon ->
             val iconColor = if (page == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
             NavigationBarItem(
-                icon = { Icon(painterResource(icon), iconsContentDescriptions[index], Modifier, iconColor) },
+                icon = { Icon(painterResource(icon), iconsContentDescriptions[index], modifier, iconColor) },
                 selected = page == index,
                 onClick = {
                     if(index != page){

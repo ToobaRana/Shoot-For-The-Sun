@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.Log
 import androidx.room.Room
 import com.example.sunandmoon.data.localDatabase.AppDatabase
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,16 +24,10 @@ object AppModule {
             AppDatabase::class.java, "database-name"
         ).build()
     }
-}
 
-/*
-@Module
-class AppModule(private val context: Context) {
     @Provides
-    fun provideAppDatabase(): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java, "database-name"
-        ).build()
+    @Singleton
+    fun provideFusedLocationProviderClient(app:Application): FusedLocationProviderClient {
+        return LocationServices.getFusedLocationProviderClient(app)
     }
-}*/
+}

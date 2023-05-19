@@ -1,5 +1,6 @@
 package com.example.sunandmoon
 
+import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,40 +35,16 @@ fun Radian.toDegree(): Degree = this * 180 / Math.PI
 
 // Calculates and returns a list of sunrise and sunset and sunset (as strings)
 // longitude is in degrees (positive to the east of the Prime Meridian)
-fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, latitude: Degree, longitude: Degree): List<String> {
+fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, location: Location): List<String> {
 
-    //val timeString: String = timestampString.split("T")[1]
-    val hour: Double = localDateTime.hour.toDouble()
-    val minutes: Double = localDateTime.minute.toDouble()
-    val seconds: Double = localDateTime.second.toDouble()
-
-    val dayOfYear: Double = localDateTime.toLocalDate().dayOfYear.toDouble()
-    val hourDecimal: Double = hour + minutes / 60 + seconds / 60 / 60 + timeZoneOffset
-    val isLeapYear: Boolean = (localDateTime.toLocalDate().year % 4) == 0
-
-    val daysInYear: Double = if(isLeapYear) 366.0 else 365.0
-
-    // this is the fraction of the year. radians
-    val y: Radian = (2 * Math.PI / daysInYear) * (dayOfYear - 1 + ((hourDecimal - 12) / 24))
+    val latitude: Degree =  location.latitude
+    val longitude: Degree = location.longitude
 
     // in minutes
-    //val eqtime: Double = 229.18 * (0.000075 + 0.001868 * cos(y) + 0.032077 * sin(y) - 0.014615 * cos(2 * y) - 0.040849 * sin(2 * y))
-    //val n = 2 * PI / 365 * (day - 1)
-    val eqtime: Double = 229.18*(0.000075 + 0.001868* cos(y) - 0.032077*sin(y) -0.014615*cos(2*y) - 0.040849*sin(2* y) )
+    val eqtime: Double = calculateEquationOfTime(localDateTime, timeZoneOffset)
 
     // radians
-    //val decl: Radian = 0.006918 - 0.399912 * cos(y) + 0.070257 * sin(y) - 0.006758 * cos(2 * y) + 0.000907 * sin(2 * y) - 0.002697 * cos(3 * y) + 0.00148 * sin(3 * y)
-    val decl: Radian = (90-(Math.toDegrees(acos(sin(Math.toRadians(-23.44)* Math.cos(Math.toRadians((360/365.24)*(dayOfYear+10)+360/Math.PI*0.0167*sin(Math.toRadians((360/365.24)*(dayOfYear-2)))))))))).toRadian()
-
-    val timeOffset: Double = eqtime + 4 * longitude - 60 * timeZoneOffset
-
-    val tst: Double = hour*60 + minutes + seconds/60 + timeOffset
-
-    // the solar hour angle in degrees is:
-    val ha: Degree = tst / 4 - 180
-
-    // THE FORMULA IN THE PAPER SAYS cost AND NOT cos. IS THIS A SPELLING MISTAKE?
-    val zenithAngle: Radian = acos(sin(latitude.toRadian()) * sin(decl) + cos(latitude.toRadian()) * cos(decl) * cos(ha.toRadian()))
+    val decl: Radian = calculateDeclinationAngle(localDateTime)
 
     val haSunrise: Radian = acos(cos(90.833.toRadian())/(cos(latitude.toRadian())*cos(decl)) - tan(latitude.toRadian()) * tan(decl))
     val haSunset: Radian = -haSunrise
@@ -91,16 +68,8 @@ fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, lat
     Log.i("matte", "timeZoneOffset $timeZoneOffset")
     Log.i("matte", "latitude: $latitude")
     Log.i("matte", "longitude: $longitude")
-    Log.i("matte", "dayOfYear: $dayOfYear")
-    Log.i("matte", "hourDecimal: $hourDecimal")
-    Log.i("matte", "daysInYear: $daysInYear")
-    Log.i("matte", "y: $y")
     Log.i("matte", "eqtime: $eqtime")
     Log.i("matte", "decl radian: $decl, decl degrees: ${decl.toDegree()}")
-    Log.i("matte", "timeOffset: $timeOffset")
-    Log.i("matte", "tst: $tst")
-    Log.i("matte", "ha: $ha")
-    Log.i("matte", "zenithAngle: $zenithAngle")
     Log.i("matte", "haSunrise: $haSunrise")
     Log.i("matte", "haSunset: $haSunset")
     Log.i("matte", "sunriseTimeLocalTime: " + sunriseTimeLocalTime.format(formatter))
@@ -110,6 +79,96 @@ fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, lat
 
 
     return listOf(sunriseTimeLocalTimeRounded, sunsetTimeLocalTimeRounded, solarNoonTimeLocalTimeRounded)
+}
+
+fun calculateHourDecimal(localDateTime: LocalDateTime, timeZoneOffset: Double): Double {
+    val hour: Double = localDateTime.hour.toDouble()
+    val minutes: Double = localDateTime.minute.toDouble()
+    val seconds: Double = localDateTime.second.toDouble()
+
+    return hour + minutes / 60 + seconds / 60 / 60 + timeZoneOffset
+}
+
+fun calculateFractionOfYear(localDateTime: LocalDateTime, timeZoneOffset: Double, dayOfYear: Double): Radian {
+    val hourDecimal: Double = calculateHourDecimal(localDateTime, timeZoneOffset)
+    val isLeapYear: Boolean = (localDateTime.toLocalDate().year % 4) == 0
+
+    val daysInYear: Double = if(isLeapYear) 366.0 else 365.0
+
+    Log.i("matte", "hourDecimal: $hourDecimal")
+    Log.i("matte", "daysInYear: $daysInYear")
+
+    // this is the fraction of the year. radians
+    return (2 * Math.PI / daysInYear) * (dayOfYear - 1 + ((hourDecimal - 12) / 24))
+}
+
+// returns equation of time in minutes
+fun calculateEquationOfTime(localDateTime: LocalDateTime, timeZoneOffset: Double): Double {
+    val dayOfYear: Double = localDateTime.toLocalDate().dayOfYear.toDouble()
+
+    // this is the fraction of the year. radians
+    val y: Radian = calculateFractionOfYear(localDateTime, timeZoneOffset, dayOfYear)
+
+    Log.i("matte", "dayOfYear: $dayOfYear")
+    Log.i("matte", "y: $y")
+
+    // in minutes
+    //val eqtime: Double = 229.18 * (0.000075 + 0.001868 * cos(y) + 0.032077 * sin(y) - 0.014615 * cos(2 * y) - 0.040849 * sin(2 * y))
+    //val n = 2 * PI / 365 * (day - 1)
+    return 229.18*(0.000075 + 0.001868* cos(y) - 0.032077*sin(y) -0.014615*cos(2*y) - 0.040849*sin(2* y) )
+}
+
+fun calculateDeclinationAngle(localDateTime: LocalDateTime): Radian {
+    val dayOfYear: Double = localDateTime.toLocalDate().dayOfYear.toDouble()
+
+    // radians
+    //val decl: Radian = 0.006918 - 0.399912 * cos(y) + 0.070257 * sin(y) - 0.006758 * cos(2 * y) + 0.000907 * sin(2 * y) - 0.002697 * cos(3 * y) + 0.00148 * sin(3 * y)
+    return (90-(Math.toDegrees(acos(sin(Math.toRadians(-23.44)* Math.cos(Math.toRadians((360/365.24)*(dayOfYear+10)+360/Math.PI*0.0167*sin(Math.toRadians((360/365.24)*(dayOfYear-2)))))))))).toRadian()
+}
+
+// for the AR feature. Returns the sun azimuth angle and zenith angles, both in degrees
+fun calculateSunPosition(localDateTime: LocalDateTime, timeZoneOffset: Double, location: Location): Pair<Double, Double> {
+
+    val latitude: Degree =  location.latitude
+    val longitude: Degree = location.longitude
+
+    // in minutes
+    val eqtime: Double = calculateEquationOfTime(localDateTime, timeZoneOffset)
+
+    // radians
+    val decl: Radian = calculateDeclinationAngle(localDateTime)
+
+    val hour: Double = localDateTime.hour.toDouble()
+    val minutes: Double = localDateTime.minute.toDouble()
+    val seconds: Double = localDateTime.second.toDouble()
+
+    val timeOffset: Double = eqtime + 4 * longitude - 60 * timeZoneOffset
+
+    val tst: Double = hour*60 + minutes + seconds/60 + timeOffset
+
+    // the solar hour angle in degrees is:
+    val ha: Degree = tst / 4 - 180
+
+    // THE FORMULA IN THE PAPER SAYS cost AND NOT cos. IS THIS A SPELLING MISTAKE?
+    val zenithAngle: Radian = (acos(sin(latitude.toRadian()) * sin(decl) + cos(latitude.toRadian()) * cos(decl) * cos(ha.toRadian())) - Math.PI / 2 ) * -1
+
+    // Degrees clockwise from north
+    val azimuthAngle: Degree =  -(acos(-( (sin(latitude.toRadian()) * cos(zenithAngle) - sin(decl)) / cos(latitude.toRadian()) * sin(zenithAngle) )) - 180)
+
+    Log.i("matte", localDateTime.toString())
+    Log.i("matte", "timeZoneOffset $timeZoneOffset")
+    Log.i("matte", "latitude: $latitude")
+    Log.i("matte", "longitude: $longitude")
+    Log.i("matte", "eqtime: $eqtime")
+    Log.i("matte", "decl radian: $decl, decl degrees: ${decl.toDegree()}")
+
+    Log.i("matte", "timeOffset: $timeOffset")
+    Log.i("matte", "tst: $tst")
+    Log.i("matte", "ha: $ha")
+    Log.i("matte", "zenithAngle.toDegree(): ${zenithAngle.toDegree()}")
+    Log.i("matte", "azimuthAngle: $azimuthAngle")
+
+    return Pair(azimuthAngle, zenithAngle.toDegree())
 }
 
 fun roundToNearestMinute(timeStringHHmmss: String): String {
