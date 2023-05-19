@@ -21,7 +21,6 @@ import com.example.sunandmoon.ui.theme.SunColor
 fun CreateShootSunPositionCard(
     modifier: Modifier,
     containerColor: Color,
-    updateTime: () -> Unit,
     painter: Painter,
     chosen: Boolean,
     updateTimePicker: () -> Unit,
@@ -37,7 +36,7 @@ fun CreateShootSunPositionCard(
     Card(
         modifier = modifier
             .size(80.dp)
-            .clickable { updateTime(); updateTimePicker();updatePositionIndex() },
+            .clickable { updateTimePicker();updatePositionIndex() },
         colors = CardDefaults.cardColors(containerColor = containerColor),
         border = border
     ) {

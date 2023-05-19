@@ -19,8 +19,6 @@ import java.time.LocalTime
 @Composable
 fun SunPositionTime(
     modifier: Modifier,
-    updateTime: (time: LocalTime) -> Unit,
-    sunTimes: List<String>,
     updateTimePicker: (enabled: Boolean) -> Unit,
     chosenSunIndex: Int,
     updateChosenIndex: (index: Int) -> Unit
@@ -42,11 +40,7 @@ fun SunPositionTime(
 
             CreateShootSunPositionCard(
                 modifier = modifier,
-                updateTime = {
-                    updateTime(
-                        LocalTime.now()
-                    )
-                },
+
                 painter = painterResource(
                     R.drawable.sunset
                 ),
@@ -58,7 +52,6 @@ fun SunPositionTime(
 
             CreateShootSunPositionCard(
                 modifier = modifier,
-                updateTime = { updateTime(LocalTime.parse(sunTimes[0])) },
                 painter = painterResource(
                     R.drawable.sunrise
                 ),
@@ -70,7 +63,6 @@ fun SunPositionTime(
                 )
             CreateShootSunPositionCard(
                 modifier = modifier,
-                updateTime = { updateTime(LocalTime.parse(sunTimes[1])) },
                 painter = painterResource(
                     R.drawable.solarnoon
                 ),
@@ -81,7 +73,6 @@ fun SunPositionTime(
             )
             CreateShootSunPositionCard(
                 modifier = modifier,
-                updateTime = { updateTime(LocalTime.parse(sunTimes[2])) },
                 painter = painterResource(
                     R.drawable.sunset
                 ),

@@ -1,7 +1,6 @@
 package com.example.sunandmoon.ui.screens
 
 
-import android.location.Location
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,13 +17,14 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.checkPermissions
-import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.userInputComponents.SunPositionTime
@@ -144,7 +144,7 @@ fun CreateShootScreen(
                         Button(
                             onClick = {
 
-                                //createShootViewModel.getCurrentPosition()
+                                createShootViewModel.getCurrentPosition()
                             },
                             enabled = createShootUIState.locationEnabled
 
@@ -168,12 +168,18 @@ fun CreateShootScreen(
                         updateDay = { day: Int -> createShootViewModel.updateDay(day) })
                 }
                 item {
-                    Text(
-                        modifier = modifier,
-                        text = stringResource(R.string.Time),
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    Spacer(modifier = modifier.size(30.dp))
+                    Row(modifier = modifier.wrapContentSize()){
+                        Text(
+                            modifier = modifier,
+                            text = stringResource(R.string.Time),
+                            fontSize = 20.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontFamily = FontFamily(Font(R.font.nunito))
+                        )
+                        Spacer(modifier = modifier.width(90.dp))
+                    }
+
 
                     TimepickerComponent(
                         modifier = modifier.wrapContentSize(),
@@ -197,12 +203,19 @@ fun CreateShootScreen(
                 }
                 item {
                     Spacer(modifier = modifier.size(20.dp))
-                    Text(
-                        modifier = modifier,
-                        text = stringResource(R.string.SunPosition),
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start){
+                        Spacer(modifier = modifier.width(20.dp))
+                        Text(
+                            modifier = modifier,
+                            text = stringResource(R.string.SunPosition),
+                            fontSize = 20.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontFamily = FontFamily(Font(R.font.nunito))
+
+
+                        )
+                    }
+
                 }
                 item {
                     Row(
@@ -212,15 +225,6 @@ fun CreateShootScreen(
                     ) {
                         SunPositionTime(
                             modifier = modifier,
-                            updateTime = { time: LocalTime -> createShootViewModel.updateTime(time) },
-                            getSunRiseNoonFall(
-                                localDateTime = createShootUIState.chosenDate,
-                                timeZoneOffset = createShootUIState.timeZoneOffset,
-                                location = Location("").apply {
-                                    latitude = createShootUIState.latitude
-                                    longitude = createShootUIState.longitude
-                                }
-                            ),
                             updateTimePicker = { enabled: Boolean ->
                                 createShootViewModel.timePickerSwitch(
                                     enabled
@@ -241,7 +245,8 @@ fun CreateShootScreen(
                         modifier = modifier,
                         text = stringResource(R.string.PreferredWeather),
                         fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
+                        fontFamily = FontFamily(Font(R.font.nunito))
                     )
 
                 }
