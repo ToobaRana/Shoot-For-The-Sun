@@ -61,21 +61,18 @@ fun TableView(
                 fontSize = 30.sp,
                 textAlign = TextAlign.Center,
                 modifier = modifier
-                    .padding(top = 2.dp, end = 5.dp, start = 5.dp),
+                    .padding(top = 15.dp, end = 5.dp, start = 5.dp),
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight(400),
                 minLines = 2,
-                lineHeight =35.sp
-                
+                lineHeight = 35.sp
             )
-
         },
 
         content = { innerPadding ->
             innerPadding
-
             Column(
-                modifier.padding(top = 120.dp, end= 3.dp, start = 3.dp),
+                modifier.padding(top = 120.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -85,25 +82,17 @@ fun TableView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     LocationSearch(
-                        modifier = modifier.width(215.dp),
+                        modifier = Modifier.width(241.dp),
                         locationSearchQuery = tableUIState.locationSearchQuery,
                         locationSearchResults = tableUIState.locationSearchResults,
                         setLocationSearchQuery = { query: String ->
-                            tableViewModel.setLocationSearchQuery(
-                                query
-                            )
+                            tableViewModel.setLocationSearchQuery(query)
                         },
                         loadLocationSearchResults = { query: String ->
-                            tableViewModel.loadLocationSearchResults(
-                                query
-                            )
+                            tableViewModel.loadLocationSearchResults(query)
                         },
                         setCoordinates = { newLatitude: Double, newLongitude: Double, setTimeZoneOffset: Boolean ->
-                            tableViewModel.setCoordinates(
-                                newLatitude,
-                                newLongitude,
-                                setTimeZoneOffset
-                            )
+                            tableViewModel.setCoordinates(newLatitude, newLongitude, setTimeZoneOffset)
                         }
                     )
                     chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
@@ -115,7 +104,7 @@ fun TableView(
 
                 Box(modifier
                         .fillMaxSize()
-                        .padding(top = 220.dp, start = 2.5.dp, end = 2.5.dp, bottom = 84.dp)) {
+                        .padding(top = 240.dp, start = 2.5.dp, end = 2.5.dp, bottom = 84.dp)) {
 
                 LazyColumn(modifier.padding(top = 15.dp)) {
 
@@ -133,16 +122,31 @@ fun TableView(
                             fontWeight = FontWeight.Bold
                         )
 
-                        Text(
-                            text = chosenSunType,
-                            fontSize = 19.sp,
-                            modifier = modifier
-                                .weight(1f)
-                                .padding(start = 50.dp),
-                            color = MaterialTheme.colorScheme.primary,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
-                        )
+                        if (chosenSunType == "SolarNoon"){
+                            Text(
+                                text = chosenSunType,
+                                fontSize = 19.sp,
+                                modifier = modifier
+                                    .weight(1f)
+                                    .padding(start = 20.dp),
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        if (chosenSunType == "Sunset" || chosenSunType == "Sunrise"){
+                            Text(
+                                text = chosenSunType,
+                                fontSize = 19.sp,
+                                modifier = modifier
+                                    .weight(1f)
+                                    .padding(start = 50.dp),
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
 
                         Text(
                             text = "Our " + chosenSunType,
@@ -156,7 +160,7 @@ fun TableView(
                         )
 
                         Text(
-                            text = "+-Offset",
+                            text = "Offset",
                             fontSize = 19.sp,
                             modifier = modifier
                                 .padding(1.dp, end = 4.dp),
@@ -195,7 +199,7 @@ fun TableView(
                 Box(
                     modifier
                         .fillMaxWidth()
-                        .padding(top = 165.dp)
+                        .padding(top = 180.dp)
                         .zIndex(1f), contentAlignment = Alignment.Center)   {
                     CalendarComponent(
                         modifier,
@@ -211,7 +215,6 @@ fun TableView(
                 }
 
             }
-
 
         },
         bottomBar = {
@@ -231,16 +234,14 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf("Sunrise") }
 
-
     //Dropdown menu setup
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }, modifier = modifier.width(155.dp)
+        onExpandedChange = { expanded = !expanded }, modifier = modifier.width(310.dp)
     ) {
+
         TextField(
             modifier = modifier.menuAnchor(),
-            // The `menuAnchor` modifier must be passed to the text field for correctness.
-
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
@@ -265,22 +266,21 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
         ) {
             options.forEach { selectionOption ->
                 DropdownMenuItem(
-                    text = { Text(selectionOption) },
+                    text = { Text(selectionOption, fontSize = 18.sp) },
                     onClick = {
                         selectedOptionText = selectionOption
                         expanded = false
                         tableViewModel.setSunType(selectedOptionText)
                         tableViewModel.loadSunInformation()
-
-
                     },
+
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                 )
             }
         }
 
     }
-    Log.d("dropdownSelectedOptionText", selectedOptionText)
+    //Log.d("dropdownSelectedOptionText", selectedOptionText)
 
     return selectedOptionText
 }
