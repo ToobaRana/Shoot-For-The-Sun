@@ -96,7 +96,9 @@ fun fetchLocation(
     setCoordinates: (latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) -> Unit
 ) {
     try {
+        Log.i("ararar", "fetch location attempt")
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            Log.i("ararar", "fetch location success")
             if (location != null) {
                 setCoordinates(location.latitude, location.longitude, true)
             } else {

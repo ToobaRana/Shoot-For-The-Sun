@@ -262,8 +262,8 @@ class CreateShootViewModel  @Inject constructor(
 
     }
     private fun setLocationQuery(){
-        val newPlace = //reverseApi-call
         viewModelScope.launch {
+            val newPlace = //reverseApi-call
             _createShootUIState.update { currentState ->
                 currentState.copy(
                     //locationSearchQuery = newPlace
