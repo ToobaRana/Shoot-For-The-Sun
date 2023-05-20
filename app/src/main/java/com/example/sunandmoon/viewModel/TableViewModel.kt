@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.util.simplifyLocationNameQuery
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -192,10 +193,12 @@ class TableViewModel : ViewModel() {
         }
     }
 
-    fun setLocationSearchQuery(inputQuery: String) {
+    fun setLocationSearchQuery(inputQuery: String, format: Boolean) {
+        var queryToStore = inputQuery
+        if(format) queryToStore = simplifyLocationNameQuery(queryToStore)
         _tableUIState.update { currentState ->
             currentState.copy(
-                locationSearchQuery = inputQuery
+                locationSearchQuery = queryToStore
             )
         }
     }

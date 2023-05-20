@@ -13,6 +13,7 @@ import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.util.simplifyLocationNameQuery
 import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -57,10 +58,14 @@ class CreateShootViewModel  @Inject constructor(
         getCurrentPosition()
     }
 
-    fun setLocationSearchQuery(inputQuery: String) {
+    fun setLocationSearchQuery(inputQuery: String, format: Boolean) {
+        var queryToStore = inputQuery
+        if(format) {
+            queryToStore = simplifyLocationNameQuery(queryToStore)
+        }
         _createShootUIState.update { currentState ->
             currentState.copy(
-                locationSearchQuery = inputQuery
+                locationSearchQuery = queryToStore
             )
         }
     }
@@ -254,7 +259,7 @@ class CreateShootViewModel  @Inject constructor(
             val locationName = dataSource.fetchReverseGeocoding(location)
             _createShootUIState.update { currentState ->
                 currentState.copy(
-                    locationSearchQuery = locationName.split(",").first() + ", " + locationName.split(",").last()
+                    locationSearchQuery = simplifyLocationNameQuery(locationName)
                 )
             }
         }

@@ -61,11 +61,11 @@ class DataSource() {
         return apiResults
     }
 
-    // example: https://nominatim.openstreetmap.org/reverse?lat=59.961266&lon=10.7813993&format=json
+    // example: https://nominatim.openstreetmap.org/reverse?lat=59.961266&lon=10.7813993&format=json&zoom=18
     // returns the display name of the given location
     suspend fun fetchReverseGeocoding(location: Location): String {
         val endPoint =
-            "$baseURLNominatimReverse?lat=${location.latitude}&lon=${location.longitude}&format=json&accept-language=en"
+            "$baseURLNominatimReverse?lat=${location.latitude}&lon=${location.longitude}&format=json&accept-language=en&zoom=12"
 
         val apiResult: String = client.get(endPoint).body()
         val jObject = JSONObject(apiResult)

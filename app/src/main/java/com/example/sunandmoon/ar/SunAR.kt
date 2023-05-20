@@ -158,7 +158,11 @@ fun TheApp(
 }
 
 @Composable
-fun SunFinder(modifier: Modifier, sensorStatus: FloatArray, sunZenith: Double, sunAzimuth: Double) {
+fun SunFinder(
+    modifier: Modifier,
+    sensorStatus: FloatArray,
+    sunZenith: Double, sunAzimuth: Double
+) {
 
     if(sensorStatus.size < 2 || sensorStatus[0].isNaN() || sensorStatus[1].isNaN()) return
 
@@ -174,7 +178,7 @@ fun SunFinder(modifier: Modifier, sensorStatus: FloatArray, sunZenith: Double, s
     val xPos2 = sun2ImagePos[0]
     val yPos2 = sun2ImagePos[1]
 
-    Column() {
+    /*Column() {
         Column() {
             for(element in sensorStatus) {
                 Text(text = "        " + (element * 180.0 / Math.PI).toString(), color = Color.White)
@@ -185,7 +189,7 @@ fun SunFinder(modifier: Modifier, sensorStatus: FloatArray, sunZenith: Double, s
                 Text(text = "        " + (element * 180.0 / Math.PI).toString(), color = Color.Black)
             }
         }
-    }
+    }*/
     //println(sensorStatus[2] * 180.0 / Math.PI)
 
     // sky directions
@@ -227,7 +231,14 @@ fun SunFinder(modifier: Modifier, sensorStatus: FloatArray, sunZenith: Double, s
 }
 
 @Composable
-fun sun(modifier: Modifier, sensorStatus: FloatArray, xPos: Dp, yPos: Dp, color: Color, sunZenith: Double) {
+fun sun(
+    modifier: Modifier,
+    sensorStatus: FloatArray,
+    xPos: Dp,
+    yPos: Dp,
+    color: Color,
+    sunZenith: Double
+) {
     // the sun
     Box(
         modifier = modifier
@@ -250,7 +261,12 @@ fun sun(modifier: Modifier, sensorStatus: FloatArray, xPos: Dp, yPos: Dp, color:
     }
 }
 
-fun getARPos(sensorStatus: FloatArray, currentContext: Context, sunZenith: Double, sunAzimuth: Double): List<Dp> {
+fun getARPos(
+    sensorStatus: FloatArray,
+    currentContext: Context,
+    sunZenith: Double,
+    sunAzimuth: Double
+): List<Dp> {
     val screenWidthHeight = getScreenWidthHeightInMm(currentContext)
     val screenWidth = screenWidthHeight[1] // + 80
     val screenHeight = screenWidthHeight[1] * 3/4 // - 30
@@ -336,31 +352,33 @@ fun getCameraFOV(currentContext: Context): List<Double> {
 
 @Composable
 fun skyDirections(modifier: Modifier, sensorStatus: FloatArray, current: Context) {
-    val northTextPos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(0.0), Math.toRadians(0.0))
+    val context: Context = LocalContext.current
+
+    val northTextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(0.0))
     SkyDirection(modifier, sensorStatus, northTextPos, "N")
 
-    val northEastTextPos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(0.0), Math.toRadians(45.0))
+    val northEastTextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(45.0))
     SkyDirection(modifier, sensorStatus, northEastTextPos, "NE")
 
-    val eastTextPos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(0.0), Math.toRadians(90.0))
+    val eastTextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(90.0))
     SkyDirection(modifier, sensorStatus, eastTextPos, "E")
 
-    val southEastTextPos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(0.0), Math.toRadians(135.0))
+    val southEastTextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(135.0))
     SkyDirection(modifier, sensorStatus, southEastTextPos, "SE")
 
-    val south2TextPos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(0.0), Math.toRadians(180.0))
+    val south2TextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(180.0))
     SkyDirection(modifier, sensorStatus, south2TextPos, "S")
 
-    val south1TextPos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(0.0), Math.toRadians(-180.0))
+    val south1TextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(-180.0))
     SkyDirection(modifier, sensorStatus, south1TextPos, "S")
 
-    val southWestTextPos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(0.0), Math.toRadians(-135.0))
+    val southWestTextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(-135.0))
     SkyDirection(modifier, sensorStatus, southWestTextPos, "SW")
 
-    val westTextPos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(0.0), Math.toRadians(-90.0))
+    val westTextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(-90.0))
     SkyDirection(modifier, sensorStatus, westTextPos, "W")
 
-    val northWestTextPos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(0.0), Math.toRadians(-45.0))
+    val northWestTextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(-45.0))
     SkyDirection(modifier, sensorStatus, northWestTextPos, "NW")
 }
 

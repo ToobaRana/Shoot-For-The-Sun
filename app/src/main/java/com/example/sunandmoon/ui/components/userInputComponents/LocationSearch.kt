@@ -24,7 +24,7 @@ fun LocationSearch(
     modifier: Modifier,
     locationSearchQuery: String,
     locationSearchResults: List<LocationSearchResults>,
-    setLocationSearchQuery: (query: String) -> Unit,
+    setLocationSearchQuery: (query: String, format: Boolean) -> Unit,
     loadLocationSearchResults: (query: String) -> Unit,
     setCoordinates: (location: Location, setTimeZoneOffset: Boolean) -> Unit,
 ) {
@@ -40,7 +40,7 @@ fun LocationSearch(
         TextField(
             value = locationSearchQuery,
             onValueChange = { query ->
-                setLocationSearchQuery(query)
+                setLocationSearchQuery(query, false)
             },
             label = { Text("Search for a location", fontSize = 18.sp) },
             placeholder = { Text("Enter a location", fontSize = 18.sp) },
@@ -87,7 +87,7 @@ fun LocationSearch(
                             .clickable {
                                 isDropdownExpanded = false
                                 setCoordinates(Location("").apply { latitude = item.lat.toDouble(); longitude = item.lon.toDouble() }, true)
-                                setLocationSearchQuery(item.display_name.split(",").first() + ", " + item.display_name.split(",").last())
+                                setLocationSearchQuery(item.display_name, true)
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                     )

@@ -85,8 +85,8 @@ fun TableView(
                         modifier = Modifier.width(241.dp),
                         locationSearchQuery = tableUIState.locationSearchQuery,
                         locationSearchResults = tableUIState.locationSearchResults,
-                        setLocationSearchQuery = { query: String ->
-                            tableViewModel.setLocationSearchQuery(query)
+                        setLocationSearchQuery = { query: String, format: Boolean ->
+                            tableViewModel.setLocationSearchQuery(query, format)
                         },
                         loadLocationSearchResults = { query: String ->
                             tableViewModel.loadLocationSearchResults(query)

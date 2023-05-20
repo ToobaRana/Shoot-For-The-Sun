@@ -48,7 +48,7 @@ class ProductionSelectionViewModel @Inject constructor(
     )
 
     // to reduce the amount of API-calls needed
-    val retrievedWeatherData: Map<Location, LocationForecast> = mutableMapOf()
+    val retrievedWeatherData: MutableMap<Location, LocationForecast> = mutableMapOf()
 
     val productionSelectionUIState: StateFlow<ProductionSelectionUIState> = _productionSelectionUIState.asStateFlow()
 
@@ -196,41 +196,49 @@ class ProductionSelectionViewModel @Inject constructor(
 
             shoots.forEach { shoot ->
 
-                var weatherData: LocationForecast?
-                if(shoot.location !in retrievedWeatherData) {
+                if(shoot.dateTime < LocalDateTime.now().minusHours(2) || shoot.dateTime > LocalDateTime.now().plusDays(10)) {
+                    return@forEach // this is the same as "continue" but for forEach loops
+                }
+
+                var weatherData: LocationForecast? = null
+                // to reduce the number of API-calls,
+                // check if we already have the weather forecast stored for a location within 1km
+                retrievedWeatherData.forEach {
+                    if(it.key.distanceTo(shoot.location) < 1000) {
+                        weatherData = it.value
+                    }
+                }
+                if(weatherData == null) {
+                    Log.i("API_PreferredWeather", retrievedWeatherData.size.toString())
                     weatherData = dataSource.fetchWeatherAPI(shoot.location.latitude.toString(), shoot.location.longitude.toString())
-                }
-                else {
-                    weatherData = retrievedWeatherData[shoot.location]
+                    retrievedWeatherData[shoot.location] = weatherData!!
                 }
 
-                if(weatherData != null) {
-                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
-                    val dateTimeObjectForApiUse : LocalDateTime = shoot.dateTime.withMinute(0).withSecond(0).withNano(0)
+                val dateTimeObjectForApiUse : LocalDateTime = shoot.dateTime.withMinute(0).withSecond(0).withNano(0)
 
-                    val formattedDateAndTime : String = dateTimeObjectForApiUse.format(formatter)
-                    val correctTimeObject : Timeseries? = weatherData.properties?.timeseries?.
-                    firstOrNull { it.time == formattedDateAndTime }
+                val formattedDateAndTime : String = dateTimeObjectForApiUse.format(formatter)
+                val correctTimeObject : Timeseries? = weatherData!!.properties?.timeseries?.
+                firstOrNull { it.time == formattedDateAndTime }
 
-                    var weatherIconCode : String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
-                    if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
+                var weatherIconCode : String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
+                if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
 
-                    val weatherIconString = weatherIconCode?.split("_")?.get(0)
+                val weatherIconString = weatherIconCode?.split("_")?.get(0)
 
-                    if(weatherIconString != null) {
-                        Log.i("weatherPrefrences", weatherIconString)
-                        var matchesPreferredWeather: Boolean = shoot.preferredWeather.isEmpty()
-                        shoot.preferredWeather.forEach {
-                            if(weatherIconString.contains(it.name.lowercase().replace("_", ""))) {
-                                matchesPreferredWeather = true
-                            }
+                if(weatherIconString != null) {
+                    Log.i("weatherPrefrences", weatherIconString)
+                    var matchesPreferredWeather: Boolean = shoot.preferredWeather.isEmpty()
+                    shoot.preferredWeather.forEach {
+                        if(weatherIconString.contains(it.name.lowercase().replace("_", ""))) {
+                            matchesPreferredWeather = true
                         }
+                    }
 
-                        val indexToReplace = updatedShoots.indexOf(shoot)
-                        if (indexToReplace != -1) {
-                            updatedShoots[indexToReplace] = shoot.copy(weatherMatchesPreferences = matchesPreferredWeather)
-                        }
+                    val indexToReplace = updatedShoots.indexOf(shoot)
+                    if (indexToReplace != -1) {
+                        updatedShoots[indexToReplace] = shoot.copy(weatherMatchesPreferences = matchesPreferredWeather)
                     }
                 }
             }

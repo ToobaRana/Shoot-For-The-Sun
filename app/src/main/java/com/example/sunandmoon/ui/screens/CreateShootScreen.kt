@@ -129,7 +129,7 @@ fun CreateShootScreen(
                         modifier,
                         createShootUIState.locationSearchQuery,
                         createShootUIState.locationSearchResults,
-                        { query: String -> createShootViewModel.setLocationSearchQuery(query) },
+                        { query: String, format: Boolean -> createShootViewModel.setLocationSearchQuery(query, format) },
                         { query: String -> createShootViewModel.loadLocationSearchResults(query) },
                         { location: Location, setTimeZoneOffset: Boolean ->
                             createShootViewModel.setCoordinates(
