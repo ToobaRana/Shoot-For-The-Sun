@@ -54,7 +54,7 @@ class CreateShootViewModel  @Inject constructor(
     val createShootUIState: StateFlow<CreateShootUIState> = _createShootUIState.asStateFlow()
 
     init {
-
+        getCurrentPosition()
     }
 
     fun setLocationSearchQuery(inputQuery: String) {
