@@ -4,7 +4,7 @@
     <string name="Sunset">Sunset</string>
     <string name="Sunrise">Sunrise</string>
     <string name="SolarNoon">SolarNoon</string>
-    <string name="NoData">No weather data available</string>
+    <string name="NoData">No weather data available\n(available 10 days into the future)</string>
 
     <string name="defaultProductionName">My Production</string>
 
@@ -19,6 +19,14 @@
     <string name="Rain">Rain</string>
     <string name="Thunderstorm">Thunderstorm</string>
     <string name="Snow">Snow</string>
+
+    <string name="HomeButton">Home button</string>
+    <string name="ARButton">A R button</string>
+    <string name="TableButton">table button</string>
+
+    <string name="EmptyAddProduction">Empty…\n\n(Add a production)</string>
+    <string name="EmptyAddShoot">Empty…\n\n(Add a shoot)</string>
+    <string name="EmptyAddShootToProduction">Empty…\n\n(Add a shoot to this production)</string>
 
 
     <string name="UseCurrentLocation">Use current location</string>

@@ -108,37 +108,42 @@ fun ProductionSelectionScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
+            var emptyAddSomethingText: String? = null
+            if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal && productionSelectionUIState.productionsList.isEmpty()) {
+                emptyAddSomethingText = stringResource(id = R.string.EmptyAddProduction)
+            } else if (currentPageIndex == SelectionPages.SHOOTS.ordinal && productionSelectionUIState.independentShootsList.isEmpty()) {
+                emptyAddSomethingText = stringResource(id = R.string.EmptyAddShoot)
+            } else if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal && productionSelectionUIState.productionShootsList.isEmpty()) {
+                emptyAddSomethingText = stringResource(id = R.string.EmptyAddShootToProduction)
+            }
+
             if (currentPageIsEmpty) {
-                ProductionShootSelectionTopPart(
-                    modifier,
-                    navigateToCreateShootScreen,
-                    productionSelectionViewModel,
-                    currentPageIndex,
-                    productionSelectionUIState,
-                    goToAboutScreen
-                )
+                Column(modifier.fillMaxSize()) {
+                    ProductionShootSelectionTopPart(
+                        modifier,
+                        navigateToCreateShootScreen,
+                        productionSelectionViewModel,
+                        currentPageIndex,
+                        productionSelectionUIState,
+                        goToAboutScreen
+                    )
+                    if (emptyAddSomethingText != null) {
+                        Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                            Spacer(modifier.size(80.dp))
+                            Text(
+                                emptyAddSomethingText,
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
             }
         },
         content = { innerPadding ->
-            var emptyAddSomethingText: String? = null
-            if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal && productionSelectionUIState.productionsList.isEmpty()) {
-                emptyAddSomethingText = "Empty...\n\n(Add a production)"
-            } else if (currentPageIndex == SelectionPages.SHOOTS.ordinal && productionSelectionUIState.independentShootsList.isEmpty()) {
-                emptyAddSomethingText = "Empty...\n\n(Add a shoot)"
-            } else if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal && productionSelectionUIState.productionShootsList.isEmpty()) {
-                emptyAddSomethingText = "Empty...\n\n(Add a shoot to this production)"
-            }
 
-            if (emptyAddSomethingText != null) {
-                Box(modifier = modifier.fillMaxSize()) {
-                    Text(
-                        "Empty...\n\n(Add a production)",
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = modifier.align(Alignment.Center),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            } else {
+
+            if(!currentPageIsEmpty) {
                 LazyColumn(
                     modifier = modifier
                         .fillMaxSize()

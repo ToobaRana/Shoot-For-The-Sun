@@ -65,6 +65,9 @@ class TableViewModel : ViewModel() {
             val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUIState.value.chosenDate.toLocalDate())
             setSameDaysFromJanuaryList(sameDaysListFromJanuary)
 
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
             for (date in sameDaysListFromJanuary.sorted()){
                 val offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
                 var offsetString: String
@@ -160,21 +163,21 @@ class TableViewModel : ViewModel() {
 
                 val stringDate = date.toString() + " 12:00"
                 Log.d("stringDate", stringDate)
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+
                 val dateTime = LocalDateTime.parse(stringDate, formatter)
 
                 val calculationSunTime = getSunRiseNoonFall(dateTime, offsetToFindSign, tableUIState.value.location)
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
-                    calculationsDateTableList.add(calculationSunTime[0])
+                    calculationsDateTableList.add(calculationSunTime[0].format(timeFormatter))
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    calculationsDateTableList.add(calculationSunTime[1])
+                    calculationsDateTableList.add(calculationSunTime[1].format(timeFormatter))
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunset"){
-                    calculationsDateTableList.add(calculationSunTime[2])
+                    calculationsDateTableList.add(calculationSunTime[2].format(timeFormatter))
                 }
 
             }
@@ -276,10 +279,10 @@ class TableViewModel : ViewModel() {
     fun setTheSunset(month: String): List<String>{
 
         val sortedElements1 = tableUIState.value.timeZoneListTableScreen.subList(4, 12).sorted()
-// Sort elements from index 1 to 3
+        // Sort elements from index 1 to 3
         val sortedElements2 = tableUIState.value.timeZoneListTableScreen.subList(1, 4).sorted()
 
-// Combine the sorted elements into a new list
+        // Combine the sorted elements into a new list
         return sortedElements1 + sortedElements2
     }
 
@@ -328,20 +331,17 @@ class TableViewModel : ViewModel() {
         }
     }
 
-    fun setCoordinates(newLatitude: Double, newLongitude: Double, setTimeZoneOffset: Boolean) {
+    fun setCoordinates(newLocation: Location, setTimeZoneOffset: Boolean) {
         viewModelScope.launch {
             if(setTimeZoneOffset) {
-                val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLatitude, newLongitude)
+                val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLocation)
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset, locationTimeZoneOffsetResult.timezone_id)
             }
 
 
             _tableUIState.update { currentState ->
                 currentState.copy(
-                    location = Location("").apply {
-                        latitude = newLatitude
-                        longitude = newLongitude
-                    }
+                    location = newLocation
                 )
             }
             loadSunInformation()

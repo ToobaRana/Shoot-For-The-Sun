@@ -74,20 +74,16 @@ class ARViewModel  @Inject constructor(
         }
     }
 
-    fun setCoordinates(newLatitude: Double, newLongitude: Double, setTimeZoneOffset: Boolean) {
+    fun setCoordinates(newLocation: Location, setTimeZoneOffset: Boolean) {
         Log.i("ararar","aaa 1.5")
         viewModelScope.launch {
             Log.i("ararar","aaa 1.75")
             if (setTimeZoneOffset) {
                 val locationTimeZoneOffsetResult =
-                    dataSource.fetchLocationTimezoneOffset(newLatitude, newLongitude)
+                    dataSource.fetchLocationTimezoneOffset(newLocation)
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
             }
 
-            val newLocation = Location("").apply {
-                latitude = newLatitude
-                longitude = newLongitude
-            }
             Log.i("ararar","aaa 1.9")
 
             _arUIState.update { currentState ->
@@ -110,11 +106,10 @@ class ARViewModel  @Inject constructor(
         Log.i("ararar","aaa0")
         viewModelScope.launch() {
             Log.i("ararar","aaa 0.5")
-            fetchLocation(fusedLocationProviderClient) { latitude: Double, longitude: Double, setTimeZoneOffset: Boolean ->
+            fetchLocation(fusedLocationProviderClient) { location: Location, setTimeZoneOffset: Boolean ->
                 Log.i("ararar","aaa1")
                 setCoordinates(
-                    latitude,
-                    longitude,
+                    location,
                     setTimeZoneOffset
                 )
             }

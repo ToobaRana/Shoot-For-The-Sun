@@ -1,31 +1,28 @@
 package com.example.sunandmoon.data
 
 //import android.R
-import android.R
-import android.annotation.SuppressLint
-import android.provider.Settings.Global.getString
+
+import android.location.Location
 import android.util.Log
 import com.example.sunandmoon.BuildConfig
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
-
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import com.example.sunandmoon.model.LocationTimeZoneOffsetResultModel.LocationTimeZoneOffsetResult
 import com.example.sunandmoon.model.SunriseModel.Sunrise3
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LastLocationRequest
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.serialization.gson.*
-
+import org.json.JSONObject
 
 
 class DataSource() {
 
     val baseURLMet: String = "https://api.met.no/weatherapi/sunrise/3.0/"
-    val baseURLNominatim: String = "https://nominatim.openstreetmap.org/search"
+    val baseURLNominatimSearch: String = "https://nominatim.openstreetmap.org/search"
+    val baseURLNominatimReverse: String = "https://nominatim.openstreetmap.org/reverse"
     val baseURLWheretheiss: String = "https://api.wheretheiss.at/v1/coordinates/"
     val baseURLLocationForecast : String = "https://api.met.no/weatherapi/locationforecast/2.0/complete"
 
@@ -57,17 +54,28 @@ class DataSource() {
 
     // example: https://nominatim.openstreetmap.org/search?q=oslo&format=json&addressdetails=1&limit=10
     suspend fun fetchLocationSearchResults(query: String, limit: Int): List<LocationSearchResults>{
-        val endPoint = "$baseURLNominatim?q=$query&format=json&addressdetails=1&limit=$limit&accept-language=en"
+        val endPoint = "$baseURLNominatimSearch?q=$query&format=json&addressdetails=1&limit=$limit&accept-language=en"
 
         val apiResults: List<LocationSearchResults> = client.get(endPoint).body()
 
         return apiResults
+    }
 
+    // example: https://nominatim.openstreetmap.org/reverse?lat=59.961266&lon=10.7813993&format=json
+    // returns the display name of the given location
+    suspend fun fetchReverseGeocoding(location: Location): String {
+        val endPoint =
+            "$baseURLNominatimReverse?lat=${location.latitude}&lon=${location.longitude}&format=json&accept-language=en"
+
+        val apiResult: String = client.get(endPoint).body()
+        val jObject = JSONObject(apiResult)
+
+        return jObject.get("display_name") as String
     }
 
     // example: https://api.wheretheiss.at/v1/coordinates/59.943965,10.7178129
-    suspend fun fetchLocationTimezoneOffset(latitude: Double, longitude: Double): LocationTimeZoneOffsetResult {
-        val endPoint = "$baseURLWheretheiss$latitude,$longitude"
+    suspend fun fetchLocationTimezoneOffset(location: Location): LocationTimeZoneOffsetResult {
+        val endPoint = "$baseURLWheretheiss${location.latitude},${location.longitude}"
 
         val apiResults: LocationTimeZoneOffsetResult = client.get(endPoint).body()
 
@@ -93,14 +101,14 @@ class DataSource() {
 
 fun fetchLocation(
     fusedLocationClient: FusedLocationProviderClient,
-    setCoordinates: (latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) -> Unit
+    setCoordinates: (location: Location, setTimeZoneOffset: Boolean) -> Unit
 ) {
     try {
         Log.i("ararar", "fetch location attempt")
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             Log.i("ararar", "fetch location success")
             if (location != null) {
-                setCoordinates(location.latitude, location.longitude, true)
+                setCoordinates(location, true)
             } else {
                 Log.d("Location", "Last known location is not available")
                 // Handle the case where location is null

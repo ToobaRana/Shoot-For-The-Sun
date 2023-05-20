@@ -24,7 +24,7 @@ import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
-
+import java.time.format.DateTimeFormatter
 
 
 @HiltViewModel
@@ -75,7 +75,8 @@ class ShootInfoViewModel @Inject constructor(
                     )
                 }
                 val sunTimes = getSunRiseNoonFall(shoot.dateTime, shoot.timeZoneOffset, shoot.location)
-                setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
+                val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                setSolarTimes(sunTimes[0].format(formatter), sunTimes[1].format(formatter), sunTimes[2].format(formatter))
 
                 loadLocationForecast()
             }
