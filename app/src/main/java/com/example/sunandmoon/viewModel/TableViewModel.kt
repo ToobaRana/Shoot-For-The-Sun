@@ -67,17 +67,13 @@ class TableViewModel : ViewModel() {
 
             for (date in sameDaysListFromJanuary.sorted()){
                 val offsetToFindSignDouble = findOffset(tableUIState.value.timezone_id, date.toString())
-                var offsetString: String
-                offsetString = formatTheOffset(offsetToFindSignDouble)
+                var offsetString: String = formatTheOffset(offsetToFindSignDouble)
 
                 //update UiState
                 setTimeZoneStringApi(offsetString)
                 timeZoneListTableScreen.add(offsetString)
 
-                Log.d("offsetString", offsetString + date)
-
                 val stringDate = date.toString() + " 12:00"
-                Log.d("stringDate", stringDate)
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                 val dateTime = LocalDateTime.parse(stringDate, formatter)
 
@@ -100,33 +96,8 @@ class TableViewModel : ViewModel() {
 
             for (date in sameDaysList.sorted()){
                 val offsetToFindSignDouble = findOffset(tableUIState.value.timezone_id, date.toString())
-                var offsetString: String
 
-                offsetString = formatTheOffset(offsetToFindSignDouble)
-
-                Log.d("offsetToFindSign", offsetToFindSignDouble.toString())
-
-                val offsetList = offsetToFindSignDouble.toString().split(".")
-                Log.d("offsetList", offsetList.toString())
-                val hours = offsetList[0]
-
-                Log.d("hours", hours)
-                val hoursWithOutSign = hours.split("")[2]
-                Log.d("hoursWithOutSign", hoursWithOutSign)
-                val minutes = offsetList[1]
-                Log.d("minutesDecimal", minutes)
-
-                var convertToMinutes = convertToMinutesFunction(minutes)
-                Log.d("convertToMinutes", convertToMinutes)
-
-
-
-
-
-
-                //println(offset)
-                println(tableUIState.value.offsetStringForApi)
-
+                val offsetString: String = formatTheOffset(offsetToFindSignDouble)
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
@@ -208,7 +179,7 @@ class TableViewModel : ViewModel() {
             )
         }
     }
-    fun setTimeZoneStringApi(offsetStringForApi: String){
+    private fun setTimeZoneStringApi(offsetStringForApi: String){
         _tableUIState.update { currentState ->
             currentState.copy(
                 offsetStringForApi = offsetStringForApi,
@@ -216,18 +187,6 @@ class TableViewModel : ViewModel() {
             )
         }
     }
-
-    fun setTheSunset(month: String): List<String>{
-
-        val sortedElements1 = tableUIState.value.timeZoneListTableScreen.subList(4, 12).sorted()
-// Sort elements from index 1 to 3
-        val sortedElements2 = tableUIState.value.timeZoneListTableScreen.subList(1, 4).sorted()
-
-// Combine the sorted elements into a new list
-        return sortedElements1 + sortedElements2
-    }
-
-
 
     fun setLocationSearchQuery(inputQuery: String) {
         _tableUIState.update { currentState ->
@@ -333,8 +292,8 @@ class TableViewModel : ViewModel() {
 
 
     private fun convertToMinutesFunction(minutes: String): String{
-        var doubleMinutes = ("0." + minutes).toDouble()
-        var minutes = doubleMinutes * 60
+        val doubleMinutes = ("0." + minutes).toDouble()
+        val minutes = doubleMinutes * 60
         return minutes.toString().split(".")[0]
 
 
@@ -423,12 +382,6 @@ class TableViewModel : ViewModel() {
         return offsetString
 
     }
-
-
-
-
-
-
 
 
 }
