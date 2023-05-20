@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,11 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                     .fillMaxWidth()
                     .height(IntrinsicSize.Min)
             ) {
+                var iconColor = MaterialTheme.colorScheme.onPrimary
+                if(shoot.weatherMatchesPreferences != null) {
+                    if(shoot.weatherMatchesPreferences) iconColor = Color.Green
+                    else iconColor = Color.Red
+                }
                 Icon(
                     painterResource(R.drawable.bell_icon),
                     "Notification icon",
@@ -42,7 +48,7 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                         .align(CenterVertically)
                         .padding(8.dp, 0.dp)
                         .size(32.dp),
-                    MaterialTheme.colorScheme.onPrimary
+                    iconColor
                 )
                 Divider(
                     color = MaterialTheme.colorScheme.background,
@@ -60,8 +66,8 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                     .fillMaxWidth()
                     .padding(18.dp)
             ) {
-                Text(text = shoot.date.toLocalDate().toString(), fontSize = 18.sp, modifier = modifier.weight(1f))
-                Text(text = shoot.date.toLocalTime().toString(), textAlign = TextAlign.End, fontSize = 18.sp, modifier = modifier.weight(1f))
+                Text(text = shoot.dateTime.toLocalDate().toString(), fontSize = 18.sp, modifier = modifier.weight(1f))
+                Text(text = shoot.dateTime.toLocalTime().toString(), textAlign = TextAlign.End, fontSize = 18.sp, modifier = modifier.weight(1f))
             }
         }
     }

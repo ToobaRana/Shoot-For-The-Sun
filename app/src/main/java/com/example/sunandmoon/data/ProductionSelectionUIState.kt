@@ -4,6 +4,7 @@ import com.example.sunandmoon.data.localDatabase.dao.ProductionOrderBy
 import com.example.sunandmoon.data.localDatabase.dao.ShootOrderBy
 import com.example.sunandmoon.data.util.Production
 import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 import com.example.sunandmoon.viewModel.SelectionPages
 
 // currentPageIndex is 0 if on "productions" page or 1 if on "all shoots" page
@@ -19,4 +20,5 @@ data class ProductionSelectionUIState (
     val shootOrderBy: ShootOrderBy = ShootOrderBy.DATE_TIME,
 
     val showPreferredWeatherDialog: Boolean = false,
+    val weatherData: LocationForecast? = null
 )

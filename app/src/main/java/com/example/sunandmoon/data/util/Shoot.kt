@@ -1,6 +1,7 @@
 package com.example.sunandmoon.data.util
 
 import android.location.Location
+import com.example.sunandmoon.data.PreferableWeather
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -12,7 +13,9 @@ data class Shoot(
         latitude = 59.943965
         longitude = 10.7178129
     },
-    val date: LocalDateTime = LocalDateTime.now().withSecond(0).withNano(0),
+    val dateTime: LocalDateTime = LocalDateTime.now().withSecond(0).withNano(0),
     val timeZoneOffset: Double = 2.0,
-    val parentProductionId: Int? = null
+    val parentProductionId: Int? = null,
+    val preferredWeather: List<PreferableWeather>,
+    val weatherMatchesPreferences: Boolean? = null
 )

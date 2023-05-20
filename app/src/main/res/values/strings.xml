@@ -13,6 +13,14 @@
     <string name="SunPosition">Sun position:</string>
     <string name="PreferredWeather">Preferred Weather:</string>
 
+    <string name="ClearSky">Clear sky</string>
+    <string name="Fair">Fair</string>
+    <string name="Cloudy">Cloudy</string>
+    <string name="Rain">Rain</string>
+    <string name="Thunderstorm">Thunderstorm</string>
+    <string name="Snow">Snow</string>
+
+
     <string name="UseCurrentLocation">Use current location</string>
 
     <string name="Date">Date:</string>
@@ -31,6 +39,7 @@
         <item>Protection essential</item>
         <item>Extra protection is needed</item>
         <item>Stay inside</item>
+        <item>No UV data available</item>
     </string-array>
 
 

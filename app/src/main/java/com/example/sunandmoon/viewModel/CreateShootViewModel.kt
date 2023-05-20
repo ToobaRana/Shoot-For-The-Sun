@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.CreateShootUIState
 import com.example.sunandmoon.data.DataSource
+import com.example.sunandmoon.data.PreferableWeather
 import com.example.sunandmoon.data.fetchLocation
 import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
@@ -199,8 +200,9 @@ class CreateShootViewModel  @Inject constructor(
                     locationName = _createShootUIState.value.locationSearchQuery,
                     latitude = _createShootUIState.value.latitude,
                     longitude = _createShootUIState.value.longitude,
-                    date = _createShootUIState.value.chosenDate,
+                    dateTime = _createShootUIState.value.chosenDate,
                     timeZoneOffset = _createShootUIState.value.timeZoneOffset,
+                    preferredWeather = _createShootUIState.value.preferredWeather
                 )
 
                 if(shootId != 0) {
@@ -260,8 +262,8 @@ class CreateShootViewModel  @Inject constructor(
 
     }
     private fun setLocationQuery(){
-        val newPlace = //reverseApi-call
         viewModelScope.launch {
+            val newPlace = //reverseApi-call
             _createShootUIState.update { currentState ->
                 currentState.copy(
                     //locationSearchQuery = newPlace
@@ -299,6 +301,23 @@ class CreateShootViewModel  @Inject constructor(
             3 -> updateTime(LocalTime.parse(sunTimes[2]))
         }
 
+    }
+
+    fun setUnsetPreferredWeather(preferableWeather: PreferableWeather){
+        if(preferableWeather in _createShootUIState.value.preferredWeather) {
+            _createShootUIState.update { currentState ->
+                currentState.copy(
+                    preferredWeather = _createShootUIState.value.preferredWeather.minus(preferableWeather)
+                )
+            }
+        }
+        else {
+            _createShootUIState.update { currentState ->
+                currentState.copy(
+                    preferredWeather = _createShootUIState.value.preferredWeather.plus(preferableWeather)
+                )
+            }
+        }
     }
 }
 

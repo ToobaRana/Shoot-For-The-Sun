@@ -74,7 +74,7 @@ class ShootInfoViewModel @Inject constructor(
                         shoot = shoot
                     )
                 }
-                val sunTimes = getSunRiseNoonFall(shoot.date, shoot.timeZoneOffset, shoot.location)
+                val sunTimes = getSunRiseNoonFall(shoot.dateTime, shoot.timeZoneOffset, shoot.location)
                 setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
 
                 loadLocationForecast()

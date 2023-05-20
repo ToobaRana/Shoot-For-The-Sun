@@ -27,6 +27,7 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.checkPermissions
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
+import com.example.sunandmoon.ui.components.userInputComponents.PreferredWeatherComponent
 import com.example.sunandmoon.ui.components.userInputComponents.SunPositionTime
 import com.example.sunandmoon.ui.components.userInputComponents.TimepickerComponent
 import com.example.sunandmoon.viewModel.CreateShootViewModel
@@ -241,14 +242,32 @@ fun CreateShootScreen(
 
                 }
                 item {
-                    Text(
-                        modifier = modifier,
-                        text = stringResource(R.string.PreferredWeather),
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontFamily = FontFamily(Font(R.font.nunito))
-                    )
+                    Spacer(modifier = modifier.size(20.dp))
+                    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start){
+                        Spacer(modifier = modifier.width(20.dp))
+                        Text(
+                            modifier = modifier,
+                            text = stringResource(R.string.PreferredWeather),
+                            fontSize = 20.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontFamily = FontFamily(Font(R.font.nunito))
 
+
+                        )
+                    }
+
+                }
+                item {
+                    Row(
+                        modifier
+                            .fillMaxWidth()
+                            .wrapContentSize()
+                    ) {
+                        PreferredWeatherComponent(
+                            modifier = modifier,
+                            preferredWeather = createShootUIState.preferredWeather,
+                        )
+                    }
                 }
                 item {
                     Button(onClick = {
