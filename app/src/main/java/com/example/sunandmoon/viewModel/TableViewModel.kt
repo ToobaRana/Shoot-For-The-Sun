@@ -65,6 +65,9 @@ class TableViewModel : ViewModel() {
             val sameDaysListFromJanuary = getSameDaysInYearFromJanuary(tableUIState.value.chosenDate.toLocalDate())
             setSameDaysFromJanuaryList(sameDaysListFromJanuary)
 
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
             for (date in sameDaysListFromJanuary.sorted()){
                 val offsetToFindSignDouble = findOffset(tableUIState.value.timezone_id, date.toString())
                 var offsetString: String = formatTheOffset(offsetToFindSignDouble)
@@ -74,22 +77,23 @@ class TableViewModel : ViewModel() {
                 timeZoneListTableScreen.add(offsetString)
 
                 val stringDate = date.toString() + " 12:00"
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                Log.d("stringDate", stringDate)
+
                 val dateTime = LocalDateTime.parse(stringDate, formatter)
 
                 val calculationSunTime = getSunRiseNoonFall(dateTime, offsetToFindSignDouble, tableUIState.value.location)
                 Log.d("offsetToFindSign", offsetToFindSignDouble.toString())
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
-                    calculationsDateTableList.add(calculationSunTime[0])
+                    calculationsDateTableList.add(calculationSunTime[0].format(timeFormatter))
                 }
 
                 if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    calculationsDateTableList.add(calculationSunTime[1])
+                    calculationsDateTableList.add(calculationSunTime[1].format(timeFormatter))
                 }
 
                 if (tableUIState.value.chosenSunType == "Sunset"){
-                    calculationsDateTableList.add(calculationSunTime[2])
+                    calculationsDateTableList.add(calculationSunTime[2].format(timeFormatter))
                 }
 
             }
@@ -231,20 +235,17 @@ class TableViewModel : ViewModel() {
         }
     }
 
-    fun setCoordinates(newLatitude: Double, newLongitude: Double, setTimeZoneOffset: Boolean) {
+    fun setCoordinates(newLocation: Location, setTimeZoneOffset: Boolean) {
         viewModelScope.launch {
             if(setTimeZoneOffset) {
-                val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLatitude, newLongitude)
+                val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLocation)
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset, locationTimeZoneOffsetResult.timezone_id)
             }
 
 
             _tableUIState.update { currentState ->
                 currentState.copy(
-                    location = Location("").apply {
-                        latitude = newLatitude
-                        longitude = newLongitude
-                    }
+                    location = newLocation
                 )
             }
             loadSunInformation()

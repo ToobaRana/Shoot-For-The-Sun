@@ -1,5 +1,6 @@
 package com.example.sunandmoon.ui.screens
 
+import android.location.Location
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -25,7 +26,7 @@ fun LocationSearch(
     locationSearchResults: List<LocationSearchResults>,
     setLocationSearchQuery: (query: String) -> Unit,
     loadLocationSearchResults: (query: String) -> Unit,
-    setCoordinates: (latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) -> Unit,
+    setCoordinates: (location: Location, setTimeZoneOffset: Boolean) -> Unit,
 ) {
 
     //val shootInfoUIState by createShootViewModel.createShootUIState.collectAsState()
@@ -78,14 +79,15 @@ fun LocationSearch(
                 modifier = modifier.width(IntrinsicSize.Max)
             ) {
                 locationSearchResults.forEachIndexed { index, item ->
+
                     Text(
                         text = item.display_name,
                         modifier = modifier
                             .fillMaxWidth()
                             .clickable {
                                 isDropdownExpanded = false
-                                setCoordinates(item.lat.toDouble(), item.lon.toDouble(), true)
-                                setLocationSearchQuery(item.display_name.split(",")[0])
+                                setCoordinates(Location("").apply { latitude = item.lat.toDouble(); longitude = item.lon.toDouble() }, true)
+                                setLocationSearchQuery(item.display_name.split(",").first() + ", " + item.display_name.split(",").last())
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)
                     )

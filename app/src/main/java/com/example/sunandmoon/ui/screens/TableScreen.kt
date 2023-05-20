@@ -98,10 +98,9 @@ fun TableView(
                                 query
                             )
                         },
-                        setCoordinates = { newLatitude: Double, newLongitude: Double, setTimeZoneOffset: Boolean ->
+                        setCoordinates = { newLocation, setTimeZoneOffset: Boolean ->
                             tableViewModel.setCoordinates(
-                                newLatitude,
-                                newLongitude,
+                                newLocation,
                                 setTimeZoneOffset
                             )
                         }

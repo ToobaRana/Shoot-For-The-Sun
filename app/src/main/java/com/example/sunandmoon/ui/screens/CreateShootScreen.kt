@@ -1,6 +1,7 @@
 package com.example.sunandmoon.ui.screens
 
 
+import android.location.Location
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -130,10 +131,9 @@ fun CreateShootScreen(
                         createShootUIState.locationSearchResults,
                         { query: String -> createShootViewModel.setLocationSearchQuery(query) },
                         { query: String -> createShootViewModel.loadLocationSearchResults(query) },
-                        { latitude: Double, longitude: Double, setTimeZoneOffset: Boolean ->
+                        { location: Location, setTimeZoneOffset: Boolean ->
                             createShootViewModel.setCoordinates(
-                                latitude,
-                                longitude,
+                                location,
                                 setTimeZoneOffset
                             )
                         },

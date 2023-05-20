@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import kotlin.math.*
 
 //https://gml.noaa.gov/grad/solcalc/solareqns.PDF
@@ -33,9 +34,8 @@ typealias Radian = Double
 fun Degree.toRadian(): Radian = this / 180 * Math.PI
 fun Radian.toDegree(): Degree = this * 180 / Math.PI
 
-// Calculates and returns a list of sunrise and sunset and sunset (as strings)
-// longitude is in degrees (positive to the east of the Prime Meridian)
-fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, location: Location): List<String> {
+// Calculates and returns a list of sunrise and solar noon and sunset (as LocalTime objects)
+fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, location: Location): List<LocalTime> {
 
     val latitude: Degree =  location.latitude
     val longitude: Degree = location.longitude
@@ -54,14 +54,14 @@ fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, loc
     val solarNoonTime = 720 - 4 * longitude - eqtime
 
 
-    val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+    //val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
     val sunriseTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((sunriseTime) * 60 + 3600 * timeZoneOffset).toLong())
     val sunsetTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((sunsetTime) * 60 + 3600 * timeZoneOffset).toLong())
     val solarNoonTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((solarNoonTime) * 60 + 3600 * timeZoneOffset).toLong())
 
-    val sunriseTimeLocalTimeRounded = roundToNearestMinute(sunriseTimeLocalTime.format(formatter))
+    /*val sunriseTimeLocalTimeRounded = roundToNearestMinute(sunriseTimeLocalTime.format(formatter))
     val sunsetTimeLocalTimeRounded = roundToNearestMinute(solarNoonTimeLocalTime.format(formatter))
-    val solarNoonTimeLocalTimeRounded = roundToNearestMinute(sunsetTimeLocalTime.format(formatter))
+    val solarNoonTimeLocalTimeRounded = roundToNearestMinute(sunsetTimeLocalTime.format(formatter))*/
 
     Log.i("matte", "_______________________________________________________")
     Log.i("matte", localDateTime.toString())
@@ -72,13 +72,13 @@ fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, loc
     Log.i("matte", "decl radian: $decl, decl degrees: ${decl.toDegree()}")
     Log.i("matte", "haSunrise: $haSunrise")
     Log.i("matte", "haSunset: $haSunset")
-    Log.i("matte", "sunriseTimeLocalTime: " + sunriseTimeLocalTime.format(formatter))
-    Log.i("matte", "solarNoonTimeLocalTime: " + solarNoonTimeLocalTime.format(formatter))
-    Log.i("matte", "sunriseTimeLocalTime: " + sunsetTimeLocalTime.format(formatter))
+    Log.i("matte", "sunriseTimeLocalTime: $sunriseTimeLocalTime")
+    Log.i("matte", "solarNoonTimeLocalTime: $solarNoonTimeLocalTime")
+    Log.i("matte", "sunriseTimeLocalTime: $sunsetTimeLocalTime")
     Log.i("matte", "_______________________________________________________")
 
 
-    return listOf(sunriseTimeLocalTimeRounded, sunsetTimeLocalTimeRounded, solarNoonTimeLocalTimeRounded)
+    return listOf(roundToNearestMinute(sunriseTimeLocalTime), roundToNearestMinute(solarNoonTimeLocalTime), roundToNearestMinute(sunsetTimeLocalTime))
 }
 
 fun calculateHourDecimal(localDateTime: LocalDateTime, timeZoneOffset: Double): Double {
@@ -177,15 +177,6 @@ fun calculateSunPosition(localDateTime: LocalDateTime, timeZoneOffset: Double, l
     return Pair(azimuthAngle, zenithAngle.toDegree())
 }
 
-fun roundToNearestMinute(timeStringHHmmss: String): String {
-    val hoursString: String = timeStringHHmmss.split(":")[0]
-    val minutes: Int = timeStringHHmmss.split(":")[1].toInt()
-    val seconds: Double = timeStringHHmmss.split(":")[2].toDouble()
-
-    var minutesString: String = (minutes + round(seconds/60)).toInt().toString()
-    if(minutesString.length == 1) {
-        minutesString = "0" + minutesString
-    }
-
-    return "$hoursString:$minutesString"
+fun roundToNearestMinute(time: LocalTime): LocalTime {
+    return time.truncatedTo(ChronoUnit.MINUTES)
 }

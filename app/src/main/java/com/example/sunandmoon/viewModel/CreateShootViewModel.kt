@@ -90,17 +90,17 @@ class CreateShootViewModel  @Inject constructor(
         }
     }
 
-    fun setCoordinates(latitude: Double, longitude: Double, setTimeZoneOffset: Boolean) {
+    fun setCoordinates(location: Location, setTimeZoneOffset: Boolean) {
         viewModelScope.launch {
             if (setTimeZoneOffset) {
                 val locationTimeZoneOffsetResult =
-                    dataSource.fetchLocationTimezoneOffset(latitude, longitude)
+                    dataSource.fetchLocationTimezoneOffset(location)
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset)
             }
             _createShootUIState.update { currentState ->
                 currentState.copy(
-                    latitude = latitude,
-                    longitude = longitude
+                    latitude = location.latitude,
+                    longitude = location.longitude
                 )
             }
             updateTimeOfChosenSunPosition()
@@ -112,14 +112,13 @@ class CreateShootViewModel  @Inject constructor(
     fun getCurrentPosition() {
         viewModelScope.launch() {
 
-                fetchLocation(fusedLocationProviderClient) { latitude: Double, longitude: Double, setTimeZoneOffset: Boolean ->
-                    setCoordinates(
-                        latitude,
-                        longitude,
-                        setTimeZoneOffset
-                    )
-                }
-
+            fetchLocation(fusedLocationProviderClient) { location: Location, setTimeZoneOffset: Boolean ->
+                setCoordinates(
+                    location,
+                    setTimeZoneOffset
+                )
+                setLocationQuery(location)
+            }
 
         }
     }
@@ -129,20 +128,6 @@ class CreateShootViewModel  @Inject constructor(
             currentState.copy(
                 chosenDate = LocalDateTime.of(year, month, day, 12, 0, 0)
             )
-        }
-    }
-
-    fun loadTimeZoneOffset(latitude: Double, longitude: Double) {
-        viewModelScope.launch {
-            try {
-                val locationTimeZoneOffsetResult =
-                    dataSource.fetchLocationTimezoneOffset(latitude, longitude)
-
-                setTimeZoneOffset(locationTimeZoneOffsetResult.offset)
-
-            } catch (e: Throwable) {
-                Log.d("error", "uh oh" + e.toString())
-            }
         }
     }
 
@@ -240,6 +225,7 @@ class CreateShootViewModel  @Inject constructor(
             }
         }
     }
+
     fun updateTime(time: LocalTime){
         val newDateTime = _createShootUIState.value.chosenDate.withHour(time.hour).withMinute(time.minute)
         viewModelScope.launch {
@@ -250,6 +236,7 @@ class CreateShootViewModel  @Inject constructor(
             }
         }
     }
+
     //activates and deactivates timepicker
     fun timePickerSwitch(enabled: Boolean){
         viewModelScope.launch {
@@ -261,20 +248,19 @@ class CreateShootViewModel  @Inject constructor(
         }
 
     }
-    private fun setLocationQuery(){
+
+    private fun setLocationQuery(location: Location){
         viewModelScope.launch {
-            val newPlace = //reverseApi-call
+            val locationName = dataSource.fetchReverseGeocoding(location)
             _createShootUIState.update { currentState ->
                 currentState.copy(
-                    //locationSearchQuery = newPlace
+                    locationSearchQuery = locationName.split(",").first() + ", " + locationName.split(",").last()
                 )
             }
         }
     }
+
     fun updateSunPositionIndex(newIndex: Int){
-
-
-
         viewModelScope.launch {
             _createShootUIState.update { currentState ->
                 currentState.copy(
@@ -283,8 +269,8 @@ class CreateShootViewModel  @Inject constructor(
             }
             updateTimeOfChosenSunPosition()
         }
-
     }
+
     private fun updateTimeOfChosenSunPosition(){
         val sunTimes = getSunRiseNoonFall(
             localDateTime = _createShootUIState.value.chosenDate,
@@ -296,9 +282,9 @@ class CreateShootViewModel  @Inject constructor(
         )
         when(_createShootUIState.value.chosenSunPositionIndex){
             0 -> updateTime(LocalTime.now().withSecond(0).withNano(0))
-            1 -> updateTime(LocalTime.parse(sunTimes[0]))
-            2 -> updateTime(LocalTime.parse(sunTimes[1]))
-            3 -> updateTime(LocalTime.parse(sunTimes[2]))
+            1 -> updateTime(sunTimes[0])
+            2 -> updateTime(sunTimes[1])
+            3 -> updateTime(sunTimes[2])
         }
 
     }

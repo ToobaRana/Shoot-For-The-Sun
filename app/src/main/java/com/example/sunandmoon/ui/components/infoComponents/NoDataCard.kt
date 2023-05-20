@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 
 @Composable
@@ -29,8 +30,8 @@ fun NoDataCard(modifier : Modifier){
             contentColor = MaterialTheme.colorScheme.primary
         )
     ) {
-        Column(modifier = modifier.align(CenterHorizontally).padding(60.dp)) {
-            Text(text = cardText)
+        Column(modifier = modifier.align(CenterHorizontally).fillMaxHeight(0.9f), verticalArrangement = Arrangement.SpaceAround) {
+            Text(text = cardText, textAlign = TextAlign.Center, lineHeight = 30.sp)
         }
 
     }
