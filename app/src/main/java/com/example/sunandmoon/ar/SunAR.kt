@@ -13,6 +13,7 @@ import android.hardware.camera2.CameraManager
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,11 +26,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.camera.CameraPreview
 import com.example.sunandmoon.util.Permission
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.ui.components.NavigationComposable
+import com.example.sunandmoon.ui.components.buttonComponents.OpenARSettingsButton
+import com.example.sunandmoon.ui.components.userInputComponents.EditARSettings
 import com.example.sunandmoon.viewModel.ARViewModel
 
 
@@ -132,6 +136,7 @@ fun SunARUI(
     hasMagnetometer: Boolean,
     navigateToNextBottomBar: (index: Int) -> Unit,
     arUIState: ARUIState,
+    arViewModel: ARViewModel = viewModel()
 ) {
     // for the AR functionality
     val sunZenith = arUIState.sunZenith
@@ -143,8 +148,26 @@ fun SunARUI(
     // for the non-AR UI part for this screen
     Scaffold(
         containerColor = Color.Transparent,
+        topBar = {
+             Row(modifier.fillMaxWidth().background(Color.Transparent), horizontalArrangement = Arrangement.End) {
+                 OpenARSettingsButton(
+                     modifier,
+                     MaterialTheme.colorScheme.primary,
+                     MaterialTheme.colorScheme.onPrimary,
+                     { arViewModel.openCloseARSettings() }
+                 )
+             }
+        },
         bottomBar = { NavigationComposable(modifier = modifier, page = 1, navigateToNextBottomBar = navigateToNextBottomBar)}
-    ) { val p = it /* just to remove the error message */ }
+    ) {
+        if(arUIState.editARSettingsIsOpened) {
+            EditARSettings(
+                modifier = modifier,
+                arUIState = arUIState
+            )
+        }
+        val p = it /* just to remove the error message */
+    }
 }
 
 
@@ -158,15 +181,7 @@ fun CameraContent(modifier: Modifier = Modifier) {
         rationale = "To use AR-mode, you need to give the app permission to use your camera.",
         permissionNotAvailableContent = {
             Column(modifier) {
-                Text("O noes! No Camera!")
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = {
-                    context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.fromParts("package", context.packageName, null)
-                    })
-                }) {
-                    Text("Open Settings")
-                }
+                Text("Missing Camera Permission!")
             }
         }
     ) {

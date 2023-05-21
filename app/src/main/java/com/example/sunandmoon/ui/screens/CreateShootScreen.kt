@@ -158,7 +158,7 @@ fun CreateShootScreen(
                 item {
 
                     CalendarComponent(modifier,
-                        createShootUIState.chosenDate,
+                        createShootUIState.chosenDateTime,
                         updateYear = { year: Int -> createShootViewModel.updateYear(year) },
                         updateMonth = { month: Int, maxDay: Int ->
                             createShootViewModel.updateMonth(
@@ -187,8 +187,8 @@ fun CreateShootScreen(
                         onValueChange = { time: LocalTime ->
                             createShootViewModel.updateTime(time)
                         },
-                        enabled = createShootUIState.timeEnabled,
-                        currentTime = createShootUIState.chosenDate.toLocalTime(),
+                        enabled = createShootUIState.editTimeEnabled,
+                        currentTime = createShootUIState.chosenDateTime.toLocalTime(),
                         colors = TimePickerColors(
                             //cursorColor = MaterialTheme.colorScheme.primary,
                             textColor = MaterialTheme.colorScheme.onSurface,

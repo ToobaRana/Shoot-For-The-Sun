@@ -9,7 +9,11 @@ import java.time.LocalDateTime
 data class ARUIState(
     val sunZenith: Double?,
     val sunAzimuth: Double?,
-    val dateTime: LocalDateTime,
+    val chosenDateTime: LocalDateTime,
     val timeZoneOffset: Double?,
     val location: Location?,
+
+    val editARSettingsIsOpened: Boolean = false,
+    val editTimeEnabled: Boolean = true,
+    val chosenSunPositionIndex: Int = 0,
 )

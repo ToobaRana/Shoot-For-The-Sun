@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
@@ -45,9 +46,9 @@ class CreateShootViewModel  @Inject constructor(
             locationEnabled = false,
             latitude = 59.943965,
             longitude = 10.7178129,
-            chosenDate = LocalDateTime.now().withSecond(0).withNano(0),
+            chosenDateTime = LocalDateTime.now().withSecond(0).withNano(0),
             timeZoneOffset = 2.0,
-            timeEnabled = true,
+            editTimeEnabled = true,
             chosenSunPositionIndex = 0
         )
     )
@@ -108,7 +109,9 @@ class CreateShootViewModel  @Inject constructor(
                     longitude = location.longitude
                 )
             }
-            updateTimeOfChosenSunPosition()
+            if(_createShootUIState.value.chosenSunPositionIndex != 0) {
+                updateTimeToChosenSunPosition()
+            }
         }
         //setLocationQuery()
     }
@@ -131,8 +134,11 @@ class CreateShootViewModel  @Inject constructor(
     fun setNewDate(year: Int, month: Int, day: Int) {
         _createShootUIState.update { currentState ->
             currentState.copy(
-                chosenDate = LocalDateTime.of(year, month, day, 12, 0, 0)
+                chosenDateTime = LocalDateTime.of(LocalDate.of(year, month, day), _createShootUIState.value.chosenDateTime.toLocalTime())
             )
+        }
+        if(_createShootUIState.value.chosenSunPositionIndex != 0) {
+            updateTimeToChosenSunPosition()
         }
     }
 
@@ -147,26 +153,26 @@ class CreateShootViewModel  @Inject constructor(
     fun updateDay(day: Int) {
 
         setNewDate(
-            _createShootUIState.value.chosenDate.year,
-            _createShootUIState.value.chosenDate.monthValue,
+            _createShootUIState.value.chosenDateTime.year,
+            _createShootUIState.value.chosenDateTime.monthValue,
             day
         )
     }
 
     fun updateMonth(month: Int, maxDay: Int) {
-        var day = _createShootUIState.value.chosenDate.dayOfMonth
+        var day = _createShootUIState.value.chosenDateTime.dayOfMonth
 
         if (maxDay < day) {
             day = maxDay
         }
-        setNewDate(_createShootUIState.value.chosenDate.year, month, day)
+        setNewDate(_createShootUIState.value.chosenDateTime.year, month, day)
     }
 
     fun updateYear(year: Int) {
         setNewDate(
             year,
-            _createShootUIState.value.chosenDate.monthValue,
-            _createShootUIState.value.chosenDate.dayOfMonth
+            _createShootUIState.value.chosenDateTime.monthValue,
+            _createShootUIState.value.chosenDateTime.dayOfMonth
         )
     }
 
@@ -190,7 +196,7 @@ class CreateShootViewModel  @Inject constructor(
                     locationName = _createShootUIState.value.locationSearchQuery,
                     latitude = _createShootUIState.value.latitude,
                     longitude = _createShootUIState.value.longitude,
-                    dateTime = _createShootUIState.value.chosenDate,
+                    dateTime = _createShootUIState.value.chosenDateTime,
                     timeZoneOffset = _createShootUIState.value.timeZoneOffset,
                     preferredWeather = _createShootUIState.value.preferredWeather
                 )
@@ -232,11 +238,11 @@ class CreateShootViewModel  @Inject constructor(
     }
 
     fun updateTime(time: LocalTime){
-        val newDateTime = _createShootUIState.value.chosenDate.withHour(time.hour).withMinute(time.minute)
+        val newDateTime = _createShootUIState.value.chosenDateTime.withHour(time.hour).withMinute(time.minute)
         viewModelScope.launch {
             _createShootUIState.update { currentState ->
                 currentState.copy(
-                    chosenDate  = newDateTime
+                    chosenDateTime  = newDateTime
                 )
             }
         }
@@ -247,7 +253,7 @@ class CreateShootViewModel  @Inject constructor(
         viewModelScope.launch {
             _createShootUIState.update { currentState ->
                 currentState.copy(
-                    timeEnabled = enabled
+                    editTimeEnabled = enabled
                 )
             }
         }
@@ -272,13 +278,13 @@ class CreateShootViewModel  @Inject constructor(
                     chosenSunPositionIndex = newIndex
                 )
             }
-            updateTimeOfChosenSunPosition()
+            updateTimeToChosenSunPosition()
         }
     }
 
-    private fun updateTimeOfChosenSunPosition(){
+    private fun updateTimeToChosenSunPosition(){
         val sunTimes = getSunRiseNoonFall(
-            localDateTime = _createShootUIState.value.chosenDate,
+            localDateTime = _createShootUIState.value.chosenDateTime,
             timeZoneOffset = _createShootUIState.value.timeZoneOffset,
             location = Location("").apply {
                 latitude = _createShootUIState.value.latitude

@@ -27,7 +27,9 @@ import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 @HiltViewModel
 class ARViewModel  @Inject constructor(
@@ -40,7 +42,7 @@ class ARViewModel  @Inject constructor(
         ARUIState(
             sunZenith = null,
             sunAzimuth = null,
-            dateTime = LocalDateTime.now(),
+            chosenDateTime = LocalDateTime.now(),
             timeZoneOffset = null,
             location = null,
         )
@@ -55,8 +57,8 @@ class ARViewModel  @Inject constructor(
         //setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
 
-    fun setSunPosition(location: Location, timeZoneOffset: Double) {
-        val sunPosition = calculateSunPosition(_arUIState.value.dateTime, timeZoneOffset, location)
+    private fun setSunPosition(location: Location, timeZoneOffset: Double) {
+        val sunPosition = calculateSunPosition(_arUIState.value.chosenDateTime, timeZoneOffset, location)
         Log.i("matte", sunPosition.second.toString())
         _arUIState.update { currentState ->
             currentState.copy(
@@ -113,6 +115,119 @@ class ARViewModel  @Inject constructor(
                     setTimeZoneOffset
                 )
             }
+        }
+    }
+
+    // the rest is for the AR settings:
+
+    fun openCloseARSettings() {
+        _arUIState.update { currentState ->
+            currentState.copy(
+                editARSettingsIsOpened = !_arUIState.value.editARSettingsIsOpened
+            )
+        }
+    }
+
+    private fun setNewDate(year: Int, month: Int, day: Int) {
+        _arUIState.update { currentState ->
+            currentState.copy(
+                chosenDateTime = LocalDateTime.of(LocalDate.of(year, month, day), _arUIState.value.chosenDateTime.toLocalTime())
+            )
+        }
+
+        if(_arUIState.value.chosenSunPositionIndex != 0) {
+            updateTimeToChosenSunPosition()
+        }
+
+        val location = _arUIState.value.location
+        val timeZoneOffset = _arUIState.value.timeZoneOffset
+        if(location != null && timeZoneOffset != null) {
+            setSunPosition(location, timeZoneOffset)
+        }
+    }
+
+    fun updateDay(day: Int) {
+
+        setNewDate(
+            _arUIState.value.chosenDateTime.year,
+            _arUIState.value.chosenDateTime.monthValue,
+            day
+        )
+    }
+
+    fun updateMonth(month: Int, maxDay: Int) {
+        var day = _arUIState.value.chosenDateTime.dayOfMonth
+
+        if (maxDay < day) {
+            day = maxDay
+        }
+        setNewDate(_arUIState.value.chosenDateTime.year, month, day)
+    }
+
+    fun updateYear(year: Int) {
+        setNewDate(
+            year,
+            _arUIState.value.chosenDateTime.monthValue,
+            _arUIState.value.chosenDateTime.dayOfMonth
+        )
+    }
+
+    fun updateTime(time: LocalTime){
+        val newDateTime = _arUIState.value.chosenDateTime.withHour(time.hour).withMinute(time.minute)
+        viewModelScope.launch {
+            _arUIState.update { currentState ->
+                currentState.copy(
+                    chosenDateTime  = newDateTime
+                )
+            }
+
+            val location = _arUIState.value.location
+            val timeZoneOffset = _arUIState.value.timeZoneOffset
+            if(location != null && timeZoneOffset != null) {
+                setSunPosition(location, timeZoneOffset)
+            }
+        }
+
+
+    }
+
+    fun timePickerSwitch(enabled: Boolean){
+        viewModelScope.launch {
+            _arUIState.update { currentState ->
+                currentState.copy(
+                    editTimeEnabled = enabled
+                )
+            }
+        }
+
+    }
+
+    fun updateSunPositionIndex(newIndex: Int){
+        viewModelScope.launch {
+            _arUIState.update { currentState ->
+                currentState.copy(
+                    chosenSunPositionIndex = newIndex
+                )
+            }
+            updateTimeToChosenSunPosition()
+        }
+    }
+
+    private fun updateTimeToChosenSunPosition(){
+        val timeZoneOffset = _arUIState.value.timeZoneOffset
+        val location = _arUIState.value.location
+        if(timeZoneOffset == null || location == null) return
+
+        val sunTimes = getSunRiseNoonFall(
+            localDateTime = _arUIState.value.chosenDateTime,
+            timeZoneOffset = timeZoneOffset,
+            location = location
+        )
+        when(_arUIState.value.chosenSunPositionIndex){
+            0 -> updateTime(LocalTime.now().withSecond(0).withNano(0))
+            1 -> updateTime(sunTimes[0])
+            2 -> updateTime(sunTimes[1])
+            3 -> updateTime(sunTimes[2])
         }
     }
 }

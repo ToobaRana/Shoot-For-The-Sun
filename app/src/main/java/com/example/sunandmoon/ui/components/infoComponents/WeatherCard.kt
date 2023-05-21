@@ -122,7 +122,7 @@ fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rai
                             modifier.size(35.dp),
                             ThermometerColor
                         )
-                        Text(text = temperature.toString(), modifier.padding(start = 10.dp), fontSize = 20.sp)
+                        Text(text = temperature.toString() + "°C", modifier.padding(start = 10.dp), fontSize = 20.sp)
 
                     }
 
