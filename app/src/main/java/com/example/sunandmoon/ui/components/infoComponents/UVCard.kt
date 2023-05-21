@@ -49,7 +49,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
 
     ) {
 
-        Column(
+        Box(
             modifier = modifier
                 .padding(15.dp)
         ) {
@@ -58,7 +58,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
 
             Row(
                 modifier
-                    .padding(start = 60.dp, top = 5.dp)
+                    .padding(start = 40.dp, top = 10.dp, end = 5.dp)
                     .fillMaxWidth()
             ) {
 

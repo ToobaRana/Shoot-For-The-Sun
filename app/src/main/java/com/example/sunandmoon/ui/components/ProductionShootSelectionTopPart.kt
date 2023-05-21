@@ -1,8 +1,6 @@
 package com.example.sunandmoon.ui.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,18 +35,8 @@ fun ProductionShootSelectionTopPart(
         titleTextToUse = productionSelectionUIState.selectedProduction?.name ?: "My production"
     }
 
-    Column(modifier.fillMaxWidth()) {
-
-        if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal) {
-            GoBackEditDeleteBar(
-                modifier,
-                MaterialTheme.colorScheme.primary,
-                MaterialTheme.colorScheme.background,
-                { productionSelectionViewModel.goOutOfProduction() },
-                { /* TODO */ },
-                { productionSelectionViewModel.deleteProduction() })
-        }
-        else {
+    Box() {
+        if(currentPageIndex != SelectionPages.PRODUCTION_SHOOTS.ordinal) {
             AboutButton(
                 modifier,
                 MaterialTheme.colorScheme.primary,
@@ -57,49 +45,64 @@ fun ProductionShootSelectionTopPart(
             )
         }
 
-        Text(
-            text = titleTextToUse,
-            fontSize = 35.sp,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = 30.dp, top = 30.dp),
-            fontWeight = FontWeight(500)
-        )
-        TextField(
-            value = "",
-            placeholder = { Text("Search...", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
-            onValueChange = { query ->
-            },
-            singleLine = true,
-            modifier = modifier
-                .fillMaxWidth(0.8f)
-                .align(Alignment.CenterHorizontally),
-            leadingIcon = {
-                Icon(
-                    painterResource(R.drawable.search),
-                    "location search field icon",
+        Column(modifier.fillMaxWidth()) {
+            if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal) {
+                GoBackEditDeleteBar(
                     modifier,
-                    MaterialTheme.colorScheme.primary
-                )
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                //cursorColor = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.onSurface,
-                containerColor = MaterialTheme.colorScheme.background,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
+                    MaterialTheme.colorScheme.primary,
+                    MaterialTheme.colorScheme.background,
+                    { productionSelectionViewModel.goOutOfProduction() },
+                    { /* TODO */ },
+                    { productionSelectionViewModel.deleteProduction() })
+            }
+            else {
+                Spacer(modifier = modifier.size(30.dp))
+            }
+
+            Text(
+                text = titleTextToUse,
+                fontSize = 35.sp,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 30.dp, top = 30.dp),
+                fontWeight = FontWeight(500)
             )
-        )
-        if (currentPageIndex != SelectionPages.PRODUCTION_SHOOTS.ordinal) {
-            PagePickerProductionsShoots(modifier, productionSelectionViewModel, currentPageIndex)
+            TextField(
+                value = "",
+                placeholder = { Text("Search...", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
+                onValueChange = { query ->
+                },
+                singleLine = true,
+                modifier = modifier
+                    .fillMaxWidth(0.8f)
+                    .align(Alignment.CenterHorizontally),
+                leadingIcon = {
+                    Icon(
+                        painterResource(R.drawable.search),
+                        "location search field icon",
+                        modifier,
+                        MaterialTheme.colorScheme.primary
+                    )
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    //cursorColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.colorScheme.onSurface,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
+                )
+            )
+            if (currentPageIndex != SelectionPages.PRODUCTION_SHOOTS.ordinal) {
+                PagePickerProductionsShoots(modifier, productionSelectionViewModel, currentPageIndex)
+            }
+            AddNewOrderByButtons(
+                modifier = modifier,
+                currentPageIndex = currentPageIndex,
+                productionSelectionViewModel= productionSelectionViewModel,
+                productionSelectionUIState = productionSelectionUIState,
+                navigateToCreateShootScreen = navigateToCreateShootScreen,
+            )
         }
-        AddNewOrderByButtons(
-            modifier = modifier,
-            currentPageIndex = currentPageIndex,
-            productionSelectionViewModel= productionSelectionViewModel,
-            productionSelectionUIState = productionSelectionUIState,
-            navigateToCreateShootScreen = navigateToCreateShootScreen,
-        )
     }
 }

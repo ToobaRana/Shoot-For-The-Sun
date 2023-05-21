@@ -1,5 +1,6 @@
 package com.example.sunandmoon.ui.components.infoComponents
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -66,7 +67,8 @@ val weatherIcons : Map<String,List<Int>> = mapOf(
 @Composable
 fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rainfall : Double?, weatherIconCode : String){
     val weatherIconSplit: List<String> = weatherIconCode.split("_")
-    val isDay: Boolean = weatherIconSplit[1] == "day"
+    Log.i("wheaterIcon", weatherIconCode)
+    val isDay: Boolean = weatherIconSplit.size < 2 || weatherIconSplit[1] == "day"
     val weatherIcon = weatherIcons[weatherIconSplit[0]]?.get(if(isDay) 0 else 1)
 
 

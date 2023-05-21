@@ -28,7 +28,7 @@ fun WindCard(modifier: Modifier, time: LocalTime, windSpeed : Double?, WindDirec
 
     ) {
 
-        Column(
+        Box(
             modifier = modifier
                 .padding(15.dp)
         ) {
@@ -38,12 +38,12 @@ fun WindCard(modifier: Modifier, time: LocalTime, windSpeed : Double?, WindDirec
 
             Row(
                 modifier
-                    .padding(start = 60.dp, top = 5.dp)
+                    .padding(start = 50.dp, top = 20.dp)
                     .fillMaxWidth()
             ) {
 
 
-                Spacer(modifier = modifier.size(25.dp))
+                Spacer(modifier = modifier.size(20.dp))
 
                 Column(
                 ) {
@@ -52,13 +52,13 @@ fun WindCard(modifier: Modifier, time: LocalTime, windSpeed : Double?, WindDirec
                         painter = painterResource(id = R.drawable.wind),
                         "Wind Image",
                         modifier
-                            .size(60.dp),
+                            .size(60.dp).padding(top = 5.dp),
                         WeatherBlueColor
                     )
                     Text(text = windSpeed.toString() + " m/s", fontSize = 20.sp, modifier = modifier.padding(start = 5.dp))
                 }
                 
-                Spacer(modifier = modifier.size(60.dp))
+                Spacer(modifier = modifier.size(30.dp))
 
 
                 //pic of wind compass
