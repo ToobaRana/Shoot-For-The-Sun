@@ -57,20 +57,8 @@ fun AboutScreen(modifier: Modifier, navigateBack: () -> Unit){
         },
 
 
-        ) { innerPadding ->
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(top = 20.dp)
-        )
-
-        {
-            item {
-
-            }
-        }
-
+        ) { innerPadding -> modifier.padding(10.dp)
+        AboutCard(modifier.padding(innerPadding))
     }
 
 }

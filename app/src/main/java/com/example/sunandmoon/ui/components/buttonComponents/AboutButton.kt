@@ -27,7 +27,7 @@ fun AboutButton(
                 modifier,
                 {
                     Icon(
-                        painterResource(R.drawable.edit_icon),
+                        painterResource(R.drawable.info),
                         "About-button",
                         modifier.size(50.dp),
                         IconColor
