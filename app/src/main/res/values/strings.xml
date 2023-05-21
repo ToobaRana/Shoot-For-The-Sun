@@ -13,6 +13,8 @@
     <string name="SunPosition">Sun position:</string>
     <string name="PreferredWeather">Preferred Weather:</string>
 
+
+
     <string name="ClearSky">Clear sky</string>
     <string name="Fair">Fair</string>
     <string name="Cloudy">Cloudy</string>
@@ -28,6 +30,28 @@
     <string name="EmptyAddShoot">Empty…\n\n(Add a shoot)</string>
     <string name="EmptyAddShootToProduction">Empty…\n\n(Add a shoot to this production)</string>
 
+    <!--Text for About-Screen-->
+    <string name="AppInfo">App Info</string>
+    <string name="AppDescription">This app is supposed to help you plan productions and shoots.</string>
+    <string name="ARDescription">AR:\nFind the sun</string>
+    <string name="TableDescription">Table:\nThe table displays the time for sunrise, solar noon and sunset.
+        It shows both the timing from MET and from our own calculations.
+        On top of that, it displays the timing based on your preferred location.</string>
+
+    <string name="IconDescription">Icons used in our app are from:\n Icons 8 \n Carlo Syllobre \n Selfmade</string>
+    <string name="Icons8">Icons 8</string>
+    <string name="Icons8Link">https://icons8.com/</string>
+    <string name="carlosyllobre">Carlo Syllobre</string>
+    <string name="carlosyllobreLink">https://www.figma.com/community/file/955978734883254712/Weather-Icons-%7C-Flat-%26-Outline</string>
+
+    <!--<string-array name="TeamMembers">
+        <item>Adrian Skansen</item>
+        <item>Amalie Ingela Aaser</item>
+        <item>Henrik Brunvatne Olafsen</item>
+        <item>Maryam Jamil</item>
+        <item>Medina Malsagova</item>
+        <item>Tooba Rana</item>
+    </string-array>-->
 
     <string name="UseCurrentLocation">Use current location</string>
 
@@ -49,20 +73,6 @@
         <item>Stay inside</item>
         <item>No UV data available</item>
     </string-array>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </resources>
 

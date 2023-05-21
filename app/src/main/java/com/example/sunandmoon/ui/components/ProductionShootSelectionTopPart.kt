@@ -52,7 +52,7 @@ fun ProductionShootSelectionTopPart(
             AboutButton(
                 modifier,
                 MaterialTheme.colorScheme.primary,
-                MaterialTheme.colorScheme.background,
+                MaterialTheme.colorScheme.secondary,
                 goToAboutScreen
             )
         }
