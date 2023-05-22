@@ -24,6 +24,10 @@ import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.viewModel.TableViewModel
+import okhttp3.internal.format
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -177,15 +181,19 @@ fun TableView(
                     items(tableUIState.apiDateTableList) { date ->
 
                         val elementInTableUiStateList = date.split("T")
+                        Log.i("elementInTableUiStateList", elementInTableUiStateList.toString())
                         val sunriseTimeListWithOffset = elementInTableUiStateList[1].split("-", "+")
                         val sunriseTime = sunriseTimeListWithOffset[0]
-                        val day = elementInTableUiStateList[0]
+                        val day = elementInTableUiStateList[0] //"${dateObject.dayOfMonth}. ${dateObject.month.toString().substring(0, 3)} ${dateObject.year}"
                         val monthInt = day.split("-")[1].toInt()
+
+                        val dateObject: LocalDate = LocalDate.parse(day, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                        var dag = "${dateObject.dayOfMonth}. ${dateObject.month.toString().substring(0, 3)} ${dateObject.year}"
 
                         TableCard(
                             sunType = chosenSunType,
                             apiSunTime = sunriseTime,
-                            day = day,
+                            day = dag,
                             calculationSunTime = tableUIState.calculationsDateTableList[monthInt-1],
                             offset = tableUIState.timeZoneListTableScreen[monthInt-1],
                             modifier = modifier

@@ -132,7 +132,7 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                     Icon(painter = painterResource(id = R.drawable.calendar), "Calendar Icon", modifier = modifier
                         .size(35.dp)
                         .padding(end = 5.dp), MaterialTheme.colorScheme.primary)
-                    Text(text = date.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
+                    Text(text = "${date.dayOfMonth}. ${date.month.toString().substring(0, 3)} ${date.year}", fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
 
                     Spacer(modifier = modifier.size(30.dp))
 
