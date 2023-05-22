@@ -1,7 +1,6 @@
 package com.example.sunandmoon.ui.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,19 +10,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sunandmoon.R
 import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.ui.components.userInputComponents.dropdownMenuSunType
-import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 import com.example.sunandmoon.viewModel.TableViewModel
 import okhttp3.internal.format
 import java.time.LocalDate
@@ -62,7 +61,7 @@ fun TableView(
         topBar = {
 
             Text(
-                text = "Comparing our calculations to MET-API",
+                text = stringResource(R.string.Comparing),
                 fontSize = 30.sp,
                 textAlign = TextAlign.Center,
                 modifier = modifier.fillMaxWidth()
@@ -122,14 +121,14 @@ fun TableView(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Date",
+                            text = stringResource(R.string.DateTable),
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = modifier.weight(1.5f).padding(start = 10.dp),
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "API",
+                            text = stringResource(R.string.API),
                             fontSize = 20.sp,
                             modifier = modifier
                                 .weight(0.9f),
@@ -139,7 +138,7 @@ fun TableView(
                         )
 
                         Text(
-                            text = "Ours",
+                            text = stringResource(R.string.Ours),
                             fontSize = 20.sp,
                             modifier = modifier
                                 .weight(0.9f),
@@ -149,7 +148,7 @@ fun TableView(
                         )
 
                         Text(
-                            text = "Offset",
+                            text = stringResource(R.string.Offset),
                             fontSize = 20.sp,
                             modifier = modifier
                                 .weight(0.9f),
@@ -163,13 +162,12 @@ fun TableView(
                     items(tableUIState.apiDateTableList) { date ->
 
                         val elementInTableUiStateList = date.split("T")
-                        Log.i("elementInTableUiStateList", elementInTableUiStateList.toString())
                         val sunriseTimeListWithOffset = elementInTableUiStateList[1].split("-", "+")
                         val sunriseTime = sunriseTimeListWithOffset[0]
                         val day = elementInTableUiStateList[0] //"${dateObject.dayOfMonth}. ${dateObject.month.toString().substring(0, 3)} ${dateObject.year}"
                         val monthInt = day.split("-")[1].toInt()
 
-                        val dateObject: LocalDate = LocalDate.parse(day, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                        val dateObject: LocalDate = LocalDate.parse(day, DateTimeFormatter.ofPattern(stringResource(R.string.DateFormat)))
                         var dag = "${dateObject.dayOfMonth}. ${dateObject.month.toString().substring(0, 3)} ${dateObject.year}"
 
                         TableCard(
@@ -219,63 +217,3 @@ fun TableView(
 
 }
 
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: Modifier): String {
-    //Dropdown
-    val options = stringArrayResource(com.example.sunandmoon.R.array.suntype)
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf("Sunrise") }
-
-    //Dropdown menu setup
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }, modifier = modifier.width(310.dp)
-    ) {
-
-        TextField(
-            modifier = modifier.menuAnchor(),
-            readOnly = true,
-            value = selectedOptionText,
-            onValueChange = {},
-            label = { Text("Type", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(
-                placeholderColor = MaterialTheme.colorScheme.primary,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                unfocusedTrailingIconColor = MaterialTheme.colorScheme.primary,
-                focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
-                cursorColor = MaterialTheme.colorScheme.primary,
-                disabledTextColor = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.primary,
-                containerColor = MaterialTheme.colorScheme.onBackground,
-                focusedLabelColor = MaterialTheme.colorScheme.onPrimary
-            ), maxLines = 1
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = modifier.background(MaterialTheme.colorScheme.tertiary)
-        ) {
-            options.forEach { selectionOption ->
-                DropdownMenuItem(
-                    text = { Text(selectionOption, fontSize = 18.sp) },
-                    onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
-                        tableViewModel.setSunType(selectedOptionText)
-                        tableViewModel.loadSunInformation()
-                    },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                )
-            }
-        }
-
-    }
-    //Log.d("dropdownSelectedOptionText", selectedOptionText)
-
-    return selectedOptionText
-}
-
- */
