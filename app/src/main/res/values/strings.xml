@@ -32,6 +32,7 @@
 
     <string name="OpenARSettingsButton">Open A R Settings button</string>
     <string name="Confirm">Confirm</string>
+    <string name="Comparing">Comparing our calculations to MET-API</string>
 
     <!--Text for About-Screen-->
     <string name="AppInfo">App Info</string>
@@ -59,8 +60,14 @@
     <string name="UseCurrentLocation">Use current location</string>
 
     <string name="Date">Date:</string>
+    <string name="DateTable">Date</string>
+    <string name="API">API</string>
+    <string name="Offset">Offset</string>
+    <string name="Ours">Ours</string>
     <string name ="Productions">Productions</string>
     <string name ="SoloShoots">Solo Shoots</string>
+    <string name ="DateFormat">yyyy-MM-dd</string>
+
 
     <string-array name="suntype">
         <item>@string/Sunrise</item>

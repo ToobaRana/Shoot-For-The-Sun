@@ -310,20 +310,12 @@ class TableViewModel : ViewModel() {
     }
     fun formatTheOffset(offsetToFindSignDouble: Double): String{
         var offsetString: String
-        Log.d("offsetToFindSign", offsetToFindSignDouble.toString())
-
         val offsetList = offsetToFindSignDouble.toString().split(".")
-        Log.d("offsetList", offsetList.toString())
         val hours = offsetList[0]
-
-        Log.d("hours", hours)
         val hoursWithOutSign = hours.split("")[2]
-        Log.d("hoursWithOutSign", hoursWithOutSign)
         val minutes = offsetList[1]
-        Log.d("minutesDecimal", minutes)
 
         var convertToMinutes = convertToMinutesFunction(minutes)
-        Log.d("convertToMinutes", convertToMinutes)
 
         if (offsetToFindSignDouble in -9.9..9.9) {
 
