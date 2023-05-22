@@ -46,7 +46,7 @@ fun SunPositionsCard(
         ) {
             SunPositionComponent(
                 modifier = modifier.weight(1f),
-                sunImage = painterResource(R.drawable.sunrise),
+                sunImage = painterResource(R.drawable.sunset),
                 sunTime = sunriseTime
             )
             SunPositionComponent(

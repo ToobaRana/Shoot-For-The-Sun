@@ -13,8 +13,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
+import com.example.sunandmoon.ui.theme.RedColor
 import com.example.sunandmoon.ui.theme.SunColor
-import com.example.sunandmoon.ui.theme.ThermometerColor
 import com.example.sunandmoon.ui.theme.WeatherBlueColor
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -99,7 +99,7 @@ fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rai
 
                 //pic of weather weatherIcons[]
                 if(weatherIcon != null){
-                    Icon(
+                    Image(
                         painter = painterResource(weatherIcon),
                         "Weather Condition Image",
                         modifier.size(80.dp),
@@ -120,7 +120,7 @@ fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rai
                             painter = painterResource(id = R.drawable.thermometer),
                             "Thermometer Image",
                             modifier.size(35.dp),
-                            ThermometerColor
+                            RedColor
                         )
                         Text(text = temperature.toString() + "°C", modifier.padding(start = 10.dp), fontSize = 20.sp)
 

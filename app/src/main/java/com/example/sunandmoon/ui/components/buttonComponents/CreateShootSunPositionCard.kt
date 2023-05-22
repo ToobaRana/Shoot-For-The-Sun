@@ -15,9 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.theme.SunColor
+import androidx.compose.foundation.Image
+import com.example.sunandmoon.ui.theme.RedColor
 
 @Composable
 fun CreateShootSunPositionCard(
@@ -31,7 +34,7 @@ fun CreateShootSunPositionCard(
 ) {
     val border =
         if (chosen){
-            BorderStroke(5.dp, Color.Red)
+            BorderStroke(5.dp, RedColor)
         }else{
             null
         }
@@ -47,12 +50,11 @@ fun CreateShootSunPositionCard(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
+            Image(
                 painter,
                 "Sun Image",
                 modifier
-                    .size(60.dp),
-                SunColor
+                    .size(60.dp)
             )
         }
 

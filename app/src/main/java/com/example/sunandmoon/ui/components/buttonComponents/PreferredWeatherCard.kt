@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.ui.theme.SunColor
+import androidx.compose.foundation.Image
+import com.example.sunandmoon.ui.theme.RedColor
 
 @Composable
 fun PreferredWeatherCard(
@@ -28,7 +30,7 @@ fun PreferredWeatherCard(
 ) {
     val border =
         if (chosen){
-            BorderStroke(5.dp, Color.Red)
+            BorderStroke(5.dp, RedColor)
         }else{
             null
         }
@@ -45,12 +47,11 @@ fun PreferredWeatherCard(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
+            Image(
                 painter,
                 contentDescription,
                 modifier
-                    .size(60.dp),
-                //SunColor
+                    .size(60.dp)
             )
         }
     }

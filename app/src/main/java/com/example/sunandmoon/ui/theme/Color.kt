@@ -19,7 +19,7 @@ val InfoBlueColor = Color(0xFF222831) // the color of the cards in the shoot inf
 
 val SunColor = Color(0xFFFCC419)
 val WeatherBlueColor = Color(0xFF339AF0)
-val ThermometerColor = Color(0xFFFA5252)
+val RedColor = Color(0xFFFA5252)
 val UVLowColor = Color(0xFF8DC442)
 val UVModerateColor = Color (0xFFFDD736)
 val UVHighColor = Color (0xFFFFB300)
