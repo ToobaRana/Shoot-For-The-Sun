@@ -42,11 +42,11 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
 
                 if(shoot.weatherMatchesPreferences != null) {
                     if(shoot.weatherMatchesPreferences){
-                        weatherCheckerIcon = R.drawable.check3
+                        weatherCheckerIcon = R.drawable.check
                         iconColor = Color.Green
                     }
                     else {
-                        weatherCheckerIcon = R.drawable.warning2
+                        weatherCheckerIcon = R.drawable.warning
                         iconColor = Color.Red
 
                     }
