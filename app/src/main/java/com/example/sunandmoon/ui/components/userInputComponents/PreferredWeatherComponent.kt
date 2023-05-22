@@ -90,7 +90,7 @@ fun PreferredWeatherComponent(
                 modifier = modifier,
 
                 painter = painterResource(
-                    R.drawable.rain2
+                    R.drawable.rain
                 ),
                 contentDescription = stringResource(id =R.string.Rain),
                 containerColor = color,
