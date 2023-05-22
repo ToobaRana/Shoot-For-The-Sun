@@ -192,7 +192,6 @@ fun ProductionSelectionScreen(
     )
 
     if (productionSelectionUIState.newProductionName != null) {
-        println("lol")
         productionCreation(
             modifier,
             createProduction = { name: String ->

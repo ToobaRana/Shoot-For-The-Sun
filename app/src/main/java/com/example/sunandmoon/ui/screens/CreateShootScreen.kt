@@ -77,7 +77,7 @@ fun CreateShootScreen(
 
 
                         //Component for choosing the shoot title
-                        TextField(
+                        OutlinedTextField(
                             value = createShootUIState.name,
                             label = { Text("Title", fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito_bold))) },
                             onValueChange = { name ->
