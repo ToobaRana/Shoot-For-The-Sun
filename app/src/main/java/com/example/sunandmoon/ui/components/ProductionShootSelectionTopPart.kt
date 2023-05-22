@@ -50,7 +50,7 @@ fun ProductionShootSelectionTopPart(
                 GoBackEditDeleteBar(
                     modifier,
                     MaterialTheme.colorScheme.primary,
-                    MaterialTheme.colorScheme.background,
+                    MaterialTheme.colorScheme.secondary,
                     { productionSelectionViewModel.goOutOfProduction() },
                     { /* TODO */ },
                     { productionSelectionViewModel.deleteProduction() })

@@ -44,12 +44,12 @@ fun ProductionCard(
                     .height(IntrinsicSize.Min)
             ) {
                 Icon(
-                    painterResource(R.drawable.bell_icon),
-                    "Notification icon",
+                    painterResource(R.drawable.folder),
+                    "Folder icon",
                     modifier
                         .align(CenterVertically)
                         .padding(8.dp, 0.dp)
-                        .size(32.dp),
+                        .size(40.dp),
                     MaterialTheme.colorScheme.onPrimary
                 )
                 Divider(

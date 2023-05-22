@@ -17,6 +17,7 @@ import com.example.sunandmoon.data.util.Shoot
 
 @Composable
 fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -> Unit) {
+
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -37,17 +38,26 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                     .height(IntrinsicSize.Min)
             ) {
                 var iconColor = MaterialTheme.colorScheme.onPrimary
+                var weatherCheckerIcon: Int = 0
+
                 if(shoot.weatherMatchesPreferences != null) {
-                    if(shoot.weatherMatchesPreferences) iconColor = Color.Green
-                    else iconColor = Color.Red
+                    if(shoot.weatherMatchesPreferences){
+                        weatherCheckerIcon = R.drawable.check3
+                        iconColor = Color.Green
+                    }
+                    else {
+                        weatherCheckerIcon = R.drawable.warning2
+                        iconColor = Color.Red
+
+                    }
                 }
                 Icon(
-                    painterResource(R.drawable.bell_icon),
+                    painterResource(weatherCheckerIcon),
                     "Notification icon",
                     modifier
                         .align(CenterVertically)
                         .padding(8.dp, 0.dp)
-                        .size(32.dp),
+                        .size(40.dp),
                     iconColor
                 )
                 Divider(

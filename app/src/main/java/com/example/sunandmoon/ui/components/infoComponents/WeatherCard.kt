@@ -67,7 +67,7 @@ val weatherIcons : Map<String,List<Int>> = mapOf(
 @Composable
 fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rainfall : Double?, weatherIconCode : String){
     val weatherIconSplit: List<String> = weatherIconCode.split("_")
-    Log.i("wheaterIcon", weatherIconCode)
+    Log.i("weatherIcon", weatherIconCode)
     val isDay: Boolean = weatherIconSplit.size < 2 || weatherIconSplit[1] == "day"
     val weatherIcon = weatherIcons[weatherIconSplit[0]]?.get(if(isDay) 0 else 1)
 
