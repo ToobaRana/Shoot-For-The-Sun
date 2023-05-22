@@ -29,7 +29,7 @@ import com.example.sunandmoon.viewModel.TableViewModel
             onExpandedChange = { expanded = !expanded }, modifier = modifier.width(300.dp)
         ) {
 
-            TextField(
+            OutlinedTextField(
                 modifier = modifier.menuAnchor(),
                 readOnly = true,
                 value = selectedOptionText,

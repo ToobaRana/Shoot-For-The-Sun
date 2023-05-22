@@ -68,7 +68,7 @@ fun ProductionShootSelectionTopPart(
                     .padding(bottom = 30.dp, top = 30.dp),
                 fontWeight = FontWeight(500)
             )
-            OutlinedTextField(
+            TextField(
                 value = "",
                 placeholder = { Text("Search...", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
                 onValueChange = { query ->

@@ -76,7 +76,7 @@ fun CalendarComponent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        TextField(
+        OutlinedTextField(
             value = "${chosenDate.dayOfMonth}. ${chosenDate.month} ${chosenDate.year}",
             onValueChange = {},
             enabled = false,
