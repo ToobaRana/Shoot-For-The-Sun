@@ -55,6 +55,7 @@ import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.ProductionShootSelectionTopPart
 import com.example.sunandmoon.ui.components.buttonComponents.AddNewOrderByButtons
+
 import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
 import com.example.sunandmoon.ui.components.buttonComponents.PagePickerProductionsShoots
 import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
@@ -141,8 +142,6 @@ fun ProductionSelectionScreen(
             }
         },
         content = { innerPadding ->
-
-
             if(!currentPageIsEmpty) {
                 LazyColumn(
                     modifier = modifier

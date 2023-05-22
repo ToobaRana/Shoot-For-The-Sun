@@ -42,8 +42,8 @@ fun LocationSearch(
             onValueChange = { query ->
                 setLocationSearchQuery(query, false)
             },
-            label = { Text("Search for a location", fontSize = 18.sp) },
-            placeholder = { Text("Enter a location", fontSize = 18.sp) },
+            label = { Text("Search location", fontSize = 18.sp) },
+            placeholder = { Text("Enter location", fontSize = 18.sp) },
             singleLine = true,
             modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
             keyboardOptions = KeyboardOptions(

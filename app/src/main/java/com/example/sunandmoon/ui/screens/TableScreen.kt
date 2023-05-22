@@ -23,6 +23,8 @@ import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
+import com.example.sunandmoon.ui.components.userInputComponents.dropdownMenuSunType
+import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 import com.example.sunandmoon.viewModel.TableViewModel
 
 
@@ -82,7 +84,7 @@ fun TableView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     LocationSearch(
-                        modifier = Modifier.width(241.dp),
+                        modifier = Modifier.width(200.dp).padding(start = 1.dp),
                         locationSearchQuery = tableUIState.locationSearchQuery,
                         locationSearchResults = tableUIState.locationSearchResults,
                         setLocationSearchQuery = { query: String, format: Boolean ->
@@ -98,7 +100,7 @@ fun TableView(
                             )
                         }
                     )
-                    chosenSunType = dropdownMenuSunType(tableViewModel, modifier)
+                    chosenSunType = dropdownMenuSunType(tableViewModel, modifier = Modifier.width(165.dp).padding(end = 1.dp))
                 }
                 Spacer(modifier = modifier.height(10.dp))
             }
@@ -114,46 +116,30 @@ fun TableView(
                     item { Row(
                         modifier.background(MaterialTheme.colorScheme.tertiary).padding(top= 5.dp, bottom=5.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             text = "Day",
-                            fontSize = 19.sp,
+                            fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = modifier
-                                .padding(start = 20.dp),
+                                .padding(start = 25.dp),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Api",
+                            fontSize = 20.sp,
+                            modifier = modifier
+                                .weight(1f)
+                                .padding(start = 80.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
 
-                        if (chosenSunType == "SolarNoon"){
-                            Text(
-                                text = chosenSunType,
-                                fontSize = 19.sp,
-                                modifier = modifier
-                                    .weight(1f)
-                                    .padding(start = 20.dp),
-                                color = MaterialTheme.colorScheme.primary,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
-                        if (chosenSunType == "Sunset" || chosenSunType == "Sunrise"){
-                            Text(
-                                text = chosenSunType,
-                                fontSize = 19.sp,
-                                modifier = modifier
-                                    .weight(1f)
-                                    .padding(start = 50.dp),
-                                color = MaterialTheme.colorScheme.primary,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
                         Text(
-                            text = "Our " + chosenSunType,
-                            fontSize = 19.sp,
+                            text = "Our",
+                            fontSize = 20.sp,
                             modifier = modifier
                                 .weight(1f)
                                 .padding(2.dp),
@@ -164,9 +150,9 @@ fun TableView(
 
                         Text(
                             text = "Offset",
-                            fontSize = 19.sp,
+                            fontSize = 20.sp,
                             modifier = modifier
-                                .padding(1.dp, end = 4.dp),
+                                .padding(1.dp, end = 20.dp),
                             color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
@@ -183,7 +169,6 @@ fun TableView(
                         val monthInt = day.split("-")[1].toInt()
 
                         TableCard(
-                            sunType = chosenSunType,
                             apiSunTime = sunriseTime,
                             day = day,
                             calculationSunTime = tableUIState.calculationsDateTableList[monthInt-1],
@@ -221,6 +206,7 @@ fun TableView(
 
         },
         bottomBar = {
+
             NavigationComposable(modifier = modifier, page = 2, navigateToNextBottomBar)
         }
 
@@ -229,6 +215,7 @@ fun TableView(
 
 }
 
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: Modifier): String {
@@ -286,3 +273,5 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
 
     return selectedOptionText
 }
+
+ */

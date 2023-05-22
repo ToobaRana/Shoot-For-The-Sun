@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -14,7 +15,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TableCard(sunType: String, apiSunTime: String, calculationSunTime: String, day: String, offset: String, modifier: Modifier) {
+fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offset: String, modifier: Modifier) {
     Surface(
         modifier = modifier
             .fillMaxWidth(),
@@ -25,7 +26,8 @@ fun TableCard(sunType: String, apiSunTime: String, calculationSunTime: String, d
             modifier = modifier
                 .fillMaxWidth()
                 .background(Color.White),
-            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
 
             ) {
 
@@ -34,37 +36,23 @@ fun TableCard(sunType: String, apiSunTime: String, calculationSunTime: String, d
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = modifier.padding(8.dp)
+                modifier = modifier.padding(top = 8.dp)
             )
-            if (sunType == "SolarNoon"){
+
                 Text(
                     text = apiSunTime,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = Color.Black,
-                    modifier = modifier.padding(8.dp)
+                    modifier = modifier.padding(top = 8.dp, start = 0.dp)
                 )
-
-            }
-            if (sunType == "Sunset" || sunType == "Sunrise"){
-                Text(
-                    text = apiSunTime,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = Color.Black,
-                    modifier = modifier.padding(top =8.dp)
-                )
-
-            }
-
-
 
             Text(
                 text = calculationSunTime,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = modifier.padding(top= 8.dp, start = 20.dp)
+                modifier = modifier.padding(top= 8.dp, start = 10.dp)
             )
 
             Text(
@@ -72,7 +60,7 @@ fun TableCard(sunType: String, apiSunTime: String, calculationSunTime: String, d
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = modifier.padding(top= 8.dp, start = 45.dp)
+                modifier = modifier.padding(top= 8.dp, start = 10.dp)
             )
 
         }
