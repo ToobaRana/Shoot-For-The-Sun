@@ -269,7 +269,7 @@ fun productionCreation(
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                     leadingIcon = {
                         Icon(
-                            painterResource(R.drawable.pencil),
+                            painterResource(R.drawable.edit_icon),
                             "Edit text pencil icon",
                             Modifier,
                             MaterialTheme.colorScheme.primary

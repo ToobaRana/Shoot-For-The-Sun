@@ -66,7 +66,8 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                     .fillMaxWidth()
                     .padding(18.dp)
             ) {
-                Text(text = shoot.dateTime.toLocalDate().toString(), fontSize = 18.sp, modifier = modifier.weight(1f))
+                val date = shoot.dateTime.toLocalDate()
+                Text(text = "${date.dayOfMonth}. ${date.month.toString().substring(0, 3)} ${date.year}", fontSize = 18.sp, modifier = modifier.weight(1f))
                 Text(text = shoot.dateTime.toLocalTime().toString(), textAlign = TextAlign.End, fontSize = 18.sp, modifier = modifier.weight(1f))
             }
         }

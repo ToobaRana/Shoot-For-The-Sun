@@ -15,6 +15,8 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Production
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Composable
 fun ProductionCard(
@@ -63,8 +65,10 @@ fun ProductionCard(
 
             var dateIntervalText = "Empty"
             if (production.duration.first != null && production.duration.second != null) {
-                dateIntervalText = production.duration.first?.toLocalDate()
-                    .toString() + " - " + production.duration.second?.toLocalDate().toString()
+                val startDate: LocalDateTime = production.duration.first!!
+                val endDate: LocalDateTime = production.duration.second!!
+
+                dateIntervalText = "${startDate.dayOfMonth}. ${startDate.month.toString().substring(0, 3)} ${startDate.year}" + " - " + "${endDate.dayOfMonth}. ${endDate.month.toString().substring(0, 3)} ${endDate.year}"
             }
             Text(text = dateIntervalText, modifier = modifier.padding(18.dp), fontSize = 18.sp)
         }

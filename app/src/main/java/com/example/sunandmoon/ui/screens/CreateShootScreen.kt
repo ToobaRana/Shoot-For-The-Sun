@@ -76,16 +76,20 @@ fun CreateShootScreen(
                     ) {
 
 
-                        TextField(value = createShootUIState.name,
-                            label = { Text("Title", fontSize = 18.sp) },
+                        //Component for choosing the shoot title
+                        TextField(
+                            value = createShootUIState.name,
+                            label = { Text("Title", fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito_bold))) },
                             onValueChange = { name ->
                                 createShootViewModel.updateShootName(name)
                             },
                             placeholder = { Text("My Shoot") },
-                            modifier = modifier.fillMaxWidth(0.9f),
+                            modifier = modifier
+                                .fillMaxWidth(0.8f)
+                                .padding(5.dp, top = 20.dp),
                             leadingIcon = {
                                 Icon(
-                                    painterResource(R.drawable.pencil),
+                                    painterResource(R.drawable.edit_icon),
                                     "Edit text pencil icon",
                                     Modifier,
                                     MaterialTheme.colorScheme.primary
@@ -106,27 +110,17 @@ fun CreateShootScreen(
                                     focusManager.clearFocus()
                                 }
                             )
-
-
                         )
-
                     }
 
 
+
                 }
+
                 item {
                     Spacer(modifier = modifier.size(20.dp))
-                    Divider(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .height(3.dp),
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = modifier.size(20.dp))
-                }
-                item {
                     LocationSearch(
-                        modifier,
+                        modifier.padding(5.dp),
                         createShootUIState.locationSearchQuery,
                         createShootUIState.locationSearchResults,
                         { query: String, format: Boolean -> createShootViewModel.setLocationSearchQuery(query, format) },
@@ -139,6 +133,7 @@ fun CreateShootScreen(
                         },
                     )
                 }
+
 
                 item {
                     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -153,6 +148,7 @@ fun CreateShootScreen(
                             Text(stringResource(R.string.UseCurrentLocation), fontSize = 18.sp)
                         }
                     }
+                    Spacer(modifier = modifier.size(20.dp))
                 }
 
                 item {
@@ -171,36 +167,56 @@ fun CreateShootScreen(
                 item {
                     Spacer(modifier = modifier.size(30.dp))
                     Row(modifier = modifier.wrapContentSize()){
+
                         Text(
                             modifier = modifier,
                             text = stringResource(R.string.Time),
+                            fontFamily = FontFamily(Font(R.font.nunito_bold)),
                             fontSize = 20.sp,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontFamily = FontFamily(Font(R.font.nunito))
+                            color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = modifier.width(90.dp))
                     }
 
 
-                    TimepickerComponent(
-                        modifier = modifier.wrapContentSize(),
-                        onValueChange = { time: LocalTime ->
-                            createShootViewModel.updateTime(time)
-                        },
-                        enabled = createShootUIState.editTimeEnabled,
-                        currentTime = createShootUIState.chosenDateTime.toLocalTime(),
-                        colors = TimePickerColors(
-                            //cursorColor = MaterialTheme.colorScheme.primary,
-                            textColor = MaterialTheme.colorScheme.onSurface,
-                            containerColor = MaterialTheme.colorScheme.tertiary,
-                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                            placeholderColor = MaterialTheme.colorScheme.onSurface,
-                            disabledTextColor = Color.Black
-                        ),
-                        fieldShape = RectangleShape,
-                        containerShape = RoundedCornerShape(10.dp)
-                    )
+
+                    Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                        
+
+
+                        Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier
+                            .size(50.dp),
+                            MaterialTheme.colorScheme.primary)
+
+                        TimepickerComponent(
+                            modifier = modifier.wrapContentSize(),
+                            onValueChange = { time: LocalTime ->
+                                createShootViewModel.updateTime(time)
+                            },
+                            enabled = createShootUIState.editTimeEnabled,
+                            currentTime = createShootUIState.chosenDateTime.toLocalTime(),
+                            colors = TimePickerColors(
+                                //cursorColor = MaterialTheme.colorScheme.primary,
+                                textColor = MaterialTheme.colorScheme.onSurface,
+                                containerColor = MaterialTheme.colorScheme.tertiary,
+                                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                                placeholderColor = MaterialTheme.colorScheme.onSurface,
+                                disabledTextColor = Color.Black
+                            ),
+                            fieldShape = RectangleShape,
+                            containerShape = RoundedCornerShape(10.dp)
+                        )
+
+                        Spacer(modifier = modifier.size(50.dp))
+
+
+                    }
+
+
+
+
+
                 }
                 item {
                     Spacer(modifier = modifier.size(20.dp))

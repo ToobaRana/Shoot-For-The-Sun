@@ -10,6 +10,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,12 +41,12 @@ fun LocationSearch(
     val focusManager = LocalFocusManager.current
 
     Column(modifier = modifier.fillMaxWidth()) {
-        TextField(
+        OutlinedTextField(
             value = locationSearchQuery,
             onValueChange = { query ->
                 setLocationSearchQuery(query, false)
             },
-            label = { Text("Search location", fontSize = 18.sp) },
+            label = { Text("Search location", fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito_bold))) },
             placeholder = { Text("Enter location", fontSize = 18.sp) },
             singleLine = true,
             modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
@@ -70,7 +74,7 @@ fun LocationSearch(
                 unfocusedLabelColor = MaterialTheme.colorScheme.onSurface
             ),
             maxLines = 1
-        )
+            )
 
         if (isDropdownExpanded) {
             DropdownMenu(

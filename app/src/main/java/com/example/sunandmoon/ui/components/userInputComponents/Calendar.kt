@@ -20,6 +20,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -75,14 +77,17 @@ fun CalendarComponent(
     ) {
 
         TextField(
-            value = "${chosenDate.dayOfMonth}.${chosenDate.month} ${chosenDate.year}",
+            value = "${chosenDate.dayOfMonth}. ${chosenDate.month} ${chosenDate.year}",
             onValueChange = {},
             enabled = false,
             label = {
                 Text(
                     text = stringResource(id = R.string.Date),
                     fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    fontFamily = FontFamily(Font(R.font.nunito_bold))
+
+
                 )
             },
             modifier = modifier
@@ -132,7 +137,7 @@ fun CalendarComponentDisplay(
 
     //var currentYear by remember { mutableStateOf("2023") }
 
-    // vi har lyst til å prøve å la deg ha en blank tekstfelt for år
+    // we want to try to let you have a blank text field for years
     val currentYear: Int = chosenDate.year
     var currentYearText: String by remember {
         mutableStateOf(currentYear.toString())
@@ -188,18 +193,18 @@ fun CalendarComponentDisplay(
 
                                     currentYearText = year.replace("\\D".toRegex(), "")
 
-                                    Log.v("ÅR", year)
+                                    Log.v("year", year)
 
                                 }
                             } else {
                                 currentYearText = ""
                             }
-                            Log.v("ÅR", year)
+                            Log.v("year", year)
                         },
 
                         placeholder = { Text(text = "0") },
 
-                        label = { Text("Year") },
+                        label = { Text("Year", fontFamily = FontFamily(Font(R.font.nunito_bold))) },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done
@@ -329,7 +334,7 @@ fun MonthDropDown(
             readOnly = true,
             value = months[currentMonth - 1],
             onValueChange = { expanded = !expanded },
-            label = { Text("Month") },
+            label = { Text("Month", fontFamily = FontFamily(Font(R.font.nunito_bold))) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = TextFieldDefaults.textFieldColors(
                 //cursorColor = MaterialTheme.colorScheme.primary,
