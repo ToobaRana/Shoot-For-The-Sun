@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
@@ -66,8 +65,8 @@ fun TableView(
                 text = "Comparing our calculations to MET-API",
                 fontSize = 30.sp,
                 textAlign = TextAlign.Center,
-                modifier = modifier
-                    .padding(top = 15.dp, end = 5.dp, start = 5.dp),
+                modifier = modifier.fillMaxWidth()
+                    .padding(top = 15.dp, end = 5.dp),
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight(400),
                 minLines = 2,
@@ -83,12 +82,12 @@ fun TableView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     LocationSearch(
-                        modifier = Modifier.width(200.dp).padding(start = 1.dp),
+                        modifier = modifier.width(200.dp).padding(start = 1.dp),
                         locationSearchQuery = tableUIState.locationSearchQuery,
                         locationSearchResults = tableUIState.locationSearchResults,
                         setLocationSearchQuery = { query: String, format: Boolean ->
@@ -113,7 +112,7 @@ fun TableView(
 
                 Box(modifier
                         .fillMaxSize()
-                        .padding(top = 240.dp, start = 2.5.dp, end = 2.5.dp, bottom = 84.dp)) {
+                        .padding(top = 300.dp, start = 2.5.dp, end = 2.5.dp, bottom = 84.dp)) {
 
                 LazyColumn(modifier.padding(top = 15.dp)) {
 
@@ -123,30 +122,27 @@ fun TableView(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Day",
+                            text = "Date",
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = modifier
-                                .padding(start = 25.dp),
+                            modifier = modifier.weight(1.5f).padding(start = 10.dp),
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Api",
+                            text = "API",
                             fontSize = 20.sp,
                             modifier = modifier
-                                .weight(1f)
-                                .padding(start = 80.dp),
+                                .weight(0.9f),
                             color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
 
                         Text(
-                            text = "Our",
+                            text = "Ours",
                             fontSize = 20.sp,
                             modifier = modifier
-                                .weight(1f)
-                                .padding(2.dp),
+                                .weight(0.9f),
                             color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
@@ -156,7 +152,7 @@ fun TableView(
                             text = "Offset",
                             fontSize = 20.sp,
                             modifier = modifier
-                                .padding(1.dp, end = 20.dp),
+                                .weight(0.9f),
                             color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold

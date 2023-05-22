@@ -27,7 +27,7 @@ fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offse
                 .fillMaxWidth()
                 .background(Color.White),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceBetween
 
             ) {
 
@@ -36,7 +36,7 @@ fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offse
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = modifier.padding(top = 8.dp)
+                modifier = modifier.padding(top = 10.dp, bottom = 10.dp, start = 10.dp).weight(1.5f)
             )
 
                 Text(
@@ -44,7 +44,7 @@ fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offse
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = Color.Black,
-                    modifier = modifier.padding(top = 8.dp, start = 0.dp)
+                    modifier = modifier.padding(top = 10.dp, bottom = 10.dp).weight(0.7f)
                 )
 
             Text(
@@ -52,7 +52,7 @@ fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offse
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = modifier.padding(top= 8.dp, start = 10.dp)
+                modifier = modifier.padding(top= 10.dp, bottom = 10.dp).weight(0.7f)
             )
 
             Text(
@@ -60,7 +60,7 @@ fun TableCard(apiSunTime: String, calculationSunTime: String, day: String, offse
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Black,
-                modifier = modifier.padding(top= 8.dp, start = 10.dp)
+                modifier = modifier.padding(top= 10.dp, bottom = 10.dp).weight(0.7f)
             )
 
         }
