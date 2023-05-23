@@ -19,6 +19,7 @@ import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.theme.CheckmarkColor
 import com.example.sunandmoon.util.weatherIcons
 import androidx.compose.foundation.Image
+import com.example.sunandmoon.ui.theme.RedColor
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 
 @Composable
@@ -65,16 +66,14 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
                 Text(text = "OK")
             }
         },
-        icon = {
-            Icon(
-                painter = painterResource(if(shoot.weatherMatchesPreferences == true) R.drawable.check else R.drawable.warning),
-                tint = if(shoot.weatherMatchesPreferences == true && weatherIcon != null) CheckmarkColor
-                    else if(weatherIcon != null) Color.Red
-                    else Color.Black,
-                contentDescription =  "Preferred weather info",
-                modifier = modifier.size(70.dp),
-            )
-        }
+        icon = {Icon(
+            painter = painterResource(if(shoot.weatherMatchesPreferences == true) R.drawable.check else R.drawable.warning),
+            tint = if(shoot.weatherMatchesPreferences == true && weatherIcon != null) CheckmarkColor
+            else if(weatherIcon != null) RedColor
+            else Color.Black,
+            contentDescription =  "Preferred weather info",
+            modifier = modifier.size(70.dp),
+        )}
     )
 }
 

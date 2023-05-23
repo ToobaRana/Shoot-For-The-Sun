@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.theme.CheckmarkColor
+import com.example.sunandmoon.ui.theme.RedColor
 
 @Composable
 fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -> Unit, openPreferredWeatherDialog: () -> Unit) {
@@ -47,11 +48,12 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                     }
                     else {
                         weatherCheckerIcon = R.drawable.warning
-                        iconColor = Color.Red
+                        iconColor = RedColor
 
                     }
                 } else {
                     weatherCheckerIcon = R.drawable.unavailable
+                    iconColor = MaterialTheme.colorScheme.secondary
                 }
 
 
