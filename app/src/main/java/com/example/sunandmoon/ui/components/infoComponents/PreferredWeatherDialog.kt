@@ -22,6 +22,7 @@ import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 
 @Composable
 fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: ProductionSelectionViewModel, shoot: Shoot) {
+    val weatherIcon = productionSelectionViewModel.getWeatherIconOfShoot(shoot) //weatherIcons[weatherIconSplit[0]]?.get(if(isDay) 0 else 1)
     AlertDialog(
         containerColor = MaterialTheme.colorScheme.primary,
         onDismissRequest = {
@@ -29,8 +30,10 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
         },
         text = {
             Column() {
-                val textToShow = if(shoot.weatherMatchesPreferences == true) "Your preferred weather for this shoot matches the actual weather of this shoot"
-                    else "Your preferred weather for this shoot does not match the actual weather of this shoot"
+
+                val textToShow = if(shoot.weatherMatchesPreferences == true && weatherIcon != null) "Your preferred weather for this shoot matches the actual weather of this shoot"
+                    else if( weatherIcon != null) "Your preferred weather for this shoot does not match the actual weather of this shoot"
+                    else "No weather data available for this shoot, weather data is available from the current date to 10 days into the future"
                 Text(text = textToShow, fontWeight = FontWeight.Bold)
 
                 Text(text = "Your preferred weather:", fontWeight = FontWeight.Bold)
@@ -40,17 +43,18 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
                     }
                 }
                 else Text(text = "(No preferred weather registered)", fontWeight = FontWeight.Bold, modifier = modifier.padding(0.dp, 10.dp))
-                
-                Text(text = "Actual weather:", fontWeight = FontWeight.Bold)
 
-                val weatherIcon = productionSelectionViewModel.getWeatherIconOfShoot(shoot) //weatherIcons[weatherIconSplit[0]]?.get(if(isDay) 0 else 1)
-                if(weatherIcon != null) {
-                    Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            painter = painterResource(weatherIcon),
-                            "Weather Condition Image",
-                            modifier.size(100.dp),
-                        )
+                if( weatherIcon != null) {
+                    Text(text = "Actual weather:", fontWeight = FontWeight.Bold)
+
+                    if(weatherIcon != null) {
+                        Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                painter = painterResource(weatherIcon),
+                                "Weather Condition Image",
+                                modifier.size(100.dp),
+                            )
+                        }
                     }
                 }
             }
@@ -62,7 +66,9 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
         },
         icon = {Icon(
             painter = painterResource(if(shoot.weatherMatchesPreferences == true) R.drawable.check else R.drawable.warning),
-            tint = if(shoot.weatherMatchesPreferences == true) CheckmarkColor else Color.Red,
+            tint = if(shoot.weatherMatchesPreferences == true && weatherIcon != null) CheckmarkColor
+            else if(weatherIcon != null) Color.Red
+            else Color.Black,
             contentDescription =  "Preferred weather info",
             modifier = modifier.size(70.dp),
         )}
