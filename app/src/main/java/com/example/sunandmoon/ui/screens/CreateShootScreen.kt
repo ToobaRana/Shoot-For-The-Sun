@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
-import com.example.sunandmoon.checkPermissions
+import com.example.sunandmoon.CheckPermissions
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.userInputComponents.PreferredWeatherComponent
@@ -46,7 +46,7 @@ fun CreateShootScreen(
 ) {
 
     val createShootUIState by createShootViewModel.createShootUIState.collectAsState()
-    checkPermissions { enabled: Boolean -> createShootViewModel.updateLocation(enabled) }
+    CheckPermissions { enabled: Boolean -> createShootViewModel.updateLocation(enabled) }
 
     if (createShootUIState.parentProductionId == null && parentProductionId != null) {
         createShootViewModel.setParentProductionId(parentProductionId)
