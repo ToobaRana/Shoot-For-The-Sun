@@ -20,7 +20,8 @@ import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
 import com.example.sunandmoon.data.localDatabase.storableShootsToNormalShoots
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 import com.example.sunandmoon.model.LocationForecastModel.Timeseries
-import com.example.sunandmoon.ui.components.infoComponents.weatherIcons
+import com.example.sunandmoon.util.getCorrectTimeObject
+import com.example.sunandmoon.util.getWeatherIcon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -180,12 +181,11 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
-    fun setShowPreferredWeatherDialog(bool: Boolean){
+    fun setShowPreferredWeatherDialog(shootToShowPreferredWeatherDialogFor: Shoot?){
         _productionSelectionUIState.update { currentState ->
             currentState.copy(
-                showPreferredWeatherDialog = bool
+                shootToShowPreferredWeatherDialogFor = shootToShowPreferredWeatherDialogFor
             )
-
         }
     }
 
@@ -214,13 +214,9 @@ class ProductionSelectionViewModel @Inject constructor(
                     retrievedWeatherData[shoot.location] = weatherData!!
                 }
 
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-
                 val dateTimeObjectForApiUse : LocalDateTime = shoot.dateTime.withMinute(0).withSecond(0).withNano(0)
 
-                val formattedDateAndTime : String = dateTimeObjectForApiUse.format(formatter)
-                val correctTimeObject : Timeseries? = weatherData!!.properties?.timeseries?.
-                firstOrNull { it.time == formattedDateAndTime }
+                val correctTimeObject = getCorrectTimeObject(dateTimeObjectForApiUse, weatherData!!)
 
                 var weatherIconCode : String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
                 if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
@@ -258,5 +254,17 @@ class ProductionSelectionViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getWeatherIconOfShoot(shoot: Shoot): Int? {
+        retrievedWeatherData.forEach {
+            if(shoot.location.distanceTo(it.key) <= 1000) {
+                val correctTimeObject = getCorrectTimeObject(shoot.dateTime, it.value)
+                var weatherIconCode: String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
+                if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
+                return getWeatherIcon(weatherIconCode)
+            }
+        }
+        return null
     }
 }
