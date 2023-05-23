@@ -64,14 +64,16 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
                 Text(text = "OK")
             }
         },
-        icon = {Icon(
-            painter = painterResource(if(shoot.weatherMatchesPreferences == true) R.drawable.check else R.drawable.warning),
-            tint = if(shoot.weatherMatchesPreferences == true && weatherIcon != null) CheckmarkColor
-            else if(weatherIcon != null) Color.Red
-            else Color.Black,
-            contentDescription =  "Preferred weather info",
-            modifier = modifier.size(70.dp),
-        )}
+        icon = {
+            Icon(
+                painter = painterResource(if(shoot.weatherMatchesPreferences == true) R.drawable.check else R.drawable.warning),
+                tint = if(shoot.weatherMatchesPreferences == true && weatherIcon != null) CheckmarkColor
+                    else if(weatherIcon != null) Color.Red
+                    else Color.Black,
+                contentDescription =  "Preferred weather info",
+                modifier = modifier.size(70.dp),
+            )
+        }
     )
 }
 

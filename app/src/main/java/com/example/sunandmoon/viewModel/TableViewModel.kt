@@ -99,38 +99,44 @@ class TableViewModel : ViewModel() {
 
             }
 
-            for (date in sameDaysList.sorted()){
-                val offsetToFindSignDouble = findOffset(tableUIState.value.timezone_id, date.toString())
+            try {
 
-                val offsetString: String = formatTheOffset(offsetToFindSignDouble)
+                for (date in sameDaysList.sorted()){
+                    val offsetToFindSignDouble = findOffset(tableUIState.value.timezone_id, date.toString())
 
-                if (tableUIState.value.chosenSunType == "Sunrise"){
-                    sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
-                    apiDateTableList.add(sunRiseTime)
+                    val offsetString: String = formatTheOffset(offsetToFindSignDouble)
+
+                    if (tableUIState.value.chosenSunType == "Sunrise"){
+                        sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
+                        apiDateTableList.add(sunRiseTime)
+                    }
+
+                    if (tableUIState.value.chosenSunType == "SolarNoon"){
+                        solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.solarnoon.time
+                        apiDateTableList.add(solarNoon)
+                    }
+
+                    if (tableUIState.value.chosenSunType == "Sunset"){
+                        sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunset.time
+                        apiDateTableList.add(sunSetTime)
+                    }
                 }
 
-                if (tableUIState.value.chosenSunType == "SolarNoon"){
-                    solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.solarnoon.time
-                    apiDateTableList.add(solarNoon)
+                _tableUIState.update{currentState ->
+                    currentState.copy(
+                        apiDateTableList = apiDateTableList,
+                        calculationsDateTableList = calculationsDateTableList,
+                        timeZoneListTableScreen = timeZoneListTableScreen,
+                        missingNetworkConnection = false
+                    )
                 }
 
-                if (tableUIState.value.chosenSunType == "Sunset"){
-                    sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunset.time
-                    apiDateTableList.add(sunSetTime)
+            } catch (_: Exception) {
+                _tableUIState.update{currentState ->
+                    currentState.copy(
+                        missingNetworkConnection = true
+                    )
                 }
-
-
-            }
-
-
-
-            _tableUIState.update{currentState ->
-                currentState.copy(
-                    apiDateTableList = apiDateTableList,
-                    calculationsDateTableList = calculationsDateTableList,
-                    timeZoneListTableScreen = timeZoneListTableScreen
-
-                )
             }
         }
     }
@@ -223,7 +229,11 @@ class TableViewModel : ViewModel() {
                 }
 
             } catch (e: Throwable) {
-                Log.d("error", "uh oh")
+                _tableUIState.update { currentState ->
+                    currentState.copy(
+                        missingNetworkConnection = true
+                    )
+                }
             }
         }
     }

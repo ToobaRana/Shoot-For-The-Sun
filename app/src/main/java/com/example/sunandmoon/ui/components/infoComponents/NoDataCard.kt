@@ -17,8 +17,10 @@ import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 
 @Composable
-fun NoDataCard(modifier : Modifier){
-    val cardText : String = stringResource(R.string.NoData)
+fun NoDataCard(modifier : Modifier, missingNetworkConnection: Boolean){
+    var cardText : String =
+        if(missingNetworkConnection) stringResource(R.string.NoInternet)
+        else stringResource(R.string.NoData)
 
     ElevatedCard(
         modifier = modifier

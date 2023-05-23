@@ -18,4 +18,5 @@ data class ShootInfoUIState(
     val windSpeed: Double? = null,
     val windDirection: Double? = null,
     val uvIndex: Double? = null,
+    val missingNetworkConnection: Boolean = false
 )
