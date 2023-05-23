@@ -76,7 +76,7 @@ fun PreferredWeatherOverview(modifier: Modifier, preferableWeathers: List<Prefer
                 PreferableWeather.FAIR -> R.drawable.fairsun
                 PreferableWeather.CLOUDY -> R.drawable.cloudy
                 PreferableWeather.THUNDER -> R.drawable.rainthunder
-                PreferableWeather.RAIN -> R.drawable.rain2
+                PreferableWeather.RAIN -> R.drawable.rain
                 PreferableWeather.SNOW -> R.drawable.snow
             }
             Icon(
