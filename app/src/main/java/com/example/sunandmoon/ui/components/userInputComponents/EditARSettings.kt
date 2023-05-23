@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.ARUIState
@@ -88,7 +87,9 @@ fun EditARSettings(
                     unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
                     placeholderColor = MaterialTheme.colorScheme.onSurface,
-                    disabledTextColor = Color.Black
+                    disabledColor = MaterialTheme.colorScheme.secondary,
+
+
                 ),
                 fieldShape = RectangleShape,
                 containerShape = RoundedCornerShape(10.dp)

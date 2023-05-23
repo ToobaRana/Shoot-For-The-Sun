@@ -13,7 +13,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -198,7 +197,7 @@ fun CreateShootScreen(
                                 unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
                                 unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
                                 placeholderColor = MaterialTheme.colorScheme.onSurface,
-                                disabledTextColor = Color.Black
+                                disabledColor = MaterialTheme.colorScheme.secondary
                             ),
                             fieldShape = RectangleShape,
                             containerShape = RoundedCornerShape(10.dp)

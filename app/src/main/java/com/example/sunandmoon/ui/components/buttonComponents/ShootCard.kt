@@ -38,7 +38,7 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                     .height(IntrinsicSize.Min)
             ) {
                 var iconColor = MaterialTheme.colorScheme.onPrimary
-                var weatherCheckerIcon: Int = 0
+                val weatherCheckerIcon: Int?
 
                 if(shoot.weatherMatchesPreferences != null) {
                     if(shoot.weatherMatchesPreferences){
@@ -50,7 +50,11 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                         iconColor = Color.Red
 
                     }
+                } else {
+                    weatherCheckerIcon = R.drawable.unavailable
                 }
+
+
                 Icon(
                     painterResource(weatherCheckerIcon),
                     "Notification icon",
