@@ -26,3 +26,8 @@ val UVModerateColor = Color (0xFFFDD736)
 val UVHighColor = Color (0xFFFFB300)
 val UVVeryHighColor = Color (0xFFD1394A)
 val UVExtremeColor = Color (0xFF954F71)
+
+
+val CheckmarkColor = Color (0xFF027A00)
+
+
