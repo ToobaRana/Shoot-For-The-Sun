@@ -24,7 +24,13 @@ import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
+import com.example.sunandmoon.model.LocationForecastModel.Timeseries
+import com.example.sunandmoon.util.getCorrectTimeObject
+import com.example.sunandmoon.util.getWeatherIcon
+import com.example.sunandmoon.util.weatherIcons
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 
 @HiltViewModel
@@ -42,8 +48,6 @@ class ShootInfoViewModel @Inject constructor(
             sunriseTime = "05:23",
             solarNoonTime = "14:06",
             sunsetTime = "21:02",
-            weatherData = null
-
         )
     )
 
@@ -88,12 +92,35 @@ class ShootInfoViewModel @Inject constructor(
     fun loadLocationForecast(){
         viewModelScope.launch(Dispatchers.IO) {
             val weatherData = dataSource.fetchWeatherAPI(shootInfoUIState.value.shoot?.location?.latitude.toString(), shootInfoUIState.value.shoot?.location?.longitude.toString())
-            _shootInfoUIState.update { currenState ->
-                currenState.copy(
-                    weatherData = weatherData
-                )
-            }
+            retrieveUsefulWeatherData(weatherData)
+        }
+    }
 
+    fun retrieveUsefulWeatherData(weatherData: LocationForecast) {
+        val dateAndTime = _shootInfoUIState.value.shoot!!.dateTime
+
+        val correctTimeObject = getCorrectTimeObject(dateAndTime, weatherData)
+
+        var weatherIconCode: String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
+        if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
+        Log.d("symbolCode: ", weatherIconCode.toString())
+        val temperature: Double? = correctTimeObject?.data?.instant?.details?.air_temperature
+        var rainfallInMm: Double? = correctTimeObject?.data?.next_1_hours?.details?.precipitation_amount
+        if(rainfallInMm == null) rainfallInMm = correctTimeObject?.data?.next_6_hours?.details?.precipitation_amount
+
+        val windSpeed: Double? = correctTimeObject?.data?.instant?.details?.wind_speed
+        val windDirection: Double? = correctTimeObject?.data?.instant?.details?.wind_from_direction
+        val uvIndex: Double? = correctTimeObject?.data?.instant?.details?.ultraviolet_index_clear_sky
+
+        _shootInfoUIState.update { currentState ->
+            currentState.copy(
+                weatherIcon = getWeatherIcon(weatherIconCode),
+                temperature = temperature,
+                rainfallInMm = rainfallInMm,
+                windSpeed = windSpeed,
+                windDirection = windDirection,
+                uvIndex = uvIndex
+            )
         }
     }
 
@@ -121,4 +148,5 @@ class ShootInfoViewModel @Inject constructor(
             getShoot(idToRefresh)
         }
     }
+
 }

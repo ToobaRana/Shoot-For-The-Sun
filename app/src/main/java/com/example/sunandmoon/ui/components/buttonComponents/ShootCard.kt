@@ -16,7 +16,7 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
 
 @Composable
-fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -> Unit) {
+fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -> Unit, openPreferredWeatherDialog: () -> Unit) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -47,7 +47,9 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                     modifier
                         .align(CenterVertically)
                         .padding(8.dp, 0.dp)
-                        .size(32.dp),
+                        .size(32.dp).clickable{
+                            openPreferredWeatherDialog()
+                        },
                     iconColor
                 )
                 Divider(
