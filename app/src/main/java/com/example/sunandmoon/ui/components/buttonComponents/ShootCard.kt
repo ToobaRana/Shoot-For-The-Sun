@@ -57,7 +57,7 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
 
                 Icon(
                     painterResource(weatherCheckerIcon),
-                    "Notification icon",
+                    "Weather checker icon",
                     modifier
                         .align(CenterVertically)
                         .padding(8.dp, 0.dp)

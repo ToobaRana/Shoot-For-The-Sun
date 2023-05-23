@@ -71,7 +71,7 @@ fun AddNewOrderByButtons(
                         .padding(start = 6.dp)
                 )
                 Text(
-                    text = "Add New",
+                    text = "Add new",
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.End,

@@ -11,8 +11,8 @@
 
 
     <string name="Time">Time:</string>
-    <string name="SunPosition">Sun position:</string>
-    <string name="PreferredWeather">Preferred Weather:</string>
+    <string name="SunPosition">Sun position</string>
+    <string name="PreferredWeather">Preferred weather (select one or more)</string>
 
 
 
@@ -63,7 +63,7 @@
 
     <string name="UseCurrentLocation">Use current location</string>
 
-    <string name="Date">Date:</string>
+    <string name="Date">Date</string>
     <string name="DateTable">Date</string>
     <string name="API">API</string>
     <string name="Offset">Offset</string>
