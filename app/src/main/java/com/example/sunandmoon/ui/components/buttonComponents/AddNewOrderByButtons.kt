@@ -30,7 +30,7 @@ fun AddNewOrderByButtons(
     productionSelectionUIState: ProductionSelectionUIState,
     navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
 
-) {
+    ) {
     Box(
         modifier
             .fillMaxWidth()
@@ -63,7 +63,7 @@ fun AddNewOrderByButtons(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painterResource(id = R.drawable.plus_icon),
+                    painterResource(id = R.drawable.plus),
                     contentDescription = "Add New",
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
@@ -94,7 +94,7 @@ fun AddNewOrderByButtons(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painterResource(id = R.drawable.triangle_icon),
+                    painterResource(id = R.drawable.sortdown),
                     contentDescription = "Order by",
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(35.dp)
