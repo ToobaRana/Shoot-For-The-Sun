@@ -15,7 +15,8 @@ val PrimaryColor = Color(0xFFCB7D64) // the background color (and more)
 val SecondaryColor = Color(0xFFFAF9F9)
 val TernaryColor = Color(0xFFA44E33)
 val OnSecondaryColor = Color(0xFF000000)
-val InfoBlueColor = Color(0xFF222831) // the color of the cards in the shoot infp screen
+val InfoBlueColor = Color(0xFF222831) // the color of the cards in the shoot info screen
+val GreyColor = Color(0xFFDDDDDE)
 
 val SunColor = Color(0xFFFCC419)
 val WeatherBlueColor = Color(0xFF339AF0)

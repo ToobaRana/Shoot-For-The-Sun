@@ -18,6 +18,7 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.PreferableWeather
 import com.example.sunandmoon.ui.components.buttonComponents.CreateShootSunPositionCard
 import com.example.sunandmoon.ui.components.buttonComponents.PreferredWeatherCard
+import com.example.sunandmoon.ui.theme.GreyColor
 import com.example.sunandmoon.viewModel.CreateShootViewModel
 
 @Composable
@@ -29,7 +30,7 @@ fun PreferredWeatherComponent(
 
     Card(
         modifier.fillMaxWidth(0.9f),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
+        colors = CardDefaults.cardColors(containerColor = GreyColor)
     ) {
         Row(
             modifier = modifier

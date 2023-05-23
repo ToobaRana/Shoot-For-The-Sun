@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.buttonComponents.CreateShootSunPositionCard
+import com.example.sunandmoon.ui.theme.GreyColor
 import java.time.LocalTime
 
 @Composable
@@ -27,7 +28,7 @@ fun SunPositionTime(
 
     Card(
         modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
+        colors = CardDefaults.cardColors(containerColor = GreyColor)
     ) {
         Row(
             modifier = modifier
