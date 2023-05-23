@@ -266,7 +266,7 @@ fun productionCreation(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Text("Create new Production", color = MaterialTheme.colorScheme.onSurface)
+                Text("Create new production", color = MaterialTheme.colorScheme.onSurface)
                 TextField(
                     placeholder = { Text("My Production") },
                     modifier = modifier.clickable {},

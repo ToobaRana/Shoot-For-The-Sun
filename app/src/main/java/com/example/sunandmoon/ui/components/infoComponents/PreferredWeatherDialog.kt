@@ -18,6 +18,7 @@ import com.example.sunandmoon.data.ProductionSelectionUIState
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.theme.CheckmarkColor
 import com.example.sunandmoon.util.weatherIcons
+import androidx.compose.foundation.Image
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 
 @Composable
@@ -49,7 +50,7 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
 
                     if(weatherIcon != null) {
                         Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
+                            Image(
                                 painter = painterResource(weatherIcon),
                                 "Weather Condition Image",
                                 modifier.size(100.dp),
@@ -105,7 +106,7 @@ fun PreferredWeatherOverview(modifier: Modifier, preferableWeathers: List<Prefer
                 PreferableWeather.RAIN -> R.drawable.rain
                 PreferableWeather.SNOW -> R.drawable.snow
             }
-            Icon(
+            Image(
                 painter = painterResource(weatherIconId),
                 "Weather Condition Image",
                 modifier.size(60.dp),
