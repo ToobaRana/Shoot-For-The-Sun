@@ -87,12 +87,16 @@ class DataSource() {
     suspend fun fetchWeatherAPI(lat : String, lon : String) : LocationForecast{
         val endPoint = "$baseURLLocationForecast?lat=$lat&lon=$lon"
 
-        val apiResults : LocationForecast = client.get(endPoint){
-            headers {
-                header("X-Gravitee-API-Key", API_KEY)
-            }
+        var apiResults : LocationForecast
+        try {
+            apiResults = client.get(endPoint){
+                headers {
+                    header("X-Gravitee-API-Key", API_KEY)
+                }
+            }.body()
+        } catch (e: Exception) {
+            throw e
         }
-            .body()
 
         return apiResults
     }

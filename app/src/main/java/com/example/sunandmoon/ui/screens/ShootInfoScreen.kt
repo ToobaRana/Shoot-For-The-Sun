@@ -140,7 +140,7 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
 
                 //if statement added because weatherapi doesnt have data from before todays data and after 10 days
                 if(dateAndTime < LocalDateTime.now().minusHours(1) || dateAndTime >= LocalDateTime.now().plusDays(10)){
-                    NoDataCard(modifier)
+                    NoDataCard(modifier, shootInfoUIState.missingNetworkConnection)
                 } else{
                     if(shootInfoUIState.weatherIcon != null) {
                         WeatherCard(

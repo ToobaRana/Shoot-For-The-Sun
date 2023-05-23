@@ -1,7 +1,9 @@
 package com.example.sunandmoon.ui.screens
 
 
+import android.content.Context
 import android.location.Location
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,9 +31,11 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.CheckPermissions
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
+import com.example.sunandmoon.ui.components.userInputComponents.LatitudeLongitudeInput
 import com.example.sunandmoon.ui.components.userInputComponents.PreferredWeatherComponent
 import com.example.sunandmoon.ui.components.userInputComponents.SunPositionTime
 import com.example.sunandmoon.ui.components.userInputComponents.TimepickerComponent
+import com.example.sunandmoon.util.isNetworkAvailable
 import com.example.sunandmoon.viewModel.CreateShootViewModel
 import java.time.LocalTime
 
@@ -54,6 +59,8 @@ fun CreateShootScreen(
     if (createShootUIState.currentShootBeingEditedId == null && shootToEditId != null) {
         createShootViewModel.setCurrentShootBeingEditedId(shootToEditId)
     }
+
+    val networkIsAvailable = isNetworkAvailable(context = LocalContext.current)
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -119,36 +126,54 @@ fun CreateShootScreen(
 
                 item {
                     Spacer(modifier = modifier.size(20.dp))
-                    LocationSearch(
-                        modifier.padding(5.dp),
-                        createShootUIState.locationSearchQuery,
-                        createShootUIState.locationSearchResults,
-                        { query: String, format: Boolean -> createShootViewModel.setLocationSearchQuery(query, format) },
-                        { query: String -> createShootViewModel.loadLocationSearchResults(query) },
-                        { location: Location, setTimeZoneOffset: Boolean ->
-                            createShootViewModel.setCoordinates(
-                                location,
-                                setTimeZoneOffset
-                            )
-                        },
-                    )
+
+                    if (networkIsAvailable){
+                        LocationSearch(
+                            modifier.padding(5.dp),
+                            createShootUIState.locationSearchQuery,
+                            createShootUIState.locationSearchResults,
+                            { query: String, format: Boolean -> createShootViewModel.setLocationSearchQuery(query, format) },
+                            { query: String -> createShootViewModel.loadLocationSearchResults(query) },
+                            { location: Location, setTimeZoneOffset: Boolean ->
+                                createShootViewModel.setCoordinates(
+                                    location,
+                                    setTimeZoneOffset
+                                )
+                            },
+                        )
+                    }
+                    else {
+                        LatitudeLongitudeInput(
+                            modifier,
+                            Location("").apply {
+                                latitude =  createShootUIState.latitude
+                                longitude = createShootUIState.longitude
+                            },
+                            {location: Location, setTimeZoneOffset: Boolean ->  createShootViewModel.setCoordinates(location, setTimeZoneOffset)}
+                        )
+                    }
                 }
 
+                if(networkIsAvailable) {
+                    item {
+                        Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                            Button(
+                                onClick = {
 
-                item {
-                    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        Button(
-                            onClick = {
+                                    createShootViewModel.getCurrentPosition()
+                                },
+                                enabled = createShootUIState.locationEnabled
 
-                                createShootViewModel.getCurrentPosition()
-                            },
-                            enabled = createShootUIState.locationEnabled
-
-                        ) {
-                            Text(stringResource(R.string.UseCurrentLocation), fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito_bold)))
+                            ) {
+                                Text(
+                                    stringResource(R.string.UseCurrentLocation),
+                                    fontSize = 18.sp,
+                                    fontFamily = FontFamily(Font(R.font.nunito_bold))
+                                )
+                            }
                         }
+                        Spacer(modifier = modifier.size(20.dp))
                     }
-                    Spacer(modifier = modifier.size(20.dp))
                 }
 
                 item {

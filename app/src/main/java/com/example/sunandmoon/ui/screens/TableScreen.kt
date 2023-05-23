@@ -22,6 +22,7 @@ import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.TableCard
+import com.example.sunandmoon.ui.components.infoComponents.TableMissingInternet
 import com.example.sunandmoon.ui.components.userInputComponents.dropdownMenuSunType
 import com.example.sunandmoon.viewModel.TableViewModel
 import okhttp3.internal.format
@@ -38,7 +39,12 @@ fun TableScreen(
 ) {
     val tableUiState by tableViewModel.tableUIState.collectAsState()
 
-    TableView(modifier, tableViewModel, tableUiState, navigateToNextBottomBar)
+    if(!tableUiState.missingNetworkConnection) {
+        TableView(modifier, tableUiState, navigateToNextBottomBar)
+    }
+    else {
+        TableMissingInternet(modifier, navigateToNextBottomBar)
+    }
 }
 
 
@@ -47,12 +53,10 @@ fun TableScreen(
 @Composable
 fun TableView(
     modifier: Modifier,
-    tableViewModel: TableViewModel = viewModel(),
     tableUIState: TableUIState,
-    navigateToNextBottomBar: (index: Int) -> Unit
+    navigateToNextBottomBar: (index: Int) -> Unit,
+    tableViewModel: TableViewModel = viewModel(),
 ) {
-
-    var chosenSunType = ""
 
     Scaffold(
         modifier = modifier
@@ -102,7 +106,7 @@ fun TableView(
                             )
                         }
                     )
-                    chosenSunType = dropdownMenuSunType(tableViewModel, modifier = Modifier.width(165.dp).padding(end = 1.dp))
+                    dropdownMenuSunType(tableViewModel, modifier = Modifier.width(165.dp).padding(end = 1.dp))
                 }
                 Spacer(modifier = modifier.height(10.dp))
             }

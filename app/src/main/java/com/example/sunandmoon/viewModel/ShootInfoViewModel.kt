@@ -91,8 +91,20 @@ class ShootInfoViewModel @Inject constructor(
 
     fun loadLocationForecast(){
         viewModelScope.launch(Dispatchers.IO) {
-            val weatherData = dataSource.fetchWeatherAPI(shootInfoUIState.value.shoot?.location?.latitude.toString(), shootInfoUIState.value.shoot?.location?.longitude.toString())
-            retrieveUsefulWeatherData(weatherData)
+            var weatherData: LocationForecast? = null
+            try {
+                weatherData = dataSource.fetchWeatherAPI(shootInfoUIState.value.shoot?.location?.latitude.toString(), shootInfoUIState.value.shoot?.location?.longitude.toString())
+            } catch (_: Exception) {
+                _shootInfoUIState.update { currentState ->
+                    currentState.copy(
+                        missingNetworkConnection = true
+                    )
+                }
+            }
+
+            if (weatherData != null) {
+                retrieveUsefulWeatherData(weatherData)
+            }
         }
     }
 

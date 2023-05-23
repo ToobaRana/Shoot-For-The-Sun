@@ -5,6 +5,7 @@
     <string name="Sunrise">Sunrise</string>
     <string name="SolarNoon">SolarNoon</string>
     <string name="NoData">No weather data available\n(available 10 days into the future)</string>
+    <string name="NoInternet">Network error\nCheck your internet connection</string>
 
     <string name="defaultProductionName">My Production</string>
 
