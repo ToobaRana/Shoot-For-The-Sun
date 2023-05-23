@@ -58,7 +58,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
 
             Row(
                 modifier
-                    .padding(start = 40.dp, top = 10.dp, end = 5.dp)
+                    .padding(start = 40.dp, top = 30.dp, end = 5.dp)
                     .fillMaxWidth()
             ) {
 
@@ -69,7 +69,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
                 Icon(
                     painter = painterResource(id = R.drawable.sun),
                     "UV-Intensity Based Image",
-                    modifier.size(100.dp),
+                    modifier.size(80.dp),
                     uvColor
                 )
 

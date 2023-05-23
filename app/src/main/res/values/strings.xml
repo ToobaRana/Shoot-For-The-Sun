@@ -25,6 +25,9 @@
     <string name="HomeButton">Home button</string>
     <string name="ARButton">A R button</string>
     <string name="TableButton">table button</string>
+    <string name="SaveButton">Save</string>
+
+
 
     <string name="EmptyAddProduction">Empty…\n\n(Add a production)</string>
     <string name="EmptyAddShoot">Empty…\n\n(Add a shoot)</string>

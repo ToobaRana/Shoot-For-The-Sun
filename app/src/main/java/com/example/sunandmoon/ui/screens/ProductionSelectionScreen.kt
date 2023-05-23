@@ -303,7 +303,7 @@ fun productionCreation(
                 )
 
                 {
-                    Text(text = "Save")
+                    Text(text = stringResource(id = R.string.SaveButton))
                 }
 
 

@@ -28,7 +28,7 @@ fun PreferredWeatherComponent(
 ) {
 
     Card(
-        modifier.fillMaxWidth(0.80f),
+        modifier.fillMaxWidth(0.9f),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Row(

@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -145,7 +146,7 @@ fun CreateShootScreen(
                             enabled = createShootUIState.locationEnabled
 
                         ) {
-                            Text(stringResource(R.string.UseCurrentLocation), fontSize = 18.sp)
+                            Text(stringResource(R.string.UseCurrentLocation), fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito_bold)))
                         }
                     }
                     Spacer(modifier = modifier.size(20.dp))
@@ -169,11 +170,12 @@ fun CreateShootScreen(
                     Row(modifier = modifier.wrapContentSize()){
 
                         Text(
-                            modifier = modifier,
+                            modifier = modifier.fillMaxWidth(),
                             text = stringResource(R.string.Time),
                             fontFamily = FontFamily(Font(R.font.nunito_bold)),
                             fontSize = 20.sp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center
                         )
                         Spacer(modifier = modifier.width(90.dp))
                     }
@@ -181,12 +183,6 @@ fun CreateShootScreen(
 
 
                     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                        
-
-
-                        Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier
-                            .size(50.dp),
-                            MaterialTheme.colorScheme.primary)
 
                         TimepickerComponent(
                             modifier = modifier.wrapContentSize(),
@@ -208,16 +204,10 @@ fun CreateShootScreen(
                             containerShape = RoundedCornerShape(10.dp)
                         )
 
-                        Spacer(modifier = modifier.size(50.dp))
-
-
                     }
-
-
-
-
-
                 }
+
+
                 item {
                     Spacer(modifier = modifier.size(20.dp))
                     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start){
@@ -227,7 +217,7 @@ fun CreateShootScreen(
                             text = stringResource(R.string.SunPosition),
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.primary,
-                            fontFamily = FontFamily(Font(R.font.nunito))
+                            fontFamily = FontFamily(Font(R.font.nunito_bold))
 
 
                         )
@@ -237,7 +227,7 @@ fun CreateShootScreen(
                 item {
                     Row(
                         modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(0.9f)
                             .wrapContentSize()
                     ) {
                         SunPositionTime(
@@ -266,7 +256,7 @@ fun CreateShootScreen(
                             text = stringResource(R.string.PreferredWeather),
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.primary,
-                            fontFamily = FontFamily(Font(R.font.nunito))
+                            fontFamily = FontFamily(Font(R.font.nunito_bold))
 
 
                         )
@@ -285,13 +275,17 @@ fun CreateShootScreen(
                         )
                     }
                 }
+                
+
                 item {
-                    Button(onClick = {
+                    Button(
+                        modifier = modifier.padding(30.dp).width(200.dp).height(50.dp),
+                        onClick = {
                         //save stuff
                         createShootViewModel.saveShoot()
                         navigateBack()
                     }) {
-                        Text(text = "Save")
+                        Text(text = stringResource(id = R.string.SaveButton), fontSize = 20.sp, fontFamily = FontFamily(Font(R.font.nunito_bold)))
                     }
                 }
             }

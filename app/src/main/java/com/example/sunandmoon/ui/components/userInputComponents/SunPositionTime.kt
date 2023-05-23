@@ -26,7 +26,7 @@ fun SunPositionTime(
 ) {
 
     Card(
-        modifier.fillMaxWidth(0.95f),
+        modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Row(
