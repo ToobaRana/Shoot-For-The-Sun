@@ -16,6 +16,7 @@ data class ShootSelectionUIState (
     val selectedProduction: Production? = null,
     val newProductionName: String? = null,
 
+    val orderByDropdownOpened: Boolean = false,
     val productionOrderBy: ProductionOrderBy = ProductionOrderBy.START_DATE_TIME,
     val shootOrderBy: ShootOrderBy = ShootOrderBy.DATE_TIME,
 

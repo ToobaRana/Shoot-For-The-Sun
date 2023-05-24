@@ -61,6 +61,12 @@
     <string name="PreferredWeatherNotMatch">Your preferred weather for this shoot does not match the actual weather of this shoot</string>
     <string name="PreferredWeatherNoWeatherData">No weather data available for this shoot, weather data is available from the current date to 10 days into the future</string>
 
+    <string name="StartDate">Start date</string>
+    <string name="EndDate">End date</string>
+    <string name="Name">Name</string>
+    <string name="Latitude">Latitude</string>
+    <string name="Longitude">Longitude</string>
+
     <string name="OK">OK</string>
 
     <!--<string-array name="TeamMembers">

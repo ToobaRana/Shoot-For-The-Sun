@@ -15,7 +15,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
+import com.example.sunandmoon.data.localDatabase.dao.ProductionOrderBy
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
+import com.example.sunandmoon.data.localDatabase.dao.ShootOrderBy
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
 import com.example.sunandmoon.data.localDatabase.storableShootsToNormalShoots
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
@@ -281,5 +283,36 @@ class ShootSelectionViewModel @Inject constructor(
             }
         }
         return null
+    }
+
+    fun openCloseOrderByDropdown() {
+        _shootSelectionUIState.update { currentState ->
+            currentState.copy(
+                orderByDropdownOpened = !_shootSelectionUIState.value.orderByDropdownOpened
+            )
+        }
+    }
+
+    fun setProductionOrderBy(productionOrderBy: ProductionOrderBy) {
+        Log.i("productionOrderBy", productionOrderBy.name)
+        _shootSelectionUIState.update { currentState ->
+            currentState.copy(
+                productionOrderBy = productionOrderBy
+            )
+        }
+        getAllProductions()
+    }
+
+    fun setShootOrderBy(shootOrderBy: ShootOrderBy) {
+        _shootSelectionUIState.update { currentState ->
+            currentState.copy(
+                shootOrderBy = shootOrderBy
+            )
+        }
+
+        getAllSoloShoots()
+
+        val selectedProduction = _shootSelectionUIState.value.selectedProduction
+        if(selectedProduction != null) getShootsInProduction(selectedProduction)
     }
 }
