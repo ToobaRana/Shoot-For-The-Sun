@@ -1,8 +1,7 @@
-package com.example.sunandmoon.data.util
+package com.example.sunandmoon.data.dataUtil
 
 import android.location.Location
 import com.example.sunandmoon.data.PreferableWeather
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class Shoot(

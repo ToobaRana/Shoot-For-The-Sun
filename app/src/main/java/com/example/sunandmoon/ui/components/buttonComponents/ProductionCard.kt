@@ -10,12 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
-import com.example.sunandmoon.data.util.Production
-import com.example.sunandmoon.data.util.Shoot
-import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
-import java.time.LocalDate
+import com.example.sunandmoon.data.dataUtil.Production
 import java.time.LocalDateTime
 
 @Composable

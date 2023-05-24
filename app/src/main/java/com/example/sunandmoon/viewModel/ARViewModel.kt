@@ -7,26 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.calculateSunPosition
 import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.data.DataSource
-import com.example.sunandmoon.data.ShootInfoUIState
-import com.example.sunandmoon.data.fetchLocation
-import com.example.sunandmoon.data.localDatabase.AppDatabase
-import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
-import com.example.sunandmoon.data.localDatabase.dao.ShootDao
-import com.example.sunandmoon.data.localDatabase.storableShootToNormalShoot
-import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.util.fetchLocation
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -77,16 +67,12 @@ class ARViewModel  @Inject constructor(
     }
 
     fun setCoordinates(newLocation: Location, setTimeZoneOffset: Boolean) {
-        Log.i("ararar","aaa 1.5")
         viewModelScope.launch {
-            Log.i("ararar","aaa 1.75")
             if (setTimeZoneOffset) {
                 val locationTimeZoneOffsetResult =
                     dataSource.fetchLocationTimezoneOffset(newLocation)
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
             }
-
-            Log.i("ararar","aaa 1.9")
 
             _arUIState.update { currentState ->
                 currentState.copy(
@@ -95,9 +81,7 @@ class ARViewModel  @Inject constructor(
             }
 
             val timeZoneOffset = _arUIState.value.timeZoneOffset
-            Log.i("ararar","aaa2")
             if(timeZoneOffset != null) {
-                Log.i("ararar","aaa3")
                 setSunPosition(newLocation, timeZoneOffset)
             }
         }
@@ -105,11 +89,8 @@ class ARViewModel  @Inject constructor(
 
     //calls fetchLocation method with provider client, then updates latitude and longitude in uiState with return value
     fun getAndSetCurrentPosition() {
-        Log.i("ararar","aaa0")
         viewModelScope.launch() {
-            Log.i("ararar","aaa 0.5")
             fetchLocation(fusedLocationProviderClient) { location: Location, setTimeZoneOffset: Boolean ->
-                Log.i("ararar","aaa1")
                 setCoordinates(
                     location,
                     setTimeZoneOffset

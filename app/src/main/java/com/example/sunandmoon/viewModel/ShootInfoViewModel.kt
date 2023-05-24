@@ -1,6 +1,5 @@
 package com.example.sunandmoon.viewModel
 
-import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,9 +9,7 @@ import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.storableShootToNormalShoot
-import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.getSunRiseNoonFall
-import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,17 +17,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
-import com.example.sunandmoon.model.LocationForecastModel.Timeseries
 import com.example.sunandmoon.util.getCorrectTimeObject
 import com.example.sunandmoon.util.getWeatherIcon
-import com.example.sunandmoon.util.weatherIcons
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 
 @HiltViewModel

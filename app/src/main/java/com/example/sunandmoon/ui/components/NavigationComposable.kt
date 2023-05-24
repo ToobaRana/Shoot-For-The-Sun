@@ -1,19 +1,13 @@
 package com.example.sunandmoon.ui.components
 
-import android.location.Location
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
-import com.example.sunandmoon.data.util.Shoot
-import com.example.sunandmoon.ui.theme.InfoBlueColor
-import java.time.LocalDateTime
 
 @Composable
 fun NavigationComposable(modifier: Modifier, page: Int, navigateToNextBottomBar: (index: Int) -> Unit){

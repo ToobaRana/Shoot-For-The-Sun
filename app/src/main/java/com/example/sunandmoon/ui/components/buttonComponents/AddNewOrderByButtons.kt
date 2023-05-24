@@ -19,16 +19,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
-import com.example.sunandmoon.data.ProductionSelectionUIState
-import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
+import com.example.sunandmoon.data.ShootSelectionUIState
+import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages
 
 @Composable
 fun AddNewOrderByButtons(
     modifier: Modifier,
     currentPageIndex: Int,
-    productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
-    productionSelectionUIState: ProductionSelectionUIState,
+    shootSelectionViewModel: ShootSelectionViewModel = hiltViewModel(),
+    shootSelectionUIState: ShootSelectionUIState,
     navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
 
     ) {
@@ -52,10 +52,10 @@ fun AddNewOrderByButtons(
                     .background(MaterialTheme.colorScheme.primary)
                     .clickable {
                         if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal) {
-                            productionSelectionViewModel.setProductionName("")
+                            shootSelectionViewModel.setProductionName("")
                         } else {
                             navigateToCreateShootScreen(
-                                productionSelectionUIState.selectedProduction?.id,
+                                shootSelectionUIState.selectedProduction?.id,
                                 null
                             )
                         }

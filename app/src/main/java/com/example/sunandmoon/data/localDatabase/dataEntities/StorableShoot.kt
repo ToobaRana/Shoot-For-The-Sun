@@ -1,9 +1,7 @@
 package com.example.sunandmoon.data.localDatabase.dataEntities
 
-import android.location.Location
 import androidx.room.*
 import com.example.sunandmoon.data.PreferableWeather
-import com.example.sunandmoon.data.util.Shoot
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

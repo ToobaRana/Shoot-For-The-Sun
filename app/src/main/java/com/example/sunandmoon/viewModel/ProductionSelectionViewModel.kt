@@ -3,13 +3,12 @@ package com.example.sunandmoon.viewModel
 
 import android.location.Location
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
-import com.example.sunandmoon.data.ProductionSelectionUIState
-import com.example.sunandmoon.data.util.Production
-import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.data.ShootSelectionUIState
+import com.example.sunandmoon.data.dataUtil.Production
+import com.example.sunandmoon.data.dataUtil.Shoot
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,16 +19,13 @@ import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
 import com.example.sunandmoon.data.localDatabase.storableShootsToNormalShoots
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
-import com.example.sunandmoon.model.LocationForecastModel.Timeseries
 import com.example.sunandmoon.util.getCorrectTimeObject
 import com.example.sunandmoon.util.getWeatherIcon
-import com.example.sunandmoon.util.isNetworkAvailable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 enum class SelectionPages {
@@ -37,7 +33,7 @@ enum class SelectionPages {
 }
 
 @HiltViewModel
-class ProductionSelectionViewModel @Inject constructor(
+class ShootSelectionViewModel @Inject constructor(
     private val database: AppDatabase
 ) : ViewModel() {
 
@@ -46,27 +42,27 @@ class ProductionSelectionViewModel @Inject constructor(
     val productionDao: ProductionDao = database.productionDao()
     val shootDao: ShootDao = database.shootDao()
 
-    private val _productionSelectionUIState = MutableStateFlow(
-        ProductionSelectionUIState()
+    private val _shootSelectionUIState = MutableStateFlow(
+        ShootSelectionUIState()
     )
 
     // to reduce the amount of API-calls needed
     val retrievedWeatherData: MutableMap<Location, LocationForecast> = mutableMapOf()
 
-    val productionSelectionUIState: StateFlow<ProductionSelectionUIState> = _productionSelectionUIState.asStateFlow()
+    val shootSelectionUIState: StateFlow<ShootSelectionUIState> = _shootSelectionUIState.asStateFlow()
 
     init {
         // get previously saved productions
         //saveProduction()
         getAllProductions()
-        getAllIndependentShoots()
+        getAllSoloShoots()
     }
 
 
     fun getAllProductions() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val allProductions = productionDao.getAll(_productionSelectionUIState.value.productionOrderBy.value)
+                val allProductions = productionDao.getAll(_shootSelectionUIState.value.productionOrderBy.value)
                 var productionList = mutableListOf<Production>()
                 allProductions.forEach() { storableProduction ->
                     productionList.add(
@@ -81,7 +77,7 @@ class ProductionSelectionViewModel @Inject constructor(
                     )
                 }
                 withContext(Dispatchers.Main) {
-                    _productionSelectionUIState.update { currentState ->
+                    _shootSelectionUIState.update { currentState ->
                         currentState.copy(
                             productionsList = productionList
                         )
@@ -91,15 +87,15 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
-    fun getAllIndependentShoots() {
+    fun getAllSoloShoots() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val allIndependentShoots = shootDao.getAllIndependentShoots(_productionSelectionUIState.value.shootOrderBy.value)
-                val shootList = storableShootsToNormalShoots(allIndependentShoots)
+                val allSoloShoots = shootDao.getAllSoloShoots(_shootSelectionUIState.value.shootOrderBy.value)
+                val shootList = storableShootsToNormalShoots(allSoloShoots)
 
-                _productionSelectionUIState.update { currentState ->
+                _shootSelectionUIState.update { currentState ->
                     currentState.copy(
-                        independentShootsList = shootList
+                        soloShootsList = shootList
                     )
                 }
 
@@ -125,7 +121,7 @@ class ProductionSelectionViewModel @Inject constructor(
     fun deleteProduction() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val idToDelete: Int? = _productionSelectionUIState.value.selectedProduction?.id
+                val idToDelete: Int? = _shootSelectionUIState.value.selectedProduction?.id
                 Log.i("aaa12345", idToDelete.toString())
                 if(idToDelete != null) {
                     shootDao.deleteShootsInProduction(idToDelete)
@@ -138,9 +134,9 @@ class ProductionSelectionViewModel @Inject constructor(
     }
 
     fun changeCurrentPageIndex() {
-        _productionSelectionUIState.update { currentState ->
+        _shootSelectionUIState.update { currentState ->
             val newPageIndex = (
-                    if(_productionSelectionUIState.value.currentPageIndex == 0)
+                    if(_shootSelectionUIState.value.currentPageIndex == 0)
                         SelectionPages.SHOOTS.ordinal
                     else
                         SelectionPages.PRODUCTIONS.ordinal
@@ -155,10 +151,10 @@ class ProductionSelectionViewModel @Inject constructor(
     fun getShootsInProduction(production: Production) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val productionShoots = production.id?.let { shootDao.loadByProductionId(it, _productionSelectionUIState.value.shootOrderBy.value) }
+                val productionShoots = production.id?.let { shootDao.loadByProductionId(it, _shootSelectionUIState.value.shootOrderBy.value) }
                 val shootList = storableShootsToNormalShoots(productionShoots)
 
-                _productionSelectionUIState.update { currentState ->
+                _shootSelectionUIState.update { currentState ->
                     currentState.copy(
                         productionShootsList = shootList
                     )
@@ -170,7 +166,7 @@ class ProductionSelectionViewModel @Inject constructor(
     }
 
     fun goIntoProduction(production: Production) {
-        _productionSelectionUIState.update { currentState ->
+        _shootSelectionUIState.update { currentState ->
             currentState.copy(
                 selectedProduction = production,
                 currentPageIndex = SelectionPages.PRODUCTION_SHOOTS.ordinal,
@@ -180,7 +176,7 @@ class ProductionSelectionViewModel @Inject constructor(
     }
 
     fun goOutOfProduction() {
-        _productionSelectionUIState.update { currentState ->
+        _shootSelectionUIState.update { currentState ->
             currentState.copy(
                 currentPageIndex = SelectionPages.PRODUCTIONS.ordinal,
                 selectedProduction = null
@@ -188,7 +184,7 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
     fun setProductionName(name: String?){
-        _productionSelectionUIState.update { currentState ->
+        _shootSelectionUIState.update { currentState ->
             currentState.copy(
                 newProductionName = name
             )
@@ -197,7 +193,7 @@ class ProductionSelectionViewModel @Inject constructor(
     }
 
     fun setShowPreferredWeatherDialog(shootToShowPreferredWeatherDialogFor: Shoot?){
-        _productionSelectionUIState.update { currentState ->
+        _shootSelectionUIState.update { currentState ->
             currentState.copy(
                 shootToShowPreferredWeatherDialogFor = shootToShowPreferredWeatherDialogFor
             )
@@ -259,14 +255,14 @@ class ProductionSelectionViewModel @Inject constructor(
             }
 
             if(selectionPage == SelectionPages.SHOOTS) {
-                _productionSelectionUIState.update { currentState ->
+                _shootSelectionUIState.update { currentState ->
                     currentState.copy(
-                        independentShootsList = updatedShoots
+                        soloShootsList = updatedShoots
                     )
                 }
             }
             else {
-                _productionSelectionUIState.update { currentState ->
+                _shootSelectionUIState.update { currentState ->
                     currentState.copy(
                         productionShootsList = updatedShoots
                     )
@@ -275,13 +271,13 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
-    fun getWeatherIconOfShoot(shoot: Shoot): Int? {
+    fun getWeatherIconOfShoot(shoot: Shoot): Pair<Int?, String?>? {
         retrievedWeatherData.forEach {
             if(shoot.location.distanceTo(it.key) <= 1000) {
                 val correctTimeObject = getCorrectTimeObject(shoot.dateTime, it.value)
                 var weatherIconCode: String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
                 if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
-                return getWeatherIcon(weatherIconCode)
+                return Pair(getWeatherIcon(weatherIconCode), weatherIconCode)
             }
         }
         return null
