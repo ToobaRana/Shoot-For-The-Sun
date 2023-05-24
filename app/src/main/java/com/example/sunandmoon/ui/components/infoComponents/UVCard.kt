@@ -29,7 +29,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
     val uvDescriptionsArray: Array<String> = stringArrayResource(R.array.uv_description)
 
     val uvDescription = when(uvIndex?.toInt()){
-        in 1..2 -> uvDescriptionsArray[0]
+        in 0..2 -> uvDescriptionsArray[0]
         in 3..5 -> uvDescriptionsArray[1]
         in 6..7 -> uvDescriptionsArray[2]
         in 8..10 -> uvDescriptionsArray[3]
