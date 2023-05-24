@@ -15,10 +15,10 @@ import com.example.sunandmoon.ui.screens.*
 fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "productionSelectionScreen") {
-        val routeProductionSelectionScreen = "productionSelectionScreen"
-        composable(routeProductionSelectionScreen) {
-            ProductionSelectionScreen(
+    NavHost(navController = navController, startDestination = "shootSelectionScreen") {
+        val routeShootSelectionScreen = "shootSelectionScreen"
+        composable(routeShootSelectionScreen) {
+            ShootSelectionScreen(
                 modifier = modifier,
                 navigateToShootInfoScreen = { shootId: Int -> navController.navigate("shootInfoScreen/$shootId")},
                 navigateToNextBottomBar = { index: Int ->
@@ -26,7 +26,7 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
                 },
                 navigateToCreateShootScreen = { parentProductionId: Int?, shootToEditId: Int? -> navController.navigate("createShootScreen/$parentProductionId/$shootToEditId") },
                 navController = navController,
-                currentScreenRoute = routeProductionSelectionScreen,
+                currentScreenRoute = routeShootSelectionScreen,
                 goToAboutScreen = { navController.navigate("aboutScreen") },
             )
         }
@@ -37,7 +37,7 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
             if(shootId != null) {
                 ShootInfoScreen(
                     modifier = modifier,
-                    navigateBack = { navController.popBackStack("productionSelectionScreen", false) },
+                    navigateBack = { navController.popBackStack("shootSelectionScreen", false) },
                     shootId = shootId,
                     navigateToCreateShootScreen = { parentProductionId: Int?, shootToEditId: Int? -> navController.navigate("createShootScreen/$parentProductionId/$shootToEditId") },
                     navController = navController,
@@ -48,7 +48,7 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
         composable("createShootScreen/{parentProductionId}/{shootToEditId}") { backStackEntry ->
             val parentProductionId: Int? = backStackEntry.arguments?.getString("parentProductionId")?.toIntOrNull()
             val shootToEditId: Int? = backStackEntry.arguments?.getString("shootToEditId")?.toIntOrNull()
-            val routeToGoBackTo: String = if(shootToEditId != null) routeShootInfoScreen else routeProductionSelectionScreen
+            val routeToGoBackTo: String = if(shootToEditId != null) routeShootInfoScreen else routeShootSelectionScreen
 
             CreateShootScreen(
                 modifier = modifier,
@@ -77,7 +77,7 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
         composable("aboutScreen"){
             AboutScreen(
                 modifier = modifier,
-                navigateBack = { navController.popBackStack("productionSelectionScreen", false) }
+                navigateBack = { navController.popBackStack("shootSelectionScreen", false) }
             )
         }
     }
@@ -85,7 +85,7 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
 
 fun bottomBarNavigation(index: Int, navController: NavController) {
     when (index) {
-        0 -> navController.popBackStack("productionSelectionScreen", false)
+        0 -> navController.popBackStack("shootSelectionScreen", false)
         1 -> navController.navigate("ARScreen")
         2 -> navController.navigate("tableScreen")
     }

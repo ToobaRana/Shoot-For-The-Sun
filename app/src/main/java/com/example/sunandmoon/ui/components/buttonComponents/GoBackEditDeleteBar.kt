@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
-import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
+import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 
 @Composable

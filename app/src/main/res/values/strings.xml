@@ -64,6 +64,22 @@
     <string name="carlosyllobre">Carlo Syllobre</string>
     <string name="carlosyllobreLink">https://www.figma.com/community/file/955978734883254712/Weather-Icons-%7C-Flat-%26-Outline</string>
 
+    <string name="preferredWeatherInfo">Preferred weather info</string>
+    <string name="NoPreferredWeatherRegistered">(No preferred weather registered)</string>
+    <string name="ActualWeather">Actual weather:</string>
+    <string name="YourPreferredWeather">Your preferred weather:</string>
+    <string name="PreferredWeatherMatch">Your preferred weather for this shoot matches the actual weather of this shoot</string>
+    <string name="PreferredWeatherNotMatch">Your preferred weather for this shoot does not match the actual weather of this shoot</string>
+    <string name="PreferredWeatherNoWeatherData">No weather data available for this shoot, weather data is available from the current date to 10 days into the future</string>
+
+    <string name="StartDate">Start date</string>
+    <string name="EndDate">End date</string>
+    <string name="Name">Name</string>
+    <string name="Latitude">Latitude</string>
+    <string name="Longitude">Longitude</string>
+
+    <string name="OK">OK</string>
+
     <!--<string-array name="TeamMembers">
         <item>Adrian Skansen</item>
         <item>Amalie Ingela Aaser</item>

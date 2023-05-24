@@ -14,13 +14,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
+import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages
 
 @Composable
 fun PagePickerProductionsShoots(
     modifier: Modifier,
-    productionSelectionViewModel: ProductionSelectionViewModel = viewModel(),
+    shootSelectionViewModel: ShootSelectionViewModel = viewModel(),
     currentPageIndex: Int
 ) {
     Box(
@@ -40,7 +40,7 @@ fun PagePickerProductionsShoots(
             val colors =
                 listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
             Button(
-                onClick = { if (currentPageIndex != SelectionPages.PRODUCTIONS.ordinal) productionSelectionViewModel.changeCurrentPageIndex() },
+                onClick = { if (currentPageIndex != SelectionPages.PRODUCTIONS.ordinal) shootSelectionViewModel.changeCurrentPageIndex() },
                 modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = colors[currentPageIndex]),
                 contentPadding = PaddingValues(vertical = 4.dp)
@@ -48,7 +48,7 @@ fun PagePickerProductionsShoots(
                 Text(stringResource(com.example.sunandmoon.R.string.Productions), color = colors[(currentPageIndex + 1) % 2], fontSize = 18.sp)
             }
             Button(
-                onClick = { if (currentPageIndex != SelectionPages.SHOOTS.ordinal) productionSelectionViewModel.changeCurrentPageIndex() },
+                onClick = { if (currentPageIndex != SelectionPages.SHOOTS.ordinal) shootSelectionViewModel.changeCurrentPageIndex() },
                 modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = colors[(currentPageIndex + 1) % 2]),
                 contentPadding = PaddingValues(vertical = 4.dp)

@@ -21,7 +21,7 @@ interface ShootDao {
             "WHEN 'longitude' THEN longitude " +
             "ELSE date_time " +
             "END ASC")
-    fun getAllIndependentShoots(orderBy: String): List<StorableShoot>
+    fun getAllSoloShoots(orderBy: String): List<StorableShoot>
 
     @Query("SELECT * FROM shoot WHERE parent_production_id = :productionId ORDER BY CASE :orderBy " +
             "WHEN 'name' THEN name " +

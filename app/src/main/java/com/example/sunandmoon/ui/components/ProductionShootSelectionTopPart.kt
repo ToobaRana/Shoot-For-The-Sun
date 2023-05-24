@@ -6,17 +6,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
-import com.example.sunandmoon.data.ProductionSelectionUIState
+import com.example.sunandmoon.data.ShootSelectionUIState
+import com.example.sunandmoon.data.localDatabase.dao.ProductionOrderBy
+import com.example.sunandmoon.data.localDatabase.dao.ShootOrderBy
 import com.example.sunandmoon.ui.components.buttonComponents.AboutButton
 import com.example.sunandmoon.ui.components.buttonComponents.AddNewOrderByButtons
 import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
 import com.example.sunandmoon.ui.components.buttonComponents.PagePickerProductionsShoots
-import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
+import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,15 +27,15 @@ import com.example.sunandmoon.viewModel.SelectionPages
 fun ProductionShootSelectionTopPart(
     modifier: Modifier,
     navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
-    productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
+    shootSelectionViewModel: ShootSelectionViewModel = hiltViewModel(),
     currentPageIndex: Int,
-    productionSelectionUIState: ProductionSelectionUIState,
+    shootSelectionUIState: ShootSelectionUIState,
     goToAboutScreen: () -> Unit
 ) {
     val pageTitleTexts = listOf("Your productions", "Solo shoots", "My production")
     var titleTextToUse: String = pageTitleTexts[currentPageIndex]
     if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal) {
-        titleTextToUse = productionSelectionUIState.selectedProduction?.name ?: "My production"
+        titleTextToUse = shootSelectionUIState.selectedProduction?.name ?: "My production"
     }
 
     Box() {
@@ -51,9 +54,9 @@ fun ProductionShootSelectionTopPart(
                     modifier,
                     MaterialTheme.colorScheme.primary,
                     MaterialTheme.colorScheme.secondary,
-                    { productionSelectionViewModel.goOutOfProduction() },
+                    { shootSelectionViewModel.goOutOfProduction() },
                     { /* TODO */ },
-                    { productionSelectionViewModel.deleteProduction() })
+                    { shootSelectionViewModel.deleteProduction() })
             }
             else {
                 Spacer(modifier = modifier.size(30.dp))
@@ -94,13 +97,13 @@ fun ProductionShootSelectionTopPart(
                 )
             )
             if (currentPageIndex != SelectionPages.PRODUCTION_SHOOTS.ordinal) {
-                PagePickerProductionsShoots(modifier, productionSelectionViewModel, currentPageIndex)
+                PagePickerProductionsShoots(modifier, shootSelectionViewModel, currentPageIndex)
             }
             AddNewOrderByButtons(
                 modifier = modifier,
                 currentPageIndex = currentPageIndex,
-                productionSelectionViewModel= productionSelectionViewModel,
-                productionSelectionUIState = productionSelectionUIState,
+                shootSelectionViewModel= shootSelectionViewModel,
+                shootSelectionUIState = shootSelectionUIState,
                 navigateToCreateShootScreen = navigateToCreateShootScreen,
             )
         }

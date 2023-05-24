@@ -63,7 +63,7 @@ import com.example.sunandmoon.viewModel.TableViewModel
                             selectedOptionText = selectionOption
                             expanded = false
                             tableViewModel.setSunType(selectedOptionText)
-                            tableViewModel.loadSunInformation()
+                            tableViewModel.loadTableSunInformation()
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )

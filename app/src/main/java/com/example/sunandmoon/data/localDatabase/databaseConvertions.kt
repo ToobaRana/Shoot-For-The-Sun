@@ -2,7 +2,7 @@ package com.example.sunandmoon.data.localDatabase
 
 import android.location.Location
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
-import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.data.dataUtil.Shoot
 
 fun storableShootToNormalShoot(storableShoot: StorableShoot): Shoot {
     return Shoot(

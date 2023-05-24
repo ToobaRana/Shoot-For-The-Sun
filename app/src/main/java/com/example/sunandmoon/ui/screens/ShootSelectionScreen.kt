@@ -1,38 +1,22 @@
 package com.example.sunandmoon.ui.screens
 
-import android.content.res.Resources
-import android.graphics.drawable.Icon
-
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.material3.AlertDialogDefaults.containerColor
-import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.BlurredEdgeTreatment
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -40,39 +24,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.ImeOptions
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.sunandmoon.R
-import com.example.sunandmoon.data.ProductionSelectionUIState
-import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.ProductionShootSelectionTopPart
-import com.example.sunandmoon.ui.components.buttonComponents.AddNewOrderByButtons
+import com.example.sunandmoon.ui.components.buttonComponents.OrderByDropdown
 
-import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
-import com.example.sunandmoon.ui.components.buttonComponents.PagePickerProductionsShoots
 import com.example.sunandmoon.ui.components.infoComponents.PreferredWeatherDialog
 import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
 import com.example.sunandmoon.ui.components.infoComponents.ShootCard
-import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
+import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductionSelectionScreen(
+fun ShootSelectionScreen(
     modifier: Modifier,
     navigateToShootInfoScreen: (shootId: Int) -> Unit,
-    productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
+    shootSelectionViewModel: ShootSelectionViewModel = hiltViewModel(),
     navigateToNextBottomBar: (index: Int) -> Unit,
     navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
     navController: NavController,
@@ -80,43 +55,43 @@ fun ProductionSelectionScreen(
     goToAboutScreen: () -> Unit
 ) {
 
-    val productionSelectionUIState by productionSelectionViewModel.productionSelectionUIState.collectAsState()
+    val shootSelectionUIState by shootSelectionViewModel.shootSelectionUIState.collectAsState()
 
     // when you navigate back to this screen we want to get the shoots from the database again
     LaunchedEffect(navController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.route == currentScreenRoute) {
                 // get all the shoots from the database when popped back to this screen
-                productionSelectionViewModel.getAllIndependentShoots()
+                shootSelectionViewModel.getAllSoloShoots()
                 // if you were inside a production. Get all the shoot within this production too
-                if (productionSelectionUIState.selectedProduction != null) {
-                    productionSelectionViewModel.getShootsInProduction(productionSelectionUIState.selectedProduction!!)
+                if (shootSelectionUIState.selectedProduction != null) {
+                    shootSelectionViewModel.getShootsInProduction(shootSelectionUIState.selectedProduction!!)
                     // We also need to get the productions again so that their date interval is correct
-                    productionSelectionViewModel.getAllProductions()
+                    shootSelectionViewModel.getAllProductions()
                 }
             }
         }
     }
 
-    val currentPageIndex = productionSelectionUIState.currentPageIndex
+    val currentPageIndex = shootSelectionUIState.currentPageIndex
     val currentPageIsEmpty: Boolean =
-        (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal && productionSelectionUIState.productionsList.isEmpty())
-                || (currentPageIndex == SelectionPages.SHOOTS.ordinal && productionSelectionUIState.independentShootsList.isEmpty())
-                || (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal && productionSelectionUIState.productionShootsList.isEmpty())
+        (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal && shootSelectionUIState.productionsList.isEmpty())
+                || (currentPageIndex == SelectionPages.SHOOTS.ordinal && shootSelectionUIState.soloShootsList.isEmpty())
+                || (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal && shootSelectionUIState.productionShootsList.isEmpty())
 
     if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal) {
-        BackHandler(enabled = true, onBack = { productionSelectionViewModel.goOutOfProduction() })
+        BackHandler(enabled = true, onBack = { shootSelectionViewModel.goOutOfProduction() })
     }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             var emptyAddSomethingText: String? = null
-            if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal && productionSelectionUIState.productionsList.isEmpty()) {
+            if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal && shootSelectionUIState.productionsList.isEmpty()) {
                 emptyAddSomethingText = stringResource(id = R.string.EmptyAddProduction)
-            } else if (currentPageIndex == SelectionPages.SHOOTS.ordinal && productionSelectionUIState.independentShootsList.isEmpty()) {
+            } else if (currentPageIndex == SelectionPages.SHOOTS.ordinal && shootSelectionUIState.soloShootsList.isEmpty()) {
                 emptyAddSomethingText = stringResource(id = R.string.EmptyAddShoot)
-            } else if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal && productionSelectionUIState.productionShootsList.isEmpty()) {
+            } else if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal && shootSelectionUIState.productionShootsList.isEmpty()) {
                 emptyAddSomethingText = stringResource(id = R.string.EmptyAddShootToProduction)
             }
 
@@ -125,9 +100,9 @@ fun ProductionSelectionScreen(
                     ProductionShootSelectionTopPart(
                         modifier,
                         navigateToCreateShootScreen,
-                        productionSelectionViewModel,
+                        shootSelectionViewModel,
                         currentPageIndex,
-                        productionSelectionUIState,
+                        shootSelectionUIState,
                         goToAboutScreen
                     )
                     if (emptyAddSomethingText != null) {
@@ -155,38 +130,38 @@ fun ProductionSelectionScreen(
                         ProductionShootSelectionTopPart(
                             modifier,
                             navigateToCreateShootScreen,
-                            productionSelectionViewModel,
+                            shootSelectionViewModel,
                             currentPageIndex,
-                            productionSelectionUIState,
+                            shootSelectionUIState,
                             goToAboutScreen
                         )
                     }
                     when (currentPageIndex) {
                         SelectionPages.PRODUCTIONS.ordinal -> {
-                            items(productionSelectionUIState.productionsList) { production ->
+                            items(shootSelectionUIState.productionsList) { production ->
                                 ProductionCard(
                                     modifier,
                                     production
-                                ) { productionSelectionViewModel.goIntoProduction(production) }
+                                ) { shootSelectionViewModel.goIntoProduction(production) }
                             }
                         }
                         SelectionPages.SHOOTS.ordinal -> {
-                            items(productionSelectionUIState.independentShootsList) { shoot ->
+                            items(shootSelectionUIState.soloShootsList) { shoot ->
                                 ShootCard(
                                     modifier,
                                     shoot,
                                     navigateToShootInfoScreen,
-                                    { productionSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
+                                    { shootSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
                                 )
                             }
                         }
                         else -> {
-                            items(productionSelectionUIState.productionShootsList) { shoot ->
+                            items(shootSelectionUIState.productionShootsList) { shoot ->
                                 ShootCard(
                                     modifier,
                                     shoot,
                                     navigateToShootInfoScreen,
-                                    { productionSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
+                                    { shootSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
                                 )
                             }
                         }
@@ -203,20 +178,20 @@ fun ProductionSelectionScreen(
         }
     )
 
-    if(productionSelectionUIState.shootToShowPreferredWeatherDialogFor != null) {
-        PreferredWeatherDialog(modifier = modifier, productionSelectionViewModel = productionSelectionViewModel, shoot = productionSelectionUIState.shootToShowPreferredWeatherDialogFor!!)
+    if(shootSelectionUIState.shootToShowPreferredWeatherDialogFor != null) {
+        PreferredWeatherDialog(modifier = modifier, shootSelectionViewModel = shootSelectionViewModel, shoot = shootSelectionUIState.shootToShowPreferredWeatherDialogFor!!)
     }
 
-    if (productionSelectionUIState.newProductionName != null) {
+    if (shootSelectionUIState.newProductionName != null) {
         productionCreation(
             modifier,
             createProduction = { name: String ->
-                productionSelectionViewModel.saveProduction(name)
+                shootSelectionViewModel.saveProduction(name)
             },
             setProductionName = { name: String? ->
-                productionSelectionViewModel.setProductionName(name)
+                shootSelectionViewModel.setProductionName(name)
             },
-            productionSelectionUIState.newProductionName!!
+            shootSelectionUIState.newProductionName!!
         )
     }
 }

@@ -48,15 +48,11 @@ class TableViewModel : ViewModel() {
     val tableUIState: StateFlow<TableUIState> = _tableUIState.asStateFlow()
 
     init {
-        loadSunInformation()
+        loadTableSunInformation()
     }
 
-    fun loadSunInformation(){
+    fun loadTableSunInformation(){
         viewModelScope.launch {
-
-            var sunRiseTime: String
-            var sunSetTime: String
-            var solarNoon: String
 
             val apiDateTableList = mutableListOf<String>()
             val calculationsDateTableList = mutableListOf<String>()
@@ -107,17 +103,17 @@ class TableViewModel : ViewModel() {
                     val offsetString: String = formatTheOffset(offsetToFindSignDouble)
 
                     if (tableUIState.value.chosenSunType == "Sunrise"){
-                        sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
+                        val sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
                         apiDateTableList.add(sunRiseTime)
                     }
 
                     if (tableUIState.value.chosenSunType == "SolarNoon"){
-                        solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.solarnoon.time
+                        val solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.solarnoon.time
                         apiDateTableList.add(solarNoon)
                     }
 
                     if (tableUIState.value.chosenSunType == "Sunset"){
-                        sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunset.time
+                        val sunSetTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunset.time
                         apiDateTableList.add(sunSetTime)
                     }
                 }
@@ -261,7 +257,7 @@ class TableViewModel : ViewModel() {
                     location = newLocation
                 )
             }
-            loadSunInformation()
+            loadTableSunInformation()
         }
     }
     fun updateDay(day: Int){
@@ -288,7 +284,7 @@ class TableViewModel : ViewModel() {
             )
 
         }
-        loadSunInformation()
+        loadTableSunInformation()
     }
 
     private fun findOffset(location: String, date: String): Double {

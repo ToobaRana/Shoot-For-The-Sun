@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,23 +16,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
-import com.example.sunandmoon.data.ProductionSelectionUIState
-import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
+import com.example.sunandmoon.data.ShootSelectionUIState
+import com.example.sunandmoon.data.localDatabase.dao.ProductionOrderBy
+import com.example.sunandmoon.data.localDatabase.dao.ShootOrderBy
+import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages
 
 @Composable
 fun AddNewOrderByButtons(
     modifier: Modifier,
     currentPageIndex: Int,
-    productionSelectionViewModel: ProductionSelectionViewModel = hiltViewModel(),
-    productionSelectionUIState: ProductionSelectionUIState,
+    shootSelectionViewModel: ShootSelectionViewModel = hiltViewModel(),
+    shootSelectionUIState: ShootSelectionUIState,
     navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
-
     ) {
-    Box(
+    Column(
         modifier
             .fillMaxWidth()
-            .padding(20.dp, 20.dp, 20.dp, 10.dp), contentAlignment = Alignment.Center
+            .padding(20.dp, 20.dp, 20.dp, 10.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             modifier
@@ -52,10 +50,10 @@ fun AddNewOrderByButtons(
                     .background(MaterialTheme.colorScheme.primary)
                     .clickable {
                         if (currentPageIndex == SelectionPages.PRODUCTIONS.ordinal) {
-                            productionSelectionViewModel.setProductionName("")
+                            shootSelectionViewModel.setProductionName("")
                         } else {
                             navigateToCreateShootScreen(
-                                productionSelectionUIState.selectedProduction?.id,
+                                shootSelectionUIState.selectedProduction?.id,
                                 null
                             )
                         }
@@ -82,14 +80,18 @@ fun AddNewOrderByButtons(
 
             Spacer(modifier = modifier.weight(0.2f))
 
-            Row(
+            Box(modifier = modifier.weight(1f)) {
+                OrderByDropdown(modifier, shootSelectionUIState)
+            }
+
+            /*Row(
                 modifier = modifier
                     .weight(1f)
                     .fillMaxHeight()
                     .clip(RoundedCornerShape(15.dp))
                     .background(MaterialTheme.colorScheme.primary)
                     .clickable {
-                        /* TODO */
+                        shootSelectionViewModel.openCloseOrderByDropdown()
                     },
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -109,7 +111,7 @@ fun AddNewOrderByButtons(
                     textAlign = TextAlign.End,
                     modifier = modifier.padding(end = 22.dp)
                 )
-            }
+            }*/
         }
     }
 }
