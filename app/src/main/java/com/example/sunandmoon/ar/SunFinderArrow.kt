@@ -44,7 +44,7 @@ fun SunFinderArrow(
                     ).toFloat() * (180.0f / Math.PI.toFloat())
                 )
         ) {
-            Image(painter = painterResource(id = R.drawable.fancy_arrow_icon), contentDescription = "Arrow pointing towards the sun", modifier = modifier
+            Image(painter = painterResource(id = R.drawable.fancy_arrow), contentDescription = "Arrow pointing towards the sun", modifier = modifier
                 .align(Alignment.Center)
                 .width(70.dp)
                 .height(70.dp))

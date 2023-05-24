@@ -13,12 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import com.example.sunandmoon.R
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import java.time.LocalTime
 
@@ -28,16 +30,22 @@ fun TimepickerComponent(
     modifier: Modifier,
     onValueChange: (chosenTime: LocalTime) -> Unit,
     currentTime: LocalTime,
-    enabled:Boolean,
+    enabled: Boolean,
     colors: TimePickerColors,
     fieldShape: Shape,
     containerShape: Shape
     //cursorColor = MaterialTheme.colorScheme.primary,
 
 ) {
+    val containerColors =
+        if (enabled) {
+            colors.containerColor
+        } else {
+            colors.disabledColor
+        }
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(colors.containerColor),
+        colors = CardDefaults.cardColors(containerColors),
         shape = containerShape,
         border = BorderStroke(2.dp, colors.textColor)
     )
@@ -62,7 +70,13 @@ fun TimepickerComponent(
                 max = 23,
                 updateTime = { hour: Int -> currentTime.withHour(hour) }
             )
-            Text(modifier = modifier.weight(1f).align(Alignment.CenterVertically), text = ":", color = colors.textColor )
+            Text(
+                modifier = modifier
+                    .weight(1f)
+                    .align(Alignment.CenterVertically),
+                text = ":",
+                color = colors.textColor
+            )
             //puts string for InputField
 
             InputField(
@@ -88,6 +102,7 @@ fun TimepickerComponent(
 
 //checks if number is within range and returns null if not
 fun validateNumber(value: String, min: Int, max: Int): Int? {
+
     if (value == "") return 0
     if (value.isDigitsOnly()) {
         return value.toInt().coerceIn(min, max)
@@ -112,13 +127,20 @@ fun InputField(
 
     ) {
     val focusManager = LocalFocusManager.current
+
     val valueText =
         if (displayTextInfo != 0) {
             displayTextInfo.toString()
-
         } else {
             ""
         }
+    val containerColor =
+        if (enabled) {
+            colors.containerColor
+        } else {
+            colors.disabledColor
+        }
+
     TextField(
         modifier = modifier
             .size(70.dp)
@@ -133,25 +155,26 @@ fun InputField(
         },
         shape = shape,
         enabled = enabled,
-        placeholder = {Text("00") },
-        textStyle = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Center),
+        placeholder = { Text("00") },
+        textStyle = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Center, fontFamily = FontFamily(Font(R.font.nunito_bold))),
         colors = TextFieldDefaults.textFieldColors(
             textColor = colors.textColor,
-            containerColor = colors.containerColor,
+            containerColor = containerColor,
+            focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             unfocusedLabelColor = colors.unfocusedLabelColor,
             placeholderColor = colors.placeholderColor,
-            disabledTextColor = colors.disabledTextColor
+            disabledTextColor = colors.textColor
 
 
         ),
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.NumberPassword,
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+            imeAction = ImeAction.Done,
+
+            ),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
     )
 }
-
 
 

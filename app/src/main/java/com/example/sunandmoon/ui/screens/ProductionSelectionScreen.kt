@@ -58,6 +58,7 @@ import com.example.sunandmoon.ui.components.buttonComponents.AddNewOrderByButton
 
 import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
 import com.example.sunandmoon.ui.components.buttonComponents.PagePickerProductionsShoots
+import com.example.sunandmoon.ui.components.infoComponents.PreferredWeatherDialog
 import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
 import com.example.sunandmoon.ui.components.infoComponents.ShootCard
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
@@ -170,12 +171,22 @@ fun ProductionSelectionScreen(
                         }
                         SelectionPages.SHOOTS.ordinal -> {
                             items(productionSelectionUIState.independentShootsList) { shoot ->
-                                ShootCard(modifier, shoot, navigateToShootInfoScreen)
+                                ShootCard(
+                                    modifier,
+                                    shoot,
+                                    navigateToShootInfoScreen,
+                                    { productionSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
+                                )
                             }
                         }
                         else -> {
                             items(productionSelectionUIState.productionShootsList) { shoot ->
-                                ShootCard(modifier, shoot, navigateToShootInfoScreen)
+                                ShootCard(
+                                    modifier,
+                                    shoot,
+                                    navigateToShootInfoScreen,
+                                    { productionSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
+                                )
                             }
                         }
                     }
@@ -190,6 +201,10 @@ fun ProductionSelectionScreen(
             }
         }
     )
+
+    if(productionSelectionUIState.shootToShowPreferredWeatherDialogFor != null) {
+        PreferredWeatherDialog(modifier = modifier, productionSelectionViewModel = productionSelectionViewModel, shoot = productionSelectionUIState.shootToShowPreferredWeatherDialogFor!!)
+    }
 
     if (productionSelectionUIState.newProductionName != null) {
         productionCreation(
@@ -251,7 +266,7 @@ fun productionCreation(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Text("Create new Production", color = MaterialTheme.colorScheme.onSurface)
+                Text("Create new production", color = MaterialTheme.colorScheme.onSurface)
                 TextField(
                     placeholder = { Text("My Production") },
                     modifier = modifier.clickable {},

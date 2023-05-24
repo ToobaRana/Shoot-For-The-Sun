@@ -3,6 +3,7 @@ package com.example.sunandmoon.viewModel
 
 import android.location.Location
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
@@ -20,7 +21,9 @@ import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
 import com.example.sunandmoon.data.localDatabase.storableShootsToNormalShoots
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 import com.example.sunandmoon.model.LocationForecastModel.Timeseries
-import com.example.sunandmoon.ui.components.infoComponents.weatherIcons
+import com.example.sunandmoon.util.getCorrectTimeObject
+import com.example.sunandmoon.util.getWeatherIcon
+import com.example.sunandmoon.util.isNetworkAvailable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,6 +97,13 @@ class ProductionSelectionViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 val allIndependentShoots = shootDao.getAllIndependentShoots(_productionSelectionUIState.value.shootOrderBy.value)
                 val shootList = storableShootsToNormalShoots(allIndependentShoots)
+
+                _productionSelectionUIState.update { currentState ->
+                    currentState.copy(
+                        independentShootsList = shootList
+                    )
+                }
+
                 checkIfWeatherMatchesPreferences(shootList, SelectionPages.SHOOTS)
             }
         }
@@ -148,6 +158,13 @@ class ProductionSelectionViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 val productionShoots = production.id?.let { shootDao.loadByProductionId(it, _productionSelectionUIState.value.shootOrderBy.value) }
                 val shootList = storableShootsToNormalShoots(productionShoots)
+
+                _productionSelectionUIState.update { currentState ->
+                    currentState.copy(
+                        productionShootsList = shootList
+                    )
+                }
+
                 checkIfWeatherMatchesPreferences(shootList, SelectionPages.PRODUCTION_SHOOTS)
             }
         }
@@ -180,12 +197,11 @@ class ProductionSelectionViewModel @Inject constructor(
         }
     }
 
-    fun setShowPreferredWeatherDialog(bool: Boolean){
+    fun setShowPreferredWeatherDialog(shootToShowPreferredWeatherDialogFor: Shoot?){
         _productionSelectionUIState.update { currentState ->
             currentState.copy(
-                showPreferredWeatherDialog = bool
+                shootToShowPreferredWeatherDialogFor = shootToShowPreferredWeatherDialogFor
             )
-
         }
     }
 
@@ -210,17 +226,17 @@ class ProductionSelectionViewModel @Inject constructor(
                 }
                 if(weatherData == null) {
                     Log.i("API_PreferredWeather", retrievedWeatherData.size.toString())
-                    weatherData = dataSource.fetchWeatherAPI(shoot.location.latitude.toString(), shoot.location.longitude.toString())
+                    try {
+                        weatherData = dataSource.fetchWeatherAPI(shoot.location.latitude.toString(), shoot.location.longitude.toString())
+                    } catch (e: Exception) {
+                        return@launch
+                    }
                     retrievedWeatherData[shoot.location] = weatherData!!
                 }
 
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-
                 val dateTimeObjectForApiUse : LocalDateTime = shoot.dateTime.withMinute(0).withSecond(0).withNano(0)
 
-                val formattedDateAndTime : String = dateTimeObjectForApiUse.format(formatter)
-                val correctTimeObject : Timeseries? = weatherData!!.properties?.timeseries?.
-                firstOrNull { it.time == formattedDateAndTime }
+                val correctTimeObject = getCorrectTimeObject(dateTimeObjectForApiUse, weatherData!!)
 
                 var weatherIconCode : String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
                 if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
@@ -258,5 +274,17 @@ class ProductionSelectionViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getWeatherIconOfShoot(shoot: Shoot): Int? {
+        retrievedWeatherData.forEach {
+            if(shoot.location.distanceTo(it.key) <= 1000) {
+                val correctTimeObject = getCorrectTimeObject(shoot.dateTime, it.value)
+                var weatherIconCode: String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
+                if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
+                return getWeatherIcon(weatherIconCode)
+            }
+        }
+        return null
     }
 }

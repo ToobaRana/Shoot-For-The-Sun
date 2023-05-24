@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 import com.example.sunandmoon.model.LocationForecastModel.Timeseries
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
@@ -51,6 +52,11 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
         return
     }
 
+    val dateAndTime = shootInfoUIState.shoot!!.dateTime
+    val date = dateAndTime.toLocalDate()
+    val timeWithSeconds = dateAndTime.toLocalTime()
+    val time = timeWithSeconds.truncatedTo(ChronoUnit.MINUTES)
+
     // when you navigate back to this screen we want to get the shoots from the database again
     LaunchedEffect(navController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -60,38 +66,6 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
             }
         }
     }
-
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-
-    val dateAndTime = shootInfoUIState.shoot!!.dateTime
-
-    val date = dateAndTime.toLocalDate()
-    val timeWithSeconds = dateAndTime.toLocalTime()
-    val time = timeWithSeconds.truncatedTo(ChronoUnit.MINUTES)
-
-    //val test = LocalDateTime.parse("2023-05-15T12:00:00Z")
-    //Log.d("shootdatoRiktig format", dateAndTime.format(formatter))
-    //Log.d("shootdato", shootInfoUIState.shoot!!.date.format(formatter))
-    //Log.d("shootdato", test.toString())
-
-    //need if statement for shoottime if it isnt a round number
-    var dateTimeObjectForApiUse : LocalDateTime = dateAndTime.withMinute(0).withSecond(0).withNano(0)
-
-
-    val formattedDateAndTime : String = dateTimeObjectForApiUse.format(formatter)
-    val correctTimeObject : Timeseries? = shootInfoUIState.weatherData?.properties?.timeseries?.
-    firstOrNull({ it.time.toString() == formattedDateAndTime })
-
-    var weatherIconCode : String? = correctTimeObject?.data?.next_1_hours?.summary?.symbol_code
-    if(weatherIconCode == null) weatherIconCode = correctTimeObject?.data?.next_6_hours?.summary?.symbol_code
-    Log.d("symbolCode: ", weatherIconCode.toString())
-    val temperature : Double? = correctTimeObject?.data?.instant?.details?.air_temperature
-    var rainfallInMm : Double? = correctTimeObject?.data?.next_1_hours?.details?.precipitation_amount
-    if(rainfallInMm == null) rainfallInMm = correctTimeObject?.data?.next_6_hours?.details?.precipitation_amount
-
-    val windSpeed : Double? = correctTimeObject?.data?.instant?.details?.wind_speed
-    val windDirection : Double? = correctTimeObject?.data?.instant?.details?.wind_from_direction
-    val uvIndex : Double? = correctTimeObject?.data?.instant?.details?.ultraviolet_index_clear_sky
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -166,20 +140,20 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
 
                 //if statement added because weatherapi doesnt have data from before todays data and after 10 days
                 if(dateAndTime < LocalDateTime.now().minusHours(1) || dateAndTime >= LocalDateTime.now().plusDays(10)){
-                    NoDataCard(modifier)
+                    NoDataCard(modifier, shootInfoUIState.missingNetworkConnection)
                 } else{
-                    if(weatherIconCode != null) {
+                    if(shootInfoUIState.weatherIcon != null) {
                         WeatherCard(
-                            modifier = modifier, time, temperature, rainfallInMm, weatherIconCode
+                            modifier = modifier, time, shootInfoUIState.temperature, shootInfoUIState.rainfallInMm, shootInfoUIState.weatherIcon
                         )
                     }
 
                     WindCard(
-                        modifier = modifier, time, windSpeed, windDirection
+                        modifier = modifier, time, shootInfoUIState.windSpeed, shootInfoUIState.windDirection
                     )
 
                     UVCard(
-                        modifier = modifier, time, uvIndex
+                        modifier = modifier, time, shootInfoUIState.uvIndex
                     )
                 }
 

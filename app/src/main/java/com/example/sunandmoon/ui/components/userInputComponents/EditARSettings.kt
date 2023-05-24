@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.ARUIState
@@ -68,7 +67,7 @@ fun EditARSettings(
                     text = stringResource(R.string.Time),
                     fontSize = 20.sp,
                     color = MaterialTheme.colorScheme.primary,
-                    fontFamily = FontFamily(Font(R.font.nunito))
+                    fontFamily = FontFamily(Font(R.font.nunito_bold))
                 )
                 Spacer(modifier = modifier.width(90.dp))
             }
@@ -88,7 +87,9 @@ fun EditARSettings(
                     unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
                     placeholderColor = MaterialTheme.colorScheme.onSurface,
-                    disabledTextColor = Color.Black
+                    disabledColor = MaterialTheme.colorScheme.secondary,
+
+
                 ),
                 fieldShape = RectangleShape,
                 containerShape = RoundedCornerShape(10.dp)
@@ -102,14 +103,14 @@ fun EditARSettings(
                     text = stringResource(R.string.SunPosition),
                     fontSize = 20.sp,
                     color = MaterialTheme.colorScheme.primary,
-                    fontFamily = FontFamily(Font(R.font.nunito))
+                    fontFamily = FontFamily(Font(R.font.nunito_bold))
                 )
             }
 
 
             Row(
                 modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.95f)
                     .wrapContentSize()
             ) {
                 SunPositionTime(
@@ -133,7 +134,7 @@ fun EditARSettings(
             Button(onClick = {
                 arViewModel.openCloseARSettings()
             }) {
-                Text(text = stringResource(id = R.string.Confirm))
+                Text(text = stringResource(id = R.string.Confirm), fontFamily = FontFamily(Font(R.font.nunito_bold)))
             }
 
             Spacer(modifier = modifier.size(20.dp))

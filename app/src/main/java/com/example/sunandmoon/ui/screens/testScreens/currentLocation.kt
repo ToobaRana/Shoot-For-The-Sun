@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sunandmoon.checkPermissions
+import com.example.sunandmoon.CheckPermissions
 import com.example.sunandmoon.ui.components.CalendarComponentDisplay
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import com.google.android.gms.location.FusedLocationProviderClient

@@ -14,10 +14,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.util.Shoot
+import com.example.sunandmoon.ui.theme.CheckmarkColor
+import com.example.sunandmoon.ui.theme.RedColor
 
 @Composable
-fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -> Unit) {
-
+fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -> Unit, openPreferredWeatherDialog: () -> Unit) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -38,26 +39,33 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                     .height(IntrinsicSize.Min)
             ) {
                 var iconColor = MaterialTheme.colorScheme.onPrimary
-                var weatherCheckerIcon: Int = 0
+                val weatherCheckerIcon: Int?
 
                 if(shoot.weatherMatchesPreferences != null) {
                     if(shoot.weatherMatchesPreferences){
                         weatherCheckerIcon = R.drawable.check
-                        iconColor = Color.Green
+                        iconColor = CheckmarkColor
                     }
                     else {
                         weatherCheckerIcon = R.drawable.warning
-                        iconColor = Color.Red
+                        iconColor = RedColor
 
                     }
+                } else {
+                    weatherCheckerIcon = R.drawable.unavailable
+                    iconColor = MaterialTheme.colorScheme.secondary
                 }
+
+
                 Icon(
                     painterResource(weatherCheckerIcon),
-                    "Notification icon",
+                    "Weather checker icon",
                     modifier
                         .align(CenterVertically)
                         .padding(8.dp, 0.dp)
-                        .size(40.dp),
+                        .size(40.dp).clickable{
+                            openPreferredWeatherDialog()
+                        },
                     iconColor
                 )
                 Divider(

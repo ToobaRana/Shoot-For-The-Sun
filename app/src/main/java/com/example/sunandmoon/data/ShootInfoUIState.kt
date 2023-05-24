@@ -11,5 +11,12 @@ data class ShootInfoUIState(
     val sunriseTime: String = "not calculated",
     val solarNoonTime: String = "not calculated",
     val sunsetTime: String = "not calculated",
-    val weatherData: LocationForecast?
+
+    val weatherIcon: Int? = null,
+    val temperature: Double? = null,
+    var rainfallInMm: Double? = null,
+    val windSpeed: Double? = null,
+    val windDirection: Double? = null,
+    val uvIndex: Double? = null,
+    val missingNetworkConnection: Boolean = false
 )
