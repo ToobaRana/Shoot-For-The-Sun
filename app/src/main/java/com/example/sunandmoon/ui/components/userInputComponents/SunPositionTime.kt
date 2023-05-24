@@ -58,7 +58,7 @@ fun SunPositionTime(
             CreateShootSunPositionCard(
                 modifier = modifier,
                 painter = painterResource(
-                    R.drawable.sunset
+                    R.drawable.sunrise
                 ),
                 containerColor = color,
                 chosen = chosenSunIndex==1 ,
