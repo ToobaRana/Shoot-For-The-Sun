@@ -19,6 +19,8 @@ import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.theme.CheckmarkColor
 import com.example.sunandmoon.util.weatherIcons
 import androidx.compose.foundation.Image
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import com.example.sunandmoon.ui.theme.RedColor
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 
@@ -36,18 +38,18 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
                 val textToShow = if(shoot.weatherMatchesPreferences == true && weatherIcon != null) "Your preferred weather for this shoot matches the actual weather of this shoot"
                     else if( weatherIcon != null) "Your preferred weather for this shoot does not match the actual weather of this shoot"
                     else "No weather data available for this shoot, weather data is available from the current date to 10 days into the future"
-                Text(text = textToShow, fontWeight = FontWeight.Bold)
+                Text(text = textToShow, fontWeight = FontWeight.Bold, fontFamily = FontFamily(Font(R.font.nunito_bold)))
 
-                Text(text = "Your preferred weather:", fontWeight = FontWeight.Bold)
+                Text(text = "Your preferred weather:", fontWeight = FontWeight.Bold, fontFamily = FontFamily(Font(R.font.nunito_bold)))
                 if(shoot.preferredWeather.isNotEmpty()) {
                     Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                         PreferredWeatherOverview(modifier, shoot.preferredWeather)
                     }
                 }
-                else Text(text = "(No preferred weather registered)", fontWeight = FontWeight.Bold, modifier = modifier.padding(0.dp, 10.dp))
+                else Text(text = "(No preferred weather registered)", fontWeight = FontWeight.Bold, modifier = modifier.padding(0.dp, 10.dp), fontFamily = FontFamily(Font(R.font.nunito_bold)))
 
                 if( weatherIcon != null) {
-                    Text(text = "Actual weather:", fontWeight = FontWeight.Bold)
+                    Text(text = "Actual weather:", fontWeight = FontWeight.Bold, fontFamily = FontFamily(Font(R.font.nunito_bold)))
 
                     if(weatherIcon != null) {
                         Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -63,7 +65,7 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
         },
         confirmButton = {
             Button(onClick = { productionSelectionViewModel.setShowPreferredWeatherDialog(null) }) {
-                Text(text = "OK")
+                Text(text = "Ok", fontFamily = FontFamily(Font(R.font.nunito_bold)))
             }
         },
         icon = {Icon(

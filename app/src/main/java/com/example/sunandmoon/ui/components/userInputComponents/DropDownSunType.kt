@@ -57,7 +57,8 @@ import com.example.sunandmoon.viewModel.TableViewModel
             ) {
                 options.forEach { selectionOption ->
                     DropdownMenuItem(
-                        text = { Text(selectionOption, fontSize = 18.sp) },
+                        text = { Text(selectionOption, fontSize = 18.sp, fontFamily = FontFamily(
+                            Font(R.font.nunito_bold))) },
                         onClick = {
                             selectedOptionText = selectionOption
                             expanded = false

@@ -5,9 +5,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sunandmoon.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,18 +23,20 @@ fun DeleteButton(
         onDismissRequest = onCancelDelete,
         title = {
             Text(
-                text = "Delete",
+                text = stringResource(id = R.string.Delete),
                 fontSize = 22.sp,
                 color = Color.Black,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontFamily = FontFamily(Font(R.font.nunito_bold)),
             )
         },
         text = {
             Text(
-                text = "Are you sure you want to delete?",
+                text = stringResource(id = R.string.DeleteBoxText),
                 fontSize = 18.sp,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
+                fontFamily = FontFamily(Font(R.font.nunito_bold)),
                 modifier = Modifier.padding(top = 10.dp)
             )
         },
@@ -38,14 +44,14 @@ fun DeleteButton(
             Button(
                 onClick = onConfirmDelete
             ) {
-                Text(text = "Confirm")
+                Text(text = stringResource(id = R.string.Confirm), fontFamily = FontFamily(Font(R.font.nunito_bold)))
             }
         },
         dismissButton = {
             Button(
                 onClick = onCancelDelete
             ) {
-                Text(text = "Cancel")
+                Text(text = stringResource(id = R.string.Cancel), fontFamily = FontFamily(Font(R.font.nunito_bold)))
             }
         }
     )

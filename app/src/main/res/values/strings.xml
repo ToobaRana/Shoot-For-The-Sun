@@ -37,6 +37,15 @@
 
     <string name="OpenARSettingsButton">Open A R Settings button</string>
     <string name="Confirm">Confirm</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Delete">Delete</string>
+    <string name="DeleteBoxText">Are you sure you want to delete?</string>
+
+
+
+
+
+
     <string name="Comparing">Comparing our calculations to MET-API</string>
 
     <!--Text for About-Screen-->
