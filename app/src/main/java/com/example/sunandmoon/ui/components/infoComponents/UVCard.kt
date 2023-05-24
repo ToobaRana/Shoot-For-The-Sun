@@ -18,7 +18,7 @@ import java.time.LocalTime
 @Composable
 fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
     val uvColor = when(uvIndex?.toInt()){
-        in 1..2 -> UVLowColor
+        in 0..2 -> UVLowColor
         in 3..5 -> UVModerateColor
         in 6..7 -> UVHighColor
         in 8..10 -> UVVeryHighColor
