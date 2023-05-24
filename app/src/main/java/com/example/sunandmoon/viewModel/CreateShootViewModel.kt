@@ -7,12 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.CreateShootUIState
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.PreferableWeather
-import com.example.sunandmoon.data.fetchLocation
 import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.util.fetchLocation
 import com.example.sunandmoon.util.simplifyLocationNameQuery
 import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -119,7 +119,6 @@ class CreateShootViewModel  @Inject constructor(
     //calls fetchLocation method with provider client, then updates latitude and longitude in uiState with return value
     fun getCurrentPosition() {
         viewModelScope.launch() {
-
             fetchLocation(fusedLocationProviderClient) { location: Location, setTimeZoneOffset: Boolean ->
                 setCoordinates(
                     location,

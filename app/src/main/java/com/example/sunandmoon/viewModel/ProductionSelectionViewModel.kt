@@ -60,7 +60,6 @@ class ProductionSelectionViewModel @Inject constructor(
         //saveProduction()
         getAllProductions()
         getAllIndependentShoots()
-
     }
 
 
