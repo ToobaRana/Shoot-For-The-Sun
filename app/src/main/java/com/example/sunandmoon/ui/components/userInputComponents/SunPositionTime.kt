@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.buttonComponents.CreateShootSunPositionCard
 import com.example.sunandmoon.ui.theme.GreyColor
+import com.example.sunandmoon.ui.theme.RedColor
+import com.example.sunandmoon.ui.theme.SunColor
 import java.time.LocalTime
 
 @Composable
@@ -49,8 +51,9 @@ fun SunPositionTime(
                 containerColor = color,
                 chosen = chosenSunIndex==0 ,
                 updateTimePicker = {updateTimePicker(true)},
-                updatePositionIndex = {updateChosenIndex(0)}
-                )
+                updatePositionIndex = {updateChosenIndex(0)},
+                iconColor = RedColor
+            )
 
             CreateShootSunPositionCard(
                 modifier = modifier,
@@ -60,9 +63,10 @@ fun SunPositionTime(
                 containerColor = color,
                 chosen = chosenSunIndex==1 ,
                 updateTimePicker = {updateTimePicker(false)},
-                updatePositionIndex = {updateChosenIndex(1)}
+                updatePositionIndex = {updateChosenIndex(1)},
+                iconColor = SunColor
+            )
 
-                )
             CreateShootSunPositionCard(
                 modifier = modifier,
                 painter = painterResource(
@@ -71,8 +75,10 @@ fun SunPositionTime(
                 containerColor = color,
                 chosen = chosenSunIndex==2 ,
                 updateTimePicker = {updateTimePicker(false)},
-                updatePositionIndex = {updateChosenIndex(2)}
+                updatePositionIndex = {updateChosenIndex(2)},
+                iconColor = SunColor
             )
+
             CreateShootSunPositionCard(
                 modifier = modifier,
                 painter = painterResource(
@@ -81,7 +87,8 @@ fun SunPositionTime(
                 containerColor = color,
                 chosen = chosenSunIndex==3 ,
                 updateTimePicker = {updateTimePicker(false)},
-                updatePositionIndex = {updateChosenIndex(3)}
+                updatePositionIndex = {updateChosenIndex(3)},
+                iconColor = SunColor
             )
         }
     }

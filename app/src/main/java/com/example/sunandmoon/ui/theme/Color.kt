@@ -21,6 +21,7 @@ val GreyColor = Color(0xFFDDDDDE)
 val SunColor = Color(0xFFFCC419)
 val WeatherBlueColor = Color(0xFF339AF0)
 val RedColor = Color(0xFFFA5252)
+
 val UVLowColor = Color(0xFF8DC442)
 val UVModerateColor = Color (0xFFFDD736)
 val UVHighColor = Color (0xFFFFB300)

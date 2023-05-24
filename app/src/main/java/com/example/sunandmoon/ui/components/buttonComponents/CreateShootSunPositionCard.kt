@@ -29,8 +29,8 @@ fun CreateShootSunPositionCard(
     painter: Painter,
     chosen: Boolean,
     updateTimePicker: () -> Unit,
-    updatePositionIndex: () -> Unit
-
+    updatePositionIndex: () -> Unit,
+    iconColor: Color
 ) {
     val border =
         if (chosen){
@@ -50,11 +50,12 @@ fun CreateShootSunPositionCard(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
+            Icon(
                 painter,
                 "Sun Image",
                 modifier
-                    .size(60.dp)
+                    .size(60.dp),
+                tint = iconColor
             )
         }
 
