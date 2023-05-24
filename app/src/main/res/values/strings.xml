@@ -28,7 +28,8 @@
     <string name="TableButton">table button</string>
     <string name="SaveButton">Save</string>
 
-
+    <string name="AddNew">Add new</string>
+    <string name="OrderBy">Order by</string>
 
     <string name="EmptyAddProduction">Empty…\n\n(Add a production)</string>
     <string name="EmptyAddShoot">Empty…\n\n(Add a shoot)</string>
