@@ -22,14 +22,14 @@ fun OpenARSettingsButton(
         // the delete and edit buttons
         Row(
             modifier
-                .fillMaxWidth(),
+                .fillMaxWidth().padding(top = 10.dp),
             horizontalArrangement = Arrangement.End
         ) {
             RoundedCornerIconButton(
                 modifier,
                 {
                     Icon(
-                        painterResource(R.drawable.edit_icon),
+                        painterResource(R.drawable.settings),
                         stringResource(id = R.string.OpenARSettingsButton),
                         modifier.size(50.dp),
                         IconColor

@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
+import com.example.sunandmoon.ui.theme.CheckmarkColor
+import com.example.sunandmoon.ui.theme.RedColor
 
 @Composable
 fun SunFinder(
@@ -46,9 +48,9 @@ fun SunFinder(
     SkyDirections(modifier, sensorStatus, LocalContext.current)
 
     // the sun
-    SunCircle(modifier, sensorStatus, xPos1, yPos1, Color.Red, sunZenith)
+    SunCircle(modifier, sensorStatus, xPos1, yPos1, RedColor, sunZenith)
     // the "other" sun
-    SunCircle(modifier, sensorStatus, xPos2, yPos2, Color.Green, sunZenith)
+    SunCircle(modifier, sensorStatus, xPos2, yPos2, CheckmarkColor, sunZenith)
 
     SunFinderArrow(modifier, xPos1, yPos1, xPos2, yPos2, sensorStatus)
 }

@@ -18,6 +18,8 @@ import com.example.sunandmoon.data.ProductionSelectionUIState
 import com.example.sunandmoon.data.util.Shoot
 import com.example.sunandmoon.ui.theme.CheckmarkColor
 import com.example.sunandmoon.util.weatherIcons
+import androidx.compose.foundation.Image
+import com.example.sunandmoon.ui.theme.RedColor
 import com.example.sunandmoon.viewModel.ProductionSelectionViewModel
 
 @Composable
@@ -49,7 +51,7 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
 
                     if(weatherIcon != null) {
                         Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
+                            Image(
                                 painter = painterResource(weatherIcon),
                                 "Weather Condition Image",
                                 modifier.size(100.dp),
@@ -64,16 +66,14 @@ fun PreferredWeatherDialog(modifier: Modifier, productionSelectionViewModel: Pro
                 Text(text = "OK")
             }
         },
-        icon = {
-            Icon(
-                painter = painterResource(if(shoot.weatherMatchesPreferences == true) R.drawable.check else R.drawable.warning),
-                tint = if(shoot.weatherMatchesPreferences == true && weatherIcon != null) CheckmarkColor
-                    else if(weatherIcon != null) Color.Red
-                    else Color.Black,
-                contentDescription =  "Preferred weather info",
-                modifier = modifier.size(70.dp),
-            )
-        }
+        icon = {Icon(
+            painter = painterResource(if(shoot.weatherMatchesPreferences == true) R.drawable.check else R.drawable.warning),
+            tint = if(shoot.weatherMatchesPreferences == true && weatherIcon != null) CheckmarkColor
+            else if(weatherIcon != null) RedColor
+            else Color.Black,
+            contentDescription =  "Preferred weather info",
+            modifier = modifier.size(70.dp),
+        )}
     )
 }
 
@@ -107,7 +107,7 @@ fun PreferredWeatherOverview(modifier: Modifier, preferableWeathers: List<Prefer
                 PreferableWeather.RAIN -> R.drawable.rain
                 PreferableWeather.SNOW -> R.drawable.snow
             }
-            Icon(
+            Image(
                 painter = painterResource(weatherIconId),
                 "Weather Condition Image",
                 modifier.size(60.dp),

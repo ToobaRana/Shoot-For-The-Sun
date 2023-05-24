@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.ImeOptions
@@ -266,7 +267,7 @@ fun productionCreation(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Text("Create new Production", color = MaterialTheme.colorScheme.onSurface)
+                Text("Create new production", color = MaterialTheme.colorScheme.onSurface)
                 TextField(
                     placeholder = { Text("My Production") },
                     modifier = modifier.clickable {},
@@ -297,7 +298,7 @@ fun productionCreation(
                         unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
                         placeholderColor = MaterialTheme.colorScheme.secondary
                     ),
-                    textStyle = TextStyle(fontSize = 18.sp)
+                    textStyle = TextStyle(fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito)))
                 )
 
                 val defaultProductionName = stringResource(R.string.defaultProductionName)
@@ -318,7 +319,7 @@ fun productionCreation(
                 )
 
                 {
-                    Text(text = stringResource(id = R.string.SaveButton))
+                    Text(text = stringResource(id = R.string.SaveButton), fontFamily = FontFamily(Font(R.font.nunito)))
                 }
 
 

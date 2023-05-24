@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,14 +65,14 @@ fun AddNewOrderByButtons(
             ) {
                 Icon(
                     painterResource(id = R.drawable.plus),
-                    contentDescription = "Add New",
+                    contentDescription = stringResource(R.string.AddNew),
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier
+                    modifier = modifier
                         .padding(7.dp)
                         .padding(start = 6.dp)
                 )
                 Text(
-                    text = "Add New",
+                    text = stringResource(R.string.AddNew),
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.End,
@@ -82,7 +83,7 @@ fun AddNewOrderByButtons(
             Spacer(modifier = modifier.weight(0.2f))
 
             Row(
-                modifier = Modifier
+                modifier = modifier
                     .weight(1f)
                     .fillMaxHeight()
                     .clip(RoundedCornerShape(15.dp))
@@ -95,13 +96,14 @@ fun AddNewOrderByButtons(
             ) {
                 Icon(
                     painterResource(id = R.drawable.sortdown),
-                    contentDescription = "Order by",
+                    contentDescription = stringResource(R.string.OrderBy),
                     tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(35.dp)
+                    modifier = modifier
+                        .size(35.dp)
                         .padding(start = 15.dp, top = 3.dp)
                 )
                 Text(
-                    text = "Order by",
+                    text =  stringResource(R.string.OrderBy),
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.End,

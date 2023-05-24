@@ -67,7 +67,7 @@ fun EditARSettings(
                     text = stringResource(R.string.Time),
                     fontSize = 20.sp,
                     color = MaterialTheme.colorScheme.primary,
-                    fontFamily = FontFamily(Font(R.font.nunito))
+                    fontFamily = FontFamily(Font(R.font.nunito_bold))
                 )
                 Spacer(modifier = modifier.width(90.dp))
             }
@@ -103,14 +103,14 @@ fun EditARSettings(
                     text = stringResource(R.string.SunPosition),
                     fontSize = 20.sp,
                     color = MaterialTheme.colorScheme.primary,
-                    fontFamily = FontFamily(Font(R.font.nunito))
+                    fontFamily = FontFamily(Font(R.font.nunito_bold))
                 )
             }
 
 
             Row(
                 modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.95f)
                     .wrapContentSize()
             ) {
                 SunPositionTime(
@@ -134,7 +134,7 @@ fun EditARSettings(
             Button(onClick = {
                 arViewModel.openCloseARSettings()
             }) {
-                Text(text = stringResource(id = R.string.Confirm))
+                Text(text = stringResource(id = R.string.Confirm), fontFamily = FontFamily(Font(R.font.nunito_bold)))
             }
 
             Spacer(modifier = modifier.size(20.dp))

@@ -13,11 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import com.example.sunandmoon.R
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import java.time.LocalTime
 
@@ -153,14 +156,16 @@ fun InputField(
         shape = shape,
         enabled = enabled,
         placeholder = { Text("00") },
-        textStyle = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Center),
+        textStyle = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Center, fontFamily = FontFamily(Font(R.font.nunito_bold))),
         colors = TextFieldDefaults.textFieldColors(
             textColor = colors.textColor,
             containerColor = containerColor,
+            focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             unfocusedLabelColor = colors.unfocusedLabelColor,
             placeholderColor = colors.placeholderColor,
-            disabledTextColor = colors.textColor
+            disabledTextColor = colors.textColor,
+            disabledIndicatorColor = colors.disabledColor
 
 
         ),
@@ -169,7 +174,7 @@ fun InputField(
             imeAction = ImeAction.Done,
 
             ),
-        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
     )
 }
 

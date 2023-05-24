@@ -98,7 +98,7 @@ fun CreateShootScreen(
                                 Icon(
                                     painterResource(R.drawable.edit_icon),
                                     "Edit text pencil icon",
-                                    Modifier,
+                                    modifier,
                                     MaterialTheme.colorScheme.primary
                                 )
                             },
@@ -191,19 +191,19 @@ fun CreateShootScreen(
                 }
                 item {
                     Spacer(modifier = modifier.size(30.dp))
+
+
                     Row(modifier = modifier.wrapContentSize()){
 
                         Text(
-                            modifier = modifier.fillMaxWidth(),
+                            modifier = modifier,
                             text = stringResource(R.string.Time),
                             fontFamily = FontFamily(Font(R.font.nunito_bold)),
                             fontSize = 20.sp,
-                            color = MaterialTheme.colorScheme.primary,
-                            textAlign = TextAlign.Center
+                            color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = modifier.width(90.dp))
                     }
-
 
 
                     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
@@ -222,7 +222,7 @@ fun CreateShootScreen(
                                 unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
                                 unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
                                 placeholderColor = MaterialTheme.colorScheme.onSurface,
-                                disabledColor = MaterialTheme.colorScheme.secondary
+                                disabledColor = MaterialTheme.colorScheme.secondary,
                             ),
                             fieldShape = RectangleShape,
                             containerShape = RoundedCornerShape(10.dp)
@@ -239,7 +239,7 @@ fun CreateShootScreen(
                         Text(
                             modifier = modifier,
                             text = stringResource(R.string.SunPosition),
-                            fontSize = 20.sp,
+                            fontSize = 19.sp,
                             color = MaterialTheme.colorScheme.primary,
                             fontFamily = FontFamily(Font(R.font.nunito_bold))
 
@@ -278,7 +278,7 @@ fun CreateShootScreen(
                         Text(
                             modifier = modifier,
                             text = stringResource(R.string.PreferredWeather),
-                            fontSize = 20.sp,
+                            fontSize = 19.sp,
                             color = MaterialTheme.colorScheme.primary,
                             fontFamily = FontFamily(Font(R.font.nunito_bold))
 
