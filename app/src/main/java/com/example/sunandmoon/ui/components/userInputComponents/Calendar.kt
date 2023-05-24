@@ -297,8 +297,8 @@ fun CalendarComponentDisplay(
             }
             Spacer(modifier.size(30.dp))
             Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
-                Button(modifier = modifier, onClick = {hideCalendar()}){
-                    Text(stringResource(R.string.Confirm))
+                Button(modifier = modifier, onClick = {hideCalendar()}, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)){
+                    Text(stringResource(R.string.Confirm), color = MaterialTheme.colorScheme.secondary)
                     Icon(painterResource(R.drawable.check), stringResource(R.string.Confirm), modifier, Color.Green)
                 }
             }
