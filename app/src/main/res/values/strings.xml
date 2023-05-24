@@ -28,7 +28,8 @@
     <string name="TableButton">table button</string>
     <string name="SaveButton">Save</string>
 
-
+    <string name="AddNew">Add new</string>
+    <string name="OrderBy">Order by</string>
 
     <string name="EmptyAddProduction">Empty…\n\n(Add a production)</string>
     <string name="EmptyAddShoot">Empty…\n\n(Add a shoot)</string>
@@ -86,6 +87,32 @@
         <item>Extra protection is needed</item>
         <item>Stay inside</item>
         <item>No UV data available</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
+    <string-array name="weekdays">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+
     </string-array>
 
 </resources>

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -36,24 +37,9 @@ import java.util.*
 const val numWeekdays = 7
 
 
-val months = listOf(
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-)
 
 
-val weekdays =
-    listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,6 +51,7 @@ fun CalendarComponent(
     updateDay: (day: Int) -> Unit,
     updateMonth: (month: Int, maxDays: Int) -> Unit
 ) {
+
 
     var showCalendar by remember { mutableStateOf(false) }
 
@@ -133,6 +120,8 @@ fun CalendarComponentDisplay(
     updateDay: (day: Int) -> Unit,
     updateMonth: (month: Int, maxDays: Int) -> Unit
 ) {
+    val months = stringArrayResource(R.array.months)
+    val weekdays = stringArrayResource(R.array.weekdays)
 
 
     //var currentYear by remember { mutableStateOf("2023") }
@@ -178,7 +167,7 @@ fun CalendarComponentDisplay(
             ) {
 
                 Box {
-                    MonthDropDown(modifier, chosenDate.monthValue, chosenDate.year, updateMonth)
+                    MonthDropDown(modifier, chosenDate.monthValue, chosenDate.year, updateMonth, months)
                 }
                 Spacer(modifier.size(20.dp))
                 Box(modifier = modifier.wrapContentSize(Alignment.Center, false)) {
@@ -245,7 +234,7 @@ fun CalendarComponentDisplay(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                DrawWeekdays()
+                DrawWeekdays(weekdays)
             }
             val daysBeforeFirst = weekdays.indexOf(
                 getDayOfFirst(
@@ -305,7 +294,7 @@ fun CalendarComponentDisplay(
 }
 
 @Composable
-fun DrawWeekdays() {
+fun DrawWeekdays(weekdays: Array<String>) {
     for (y in 0 until numWeekdays) {
         Text(text = weekdays[y].subSequence(0, 3).toString(), fontSize = 18.sp)
     }
@@ -318,7 +307,8 @@ fun MonthDropDown(
     modifier: Modifier,
     currentMonth: Int,
     currentYear: Int,
-    updateMonth: (month: Int, maxDays: Int) -> Unit
+    updateMonth: (month: Int, maxDays: Int) -> Unit,
+    months: Array<String>
 ) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
