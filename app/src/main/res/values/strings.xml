@@ -40,9 +40,11 @@
 
     <!--Text for About-Screen-->
     <string name="AppInfo">App Info</string>
-    <string name="AppDescription">This app is supposed to help you plan productions and shoots.</string>
-    <string name="ARDescription">AR:\nFind the sun</string>
-    <string name="TableDescription">Table:\nThe table displays the time for sunrise, solar noon and sunset.
+    <string name="AppDescription">With "Shoot For The Sun" you can plan productions and shoots!</string>
+    <string name="AR">AR:</string>
+    <string name="ARDescription">Use our augmented reality feature to see where the sun\'s different positions will be in the sky where you are!</string>
+    <string name="Planning"> Plan outdoor shoots and productions:\n \n Plan outdoor productions and shoots according to where you want the sun and what weather conditions you want, and we will warn you if the conditions change!</string>
+    <string name="TableDescription">Table:\n \n Our features are based on our own calculations, view our table to verify their accuracy. The table displays the time for sunrise, solar noon and sunset.
         It shows both the timing from MET and from our own calculations.
         On top of that, it displays the timing based on your preferred location.</string>
 
@@ -87,6 +89,7 @@
         <item>Stay inside</item>
         <item>No UV data available</item>
     </string-array>
+
 
 </resources>
 

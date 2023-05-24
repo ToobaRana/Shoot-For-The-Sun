@@ -3,6 +3,7 @@ package com.example.sunandmoon.ui.components.infoComponents
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,33 +30,32 @@ fun AboutCard(modifier: Modifier) {
             contentColor = MaterialTheme.colorScheme.primary
         )
     ) {
-        Column(
+        LazyColumn(
             modifier = modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(30.dp),
             verticalArrangement = Arrangement.spacedBy(30.dp)
         ) {
-            Text(
+            item{
+                Text(
                 text = stringResource(id = R.string.AppInfo),
                 fontSize = 30.sp,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier,
                 textAlign = TextAlign.Center
-            )
-            Text(text = stringResource(id = R.string.AppDescription))
-            Text(text = stringResource(id = R.string.ARDescription))
-            Text(text = stringResource(id = R.string.TableDescription))
-
-
-
-            HyperlinkText(
-
+                )
+            }
+            item{Text(text = stringResource(id = R.string.AppDescription))}
+            item{Text(text = stringResource(id = R.string.AR))}
+            item{Text(text = stringResource(id = R.string.ARDescription))}
+            item{Text(text = stringResource(id = R.string.Planning))}
+            item{Text(text = stringResource(id = R.string.TableDescription))}
+            item{HyperlinkText(
                 fullText = stringResource(id = R.string.IconDescription),
                 linkText = listOf(stringResource(id = R.string.Icons8), stringResource(id = R.string.carlosyllobre)),
                 hyperlinks = listOf("https://icons8.com/", "https://www.figma.com/community/file/955978734883254712/Weather-Icons-%7C-Flat-%26-Outline"),
                 linkTextColor = MaterialTheme.colorScheme.background,
-                fontSize = 18.sp
-            )
-
+                fontSize = 18.sp)
+            }
 
         }
 
