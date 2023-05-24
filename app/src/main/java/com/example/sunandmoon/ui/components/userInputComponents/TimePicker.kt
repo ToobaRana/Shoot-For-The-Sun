@@ -164,7 +164,8 @@ fun InputField(
             unfocusedIndicatorColor = Color.Transparent,
             unfocusedLabelColor = colors.unfocusedLabelColor,
             placeholderColor = colors.placeholderColor,
-            disabledTextColor = colors.textColor
+            disabledTextColor = colors.textColor,
+            disabledIndicatorColor = colors.disabledColor
 
 
         ),
