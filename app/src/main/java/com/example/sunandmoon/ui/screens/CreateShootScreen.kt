@@ -98,7 +98,7 @@ fun CreateShootScreen(
                                 Icon(
                                     painterResource(R.drawable.edit_icon),
                                     "Edit text pencil icon",
-                                    Modifier,
+                                    modifier,
                                     MaterialTheme.colorScheme.primary
                                 )
                             },
