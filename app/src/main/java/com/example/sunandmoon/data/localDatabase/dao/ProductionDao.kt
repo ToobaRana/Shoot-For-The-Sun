@@ -17,7 +17,7 @@ interface ProductionDao {
     @Query("SELECT * FROM production WHERE name LIKE :searchQuery ORDER BY " +
             "(CASE WHEN ((:orderBy = 'start_date_time' AND start_date_time IS NULL) OR (:orderBy = 'end_date_time' AND end_date_time IS NULL)) THEN 1 ELSE 0 END), " +
             "CASE :orderBy " +
-            "WHEN 'name' THEN name " +
+            "WHEN 'name' THEN name COLLATE NOCASE " +
             "WHEN 'start_date_time' THEN start_date_time " +
             "WHEN 'end_date_time' THEN end_date_time " +
             "ELSE start_date_time " +

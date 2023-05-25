@@ -90,7 +90,7 @@
     <string name="YourProductions">Your productions</string>
     <string name="Solos_shoots">Solo shoots</string>
 
-
+    <string name="CalibrateMagnetometer">Please calibrate your magnetometer by rotating your device in all directions. Check whether your magnetometer is calibrated correctly by using the compass directions shown in the AR view</string>
 
     <!--<string-array name="TeamMembers">
         <item>Adrian Skansen</item>

@@ -200,4 +200,14 @@ class ARViewModel  @Inject constructor(
             3 -> updateTime(sunTimes[2])
         }
     }
+
+    fun setHasShownCalibrateMagnetMessage(bool: Boolean){
+        viewModelScope.launch {
+            _arUIState.update { currentState ->
+                currentState.copy(
+                    hasShownCalibrateMagnetMessage = bool
+                )
+            }
+        }
+    }
 }

@@ -33,6 +33,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.buttonComponents.OpenARSettingsButton
+import com.example.sunandmoon.ui.components.infoComponents.CalibrateMagnetometerDialogue
 import com.example.sunandmoon.ui.components.userInputComponents.EditARSettings
 import com.example.sunandmoon.viewModel.ARViewModel
 
@@ -142,6 +143,9 @@ fun SunARUI(
     val sunZenith = arUIState.sunZenith
     val sunAzimuth = arUIState.sunAzimuth
     if(sunZenith != null && sunAzimuth != null) {
+        if(!arUIState.hasShownCalibrateMagnetMessage) {
+            CalibrateMagnetometerDialogue(modifier)
+        }
         SunFinder(modifier, sensorStatus.value, sunZenith, sunAzimuth)
     }
 

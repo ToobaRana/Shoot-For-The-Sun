@@ -1,14 +1,9 @@
 package com.example.sunandmoon.ui.screens
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,26 +11,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.ProductionShootSelectionTopPart
-import com.example.sunandmoon.ui.components.buttonComponents.OrderByDropdown
+import com.example.sunandmoon.ui.components.infoComponents.PreferredWeatherDialogue
 
-import com.example.sunandmoon.ui.components.infoComponents.PreferredWeatherDialog
 import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
 import com.example.sunandmoon.ui.components.infoComponents.ShootCard
 import com.example.sunandmoon.ui.components.userInputComponents.ProductionCreation
@@ -180,7 +165,7 @@ fun ShootSelectionScreen(
     )
 
     if(shootSelectionUIState.shootToShowPreferredWeatherDialogFor != null) {
-        PreferredWeatherDialog(modifier = modifier, shootSelectionViewModel = shootSelectionViewModel, shoot = shootSelectionUIState.shootToShowPreferredWeatherDialogFor!!)
+        PreferredWeatherDialogue(modifier = modifier, shootSelectionViewModel = shootSelectionViewModel, shoot = shootSelectionUIState.shootToShowPreferredWeatherDialogFor!!)
     }
 
     if (shootSelectionUIState.newProductionName != null) {
