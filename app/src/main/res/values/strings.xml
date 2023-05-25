@@ -59,6 +59,8 @@
     <string name="TableDescription">Table:\n \n Our features are based on our own calculations, view our table to verify their accuracy. The table displays the time for sunrise, solar noon and sunset.
         It shows both the timing from MET and from our own calculations.
         On top of that, it displays the timing based on your preferred location.</string>
+    <string name="Disclaimer">Disclaimer:</string>
+    <string name="Disclaimertext">We have observed that the calculations may be off at times by up to 4 minutes, so keep that in mind.</string>
 
     <string name="IconDescription">Icons used in our app are from:\n Icons 8 \n Carlo Syllobre \n Selfmade</string>
     <string name="Icons8">Icons 8</string>
@@ -87,6 +89,8 @@
 
     <string name="YourProductions">Your productions</string>
     <string name="Solos_shoots">Solo shoots</string>
+
+
 
     <!--<string-array name="TeamMembers">
         <item>Adrian Skansen</item>
