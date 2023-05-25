@@ -57,6 +57,10 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -176,6 +180,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.6.0-alpha01'
     androidTestImplementation 'androidx.test:runner:1.6.0-alpha02'
 
+    androidTestImplementation "org.mockito:mockito-core:1.9.5"
 }
 
 // Allow references to generated code
