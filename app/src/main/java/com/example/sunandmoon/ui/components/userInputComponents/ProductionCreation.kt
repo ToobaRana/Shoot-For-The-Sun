@@ -104,31 +104,40 @@ fun ProductionCreation(
                     textStyle = TextStyle(fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito)))
                 )
 
-                val defaultProductionName = stringResource(R.string.defaultProductionName)
-                Button(
-                    onClick = {
-                        if (productionName.isBlank()) {
-                            createProduction(defaultProductionName)
-                        } else {
-                            createProduction(productionName)
-                        }
-                        //save stuff
+                Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
 
-                        setProductionName(null)
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onSurface
+                    Button(
+                        onClick = {
+                            setProductionName(null)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onSurface
+                        )
                     )
-                )
+                    {
+                        Text(text = stringResource(id = R.string.Cancel), fontFamily = FontFamily(Font(R.font.nunito)))
+                    }
 
-                {
-                    Text(text = stringResource(id = R.string.SaveButton), fontFamily = FontFamily(
-                        Font(R.font.nunito)
+                    val defaultProductionName = stringResource(R.string.defaultProductionName)
+                    Button(
+                        onClick = {
+                            if (productionName.isBlank()) {
+                                createProduction(defaultProductionName)
+                            } else {
+                                createProduction(productionName)
+                            }
+                            //save stuff
+
+                            setProductionName(null)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onSurface
+                        )
                     )
-                    )
+                    {
+                        Text(text = stringResource(id = R.string.SaveButton), fontFamily = FontFamily(Font(R.font.nunito)))
+                    }
                 }
-
-
             }
 
         }
