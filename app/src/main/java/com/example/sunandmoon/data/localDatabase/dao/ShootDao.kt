@@ -14,23 +14,23 @@ enum class ShootOrderBy(val value: String) {
 @Dao
 interface ShootDao {
     // should sort by either latitude, date_time, latitude or longitude
-    @Query("SELECT * FROM shoot WHERE parent_production_id IS NULL ORDER BY CASE :orderBy " +
+    @Query("SELECT * FROM shoot WHERE parent_production_id IS NULL AND name LIKE :searchQuery ORDER BY CASE :orderBy " +
             "WHEN 'name' THEN name " +
             "WHEN 'date_time' THEN date_time " +
             "WHEN 'latitude' THEN latitude " +
             "WHEN 'longitude' THEN longitude " +
             "ELSE date_time " +
             "END ASC")
-    fun getAllSoloShoots(orderBy: String): List<StorableShoot>
+    fun getAllSoloShoots(orderBy: String, searchQuery: String): List<StorableShoot>
 
-    @Query("SELECT * FROM shoot WHERE parent_production_id = :productionId ORDER BY CASE :orderBy " +
+    @Query("SELECT * FROM shoot WHERE parent_production_id = :productionId AND name LIKE :searchQuery ORDER BY CASE :orderBy " +
             "WHEN 'name' THEN name " +
             "WHEN 'date_time' THEN date_time " +
             "WHEN 'latitude' THEN latitude " +
             "WHEN 'longitude' THEN longitude " +
             "ELSE date_time " +
             "END ASC")
-    fun loadByProductionId(productionId: Int, orderBy: String): List<StorableShoot>
+    fun loadByProductionId(productionId: Int, orderBy: String, searchQuery: String): List<StorableShoot>
 
     @Query("SELECT * FROM shoot WHERE uid = :shootId")
     fun loadById(shootId: Int): StorableShoot

@@ -21,5 +21,7 @@ data class ShootSelectionUIState (
     val shootOrderBy: ShootOrderBy = ShootOrderBy.DATE_TIME,
 
     val shootToShowPreferredWeatherDialogFor: Shoot? = null,
-    val weatherData: LocationForecast? = null
+    val weatherData: LocationForecast? = null,
+
+    val searchQuery: String = ""
 )

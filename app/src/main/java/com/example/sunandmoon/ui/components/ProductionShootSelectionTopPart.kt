@@ -74,9 +74,10 @@ fun ProductionShootSelectionTopPart(
                 fontWeight = FontWeight(500)
             )
             TextField(
-                value = "",
+                value = shootSelectionUIState.searchQuery,
                 placeholder = { Text(stringResource(id = R.string.Search), color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
                 onValueChange = { query ->
+                    shootSelectionViewModel.setSearchQuery(query)
                 },
                 singleLine = true,
                 modifier = modifier

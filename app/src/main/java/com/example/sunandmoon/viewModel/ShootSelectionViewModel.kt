@@ -64,7 +64,7 @@ class ShootSelectionViewModel @Inject constructor(
     fun getAllProductions() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val allProductions = productionDao.getAll(_shootSelectionUIState.value.productionOrderBy.value)
+                val allProductions = productionDao.getAll(_shootSelectionUIState.value.productionOrderBy.value, "%" + _shootSelectionUIState.value.searchQuery + "%")
                 var productionList = mutableListOf<Production>()
                 allProductions.forEach() { storableProduction ->
                     productionList.add(
@@ -92,7 +92,7 @@ class ShootSelectionViewModel @Inject constructor(
     fun getAllSoloShoots() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val allSoloShoots = shootDao.getAllSoloShoots(_shootSelectionUIState.value.shootOrderBy.value)
+                val allSoloShoots = shootDao.getAllSoloShoots(_shootSelectionUIState.value.shootOrderBy.value, "%" + _shootSelectionUIState.value.searchQuery + "%")
                 val shootList = storableShootsToNormalShoots(allSoloShoots)
 
                 _shootSelectionUIState.update { currentState ->
@@ -172,7 +172,7 @@ class ShootSelectionViewModel @Inject constructor(
     fun getShootsInProduction(production: Production) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val productionShoots = production.id?.let { shootDao.loadByProductionId(it, _shootSelectionUIState.value.shootOrderBy.value) }
+                val productionShoots = production.id?.let { shootDao.loadByProductionId(it, _shootSelectionUIState.value.shootOrderBy.value, "%" + _shootSelectionUIState.value.searchQuery + "%") }
                 val shootList = storableShootsToNormalShoots(productionShoots)
 
                 _shootSelectionUIState.update { currentState ->
@@ -331,6 +331,20 @@ class ShootSelectionViewModel @Inject constructor(
 
         getAllSoloShoots()
 
+        val selectedProduction = _shootSelectionUIState.value.selectedProduction
+        if(selectedProduction != null) getShootsInProduction(selectedProduction)
+    }
+
+    fun setSearchQuery(query: String) {
+        _shootSelectionUIState.update { currentState ->
+            currentState.copy(
+                searchQuery = query
+            )
+        }
+
+        // this is not very optimized, but we ran out of time
+        getAllProductions()
+        getAllSoloShoots()
         val selectedProduction = _shootSelectionUIState.value.selectedProduction
         if(selectedProduction != null) getShootsInProduction(selectedProduction)
     }

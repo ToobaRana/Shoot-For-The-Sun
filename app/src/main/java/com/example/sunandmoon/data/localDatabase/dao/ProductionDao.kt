@@ -14,7 +14,7 @@ interface ProductionDao {
     // should sort by either start_date_time, end_date_time or name
     // This sorts it such that if it is to be sorted by start_date_time but the start_date_time equals null,
     // then it ends up at the end of the sorting. This makes all of the empty productions be at the end
-    @Query("SELECT * FROM production ORDER BY " +
+    @Query("SELECT * FROM production WHERE name LIKE :searchQuery ORDER BY " +
             "(CASE WHEN ((:orderBy = 'start_date_time' AND start_date_time IS NULL) OR (:orderBy = 'end_date_time' AND end_date_time IS NULL)) THEN 1 ELSE 0 END), " +
             "CASE :orderBy " +
             "WHEN 'name' THEN name " +
@@ -22,7 +22,7 @@ interface ProductionDao {
             "WHEN 'end_date_time' THEN end_date_time " +
             "ELSE start_date_time " +
             "END ASC")
-    fun getAll(orderBy: String): List<StorableProduction>
+    fun getAll(orderBy: String, searchQuery: String): List<StorableProduction>
 
     @Query("SELECT * FROM production WHERE uid = :productionId")
     fun loadById(productionId: Int): StorableProduction
