@@ -14,7 +14,6 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.PreferableWeather
 import com.example.sunandmoon.data.dataUtil.Shoot
 import com.example.sunandmoon.ui.theme.CheckmarkColor
-import androidx.compose.foundation.Image
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.example.sunandmoon.ui.theme.RedColor
@@ -22,7 +21,7 @@ import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import androidx.compose.ui.res.stringResource
 
 @Composable
-fun PreferredWeatherDialog(modifier: Modifier, shootSelectionViewModel: ShootSelectionViewModel, shoot: Shoot) {
+fun PreferredWeatherDialogue(modifier: Modifier, shootSelectionViewModel: ShootSelectionViewModel, shoot: Shoot) {
     val weatherIconAndContentDescription = shootSelectionViewModel.getWeatherIconOfShoot(shoot) //weatherIcons[weatherIconSplit[0]]?.get(if(isDay) 0 else 1)
     val weatherIcon = weatherIconAndContentDescription?.first
     val weatherContentDescription = weatherIconAndContentDescription?.second

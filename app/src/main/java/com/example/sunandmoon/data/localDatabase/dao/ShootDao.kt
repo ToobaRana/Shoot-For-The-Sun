@@ -15,7 +15,7 @@ enum class ShootOrderBy(val value: String) {
 interface ShootDao {
     // should sort by either latitude, date_time, latitude or longitude
     @Query("SELECT * FROM shoot WHERE parent_production_id IS NULL AND name LIKE :searchQuery ORDER BY CASE :orderBy " +
-            "WHEN 'name' THEN name " +
+            "WHEN 'name' THEN name COLLATE NOCASE " +
             "WHEN 'date_time' THEN date_time " +
             "WHEN 'latitude' THEN latitude " +
             "WHEN 'longitude' THEN longitude " +
@@ -24,7 +24,7 @@ interface ShootDao {
     fun getAllSoloShoots(orderBy: String, searchQuery: String): List<StorableShoot>
 
     @Query("SELECT * FROM shoot WHERE parent_production_id = :productionId AND name LIKE :searchQuery ORDER BY CASE :orderBy " +
-            "WHEN 'name' THEN name " +
+            "WHEN 'name' THEN name COLLATE NOCASE " +
             "WHEN 'date_time' THEN date_time " +
             "WHEN 'latitude' THEN latitude " +
             "WHEN 'longitude' THEN longitude " +

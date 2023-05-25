@@ -13,4 +13,6 @@ data class ARUIState(
     val editARSettingsIsOpened: Boolean = false,
     val editTimeEnabled: Boolean = true,
     val chosenSunPositionIndex: Int = 0,
+
+    val hasShownCalibrateMagnetMessage: Boolean = false,
 )
