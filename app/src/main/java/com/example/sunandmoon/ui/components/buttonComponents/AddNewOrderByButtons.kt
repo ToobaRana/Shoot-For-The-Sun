@@ -33,11 +33,12 @@ fun AddNewOrderByButtons(
     Column(
         modifier
             .fillMaxWidth()
-            .padding(20.dp, 20.dp, 20.dp, 10.dp), horizontalAlignment = Alignment.CenterHorizontally
+            .padding(20.dp, 0.dp, 20.dp, 10.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth()
+                .padding(0.dp, 20.dp)
                 .height(40.dp),
             horizontalArrangement = Arrangement.Start
         ) {
@@ -83,35 +84,6 @@ fun AddNewOrderByButtons(
             Box(modifier = modifier.weight(1f)) {
                 OrderByDropdown(modifier, shootSelectionUIState)
             }
-
-            /*Row(
-                modifier = modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(MaterialTheme.colorScheme.primary)
-                    .clickable {
-                        shootSelectionViewModel.openCloseOrderByDropdown()
-                    },
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painterResource(id = R.drawable.sortdown),
-                    contentDescription = stringResource(R.string.OrderBy),
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = modifier
-                        .size(35.dp)
-                        .padding(start = 15.dp, top = 3.dp)
-                )
-                Text(
-                    text =  stringResource(R.string.OrderBy),
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    textAlign = TextAlign.End,
-                    modifier = modifier.padding(end = 22.dp)
-                )
-            }*/
         }
     }
 }

@@ -251,7 +251,8 @@ fun CalendarComponentDisplay(
             val calenderDayHeight =
                 (chosenDate.toLocalDate().lengthOfMonth() + daysBeforeFirst - 1) / 7
 
-
+            Log.i("calendar", "daysBeforeFirst: $daysBeforeFirst")
+            Log.i("calendar", "calenderDayHeight: $calenderDayHeight")
             for (i in 0..calenderDayHeight) {
                 Row(
                     modifier = modifier.fillMaxWidth(),
@@ -262,13 +263,14 @@ fun CalendarComponentDisplay(
                         for (y in 0 until daysBeforeFirst) {
                             Spacer(
                                 modifier = modifier
-                                    .size(50.dp)
+                                    .weight(1f)
+                                    .height(50.dp)
                                     .padding(1.dp)
                             )
                         }
                         for (y in daysBeforeFirst until numWeekdays) {
                             val day = (y + 1 - daysBeforeFirst)
-                            DrawDayBox(modifier, day, chosenDate.dayOfMonth) { updateDay(day) }
+                            DrawDayBox(modifier.weight(1f).height(50.dp), day, chosenDate.dayOfMonth) { updateDay(day) }
                         }
                     } else {
                         for (y in 0 until numWeekdays) {
@@ -277,14 +279,14 @@ fun CalendarComponentDisplay(
                             if (day > chosenDate.toLocalDate().lengthOfMonth()) {
                                 Spacer(
                                     modifier = modifier
-                                        .size(50.dp)
+                                        .weight(1f)
+                                        .height(50.dp)
+                                        //.size(50.dp)
                                         .padding(1.dp)
                                 )
 
                             } else {
-                                DrawDayBox(modifier, day, chosenDate.dayOfMonth) { updateDay(day) }
-
-
+                                DrawDayBox(modifier.weight(1f).height(50.dp), day, chosenDate.dayOfMonth) { updateDay(day) }
                             }
 
                         }
@@ -395,7 +397,9 @@ fun getDayOfFirst(month: Int, year: Int): String {
 
     val date = LocalDate.of(year, month, 1)
 
-    return date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    Log.i("calendar", "ehm: " + date.dayOfWeek.getDisplayName(TextStyle.FULL,  Locale.ENGLISH))
+
+    return date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
 
 }
 
@@ -416,7 +420,7 @@ fun DrawDayBox(modifier: Modifier, day: Int, chosenDay: Int, updateDay: () -> Un
     }
     Box(
         modifier = usedModifier
-            .size(50.dp)
+            //.size(50.dp)
             .padding(1.dp)
             .clickable() { updateDay() },
         contentAlignment = Alignment.Center

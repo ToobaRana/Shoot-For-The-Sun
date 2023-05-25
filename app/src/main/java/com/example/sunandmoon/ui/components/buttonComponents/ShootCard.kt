@@ -21,7 +21,7 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(35.dp, 10.dp)
+            .padding(20.dp, 10.dp)
             .clickable {
                 shoot.id?.let { navigateToNext(it) }
             },

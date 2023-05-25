@@ -32,7 +32,7 @@ fun PagePickerProductionsShoots(
     {
         Row(
             modifier
-                .width(320.dp)
+                .fillMaxWidth()
                 .height(35.dp)
                 .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(15.dp)),
             horizontalArrangement = Arrangement.Start
@@ -43,7 +43,8 @@ fun PagePickerProductionsShoots(
                 onClick = { if (currentPageIndex != SelectionPages.PRODUCTIONS.ordinal) shootSelectionViewModel.changeCurrentPageIndex() },
                 modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = colors[currentPageIndex]),
-                contentPadding = PaddingValues(vertical = 4.dp)
+                contentPadding = PaddingValues(vertical = 4.dp),
+                shape = RoundedCornerShape(15.dp)
             ) {
                 Text(stringResource(com.example.sunandmoon.R.string.Productions), color = colors[(currentPageIndex + 1) % 2], fontSize = 18.sp)
             }
@@ -51,7 +52,8 @@ fun PagePickerProductionsShoots(
                 onClick = { if (currentPageIndex != SelectionPages.SHOOTS.ordinal) shootSelectionViewModel.changeCurrentPageIndex() },
                 modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = colors[(currentPageIndex + 1) % 2]),
-                contentPadding = PaddingValues(vertical = 4.dp)
+                contentPadding = PaddingValues(vertical = 4.dp),
+                shape = RoundedCornerShape(15.dp)
             ) {
                 Text(stringResource(com.example.sunandmoon.R.string.SoloShoots), color = colors[currentPageIndex], fontSize = 18.sp)
             }

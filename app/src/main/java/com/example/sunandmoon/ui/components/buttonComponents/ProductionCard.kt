@@ -23,7 +23,7 @@ fun ProductionCard(
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(35.dp, 10.dp)
+            .padding(20.dp, 10.dp)
             .clickable {
                 goIntoProduction()
             },
