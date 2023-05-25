@@ -30,7 +30,7 @@ fun LocationSearch(
     locationSearchResults: List<LocationSearchResults>,
     setLocationSearchQuery: (query: String, format: Boolean) -> Unit,
     loadLocationSearchResults: (query: String) -> Unit,
-    setCoordinates: (location: Location, setTimeZoneOffset: Boolean) -> Unit,
+    setCoordinates: (location: Location) -> Unit,
 ) {
 
     //val shootInfoUIState by createShootViewModel.createShootUIState.collectAsState()
@@ -90,7 +90,7 @@ fun LocationSearch(
                             .fillMaxWidth()
                             .clickable {
                                 isDropdownExpanded = false
-                                setCoordinates(Location("").apply { latitude = item.lat.toDouble(); longitude = item.lon.toDouble() }, true)
+                                setCoordinates(Location("").apply { latitude = item.lat.toDouble(); longitude = item.lon.toDouble() })
                                 setLocationSearchQuery(item.display_name, true)
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)

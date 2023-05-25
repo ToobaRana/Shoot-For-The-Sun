@@ -1,5 +1,7 @@
 package com.example.sunandmoon.viewModel
 
+import android.icu.util.Calendar
+import android.icu.util.TimeZone
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -11,8 +13,10 @@ import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
+import com.example.sunandmoon.data.localDatabase.storableShootToNormalShoot
 import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.util.fetchLocation
+import com.example.sunandmoon.util.getTimeZoneOffset
 import com.example.sunandmoon.util.simplifyLocationNameQuery
 import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +30,7 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,10 +49,13 @@ class CreateShootViewModel  @Inject constructor(
             locationSearchQuery = "UiO",
             locationSearchResults = listOf(),
             locationEnabled = false,
-            latitude = 59.943965,
-            longitude = 10.7178129,
+            location = Location("").apply {
+                latitude = 59.943965
+                longitude = 10.7178129
+            },
+            hasGottenCurrentPosition = false,
             chosenDateTime = LocalDateTime.now().withSecond(0).withNano(0),
-            timeZoneOffset = 2.0,
+            timeZoneOffset = getTimeZoneOffset(),
             editTimeEnabled = true,
             chosenSunPositionIndex = 0
         )
@@ -56,7 +64,7 @@ class CreateShootViewModel  @Inject constructor(
     val createShootUIState: StateFlow<CreateShootUIState> = _createShootUIState.asStateFlow()
 
     init {
-        getCurrentPosition()
+        //getCurrentPosition()
     }
 
     fun setLocationSearchQuery(inputQuery: String, format: Boolean) {
@@ -96,17 +104,16 @@ class CreateShootViewModel  @Inject constructor(
         }
     }
 
-    fun setCoordinates(location: Location, setTimeZoneOffset: Boolean) {
+    fun setCoordinates(location: Location) {
         viewModelScope.launch {
-            if (setTimeZoneOffset) {
+            /*if (setTimeZoneOffset) {
                 val locationTimeZoneOffsetResult =
                     dataSource.fetchLocationTimezoneOffset(location)
                 setTimeZoneOffset(locationTimeZoneOffsetResult.offset)
-            }
+            }*/
             _createShootUIState.update { currentState ->
                 currentState.copy(
-                    latitude = location.latitude,
-                    longitude = location.longitude
+                    location = location
                 )
             }
             if(_createShootUIState.value.chosenSunPositionIndex != 0) {
@@ -118,11 +125,17 @@ class CreateShootViewModel  @Inject constructor(
 
     //calls fetchLocation method with provider client, then updates latitude and longitude in uiState with return value
     fun getCurrentPosition() {
+
+        _createShootUIState.update { currentState ->
+            currentState.copy(
+                hasGottenCurrentPosition = true
+            )
+        }
+
         viewModelScope.launch() {
-            fetchLocation(fusedLocationProviderClient) { location: Location, setTimeZoneOffset: Boolean ->
+            fetchLocation(fusedLocationProviderClient) { location: Location ->
                 setCoordinates(
                     location,
-                    setTimeZoneOffset
                 )
                 setLocationQuery(location)
             }
@@ -141,16 +154,7 @@ class CreateShootViewModel  @Inject constructor(
         }
     }
 
-    fun setTimeZoneOffset(timeZoneOffset: Double) {
-        _createShootUIState.update { currentState ->
-            currentState.copy(
-                timeZoneOffset = timeZoneOffset
-            )
-        }
-    }
-
     fun updateDay(day: Int) {
-
         setNewDate(
             _createShootUIState.value.chosenDateTime.year,
             _createShootUIState.value.chosenDateTime.monthValue,
@@ -188,13 +192,16 @@ class CreateShootViewModel  @Inject constructor(
             withContext(Dispatchers.IO) {
                 val shootId: Int = if(_createShootUIState.value.currentShootBeingEditedId != null) _createShootUIState.value.currentShootBeingEditedId!! else 0
 
+                Log.i("saveShoot", "shootId: $shootId")
+                Log.i("saveShoot", "parentProductionId: ${_createShootUIState.value.parentProductionId}")
+
                 val storableShoot = StorableShoot(
                     uid = shootId,
                     parentProductionId = _createShootUIState.value.parentProductionId,
                     name = _createShootUIState.value.name,
                     locationName = _createShootUIState.value.locationSearchQuery,
-                    latitude = _createShootUIState.value.latitude,
-                    longitude = _createShootUIState.value.longitude,
+                    latitude = _createShootUIState.value.location.latitude,
+                    longitude = _createShootUIState.value.location.longitude,
                     dateTime = _createShootUIState.value.chosenDateTime,
                     timeZoneOffset = _createShootUIState.value.timeZoneOffset,
                     preferredWeather = _createShootUIState.value.preferredWeather
@@ -228,10 +235,21 @@ class CreateShootViewModel  @Inject constructor(
 
     fun setCurrentShootBeingEditedId(id: Int) {
         viewModelScope.launch {
-            _createShootUIState.update { currentState ->
-                currentState.copy(
-                    currentShootBeingEditedId = id
-                )
+
+            withContext(Dispatchers.IO) {
+                val shoot = storableShootToNormalShoot(shootDao.loadById(id))
+
+                _createShootUIState.update { currentState ->
+                    currentState.copy(
+                        currentShootBeingEditedId = id,
+                        parentProductionId = shoot.parentProductionId,
+                        name = shoot.name,
+                        locationSearchQuery = shoot.locationName,
+                        location = shoot.location,
+                        chosenDateTime = shoot.dateTime,
+                        preferredWeather = shoot.preferredWeather
+                    )
+                }
             }
         }
     }
@@ -285,10 +303,7 @@ class CreateShootViewModel  @Inject constructor(
         val sunTimes = getSunRiseNoonFall(
             localDateTime = _createShootUIState.value.chosenDateTime,
             timeZoneOffset = _createShootUIState.value.timeZoneOffset,
-            location = Location("").apply {
-                latitude = _createShootUIState.value.latitude
-                longitude = _createShootUIState.value.longitude
-            }
+            location = _createShootUIState.value.location
         )
         when(_createShootUIState.value.chosenSunPositionIndex){
             0 -> updateTime(LocalTime.now().withSecond(0).withNano(0))

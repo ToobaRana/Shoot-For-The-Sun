@@ -27,7 +27,7 @@ import java.time.LocalTime
 fun LatitudeLongitudeInput(
     modifier: Modifier,
     currentLocation: Location,
-    setCoordinates: (location: Location, setTimeZoneOffset: Boolean) -> Unit,
+    setCoordinates: (location: Location) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
     Column(modifier.fillMaxWidth().padding(bottom = 20.dp)) {
@@ -36,7 +36,7 @@ fun LatitudeLongitudeInput(
                 value = currentLocation.latitude.toString(),
                 onValueChange = { query ->
                     try {
-                        setCoordinates(currentLocation.apply { latitude = query.toDouble() }, false)
+                        setCoordinates(currentLocation.apply { latitude = query.toDouble() })
                     } catch (e: Exception) {
                         Log.i("LatitudeLongitudeInput", "Invalid latitude")
                     }
@@ -69,7 +69,7 @@ fun LatitudeLongitudeInput(
                 value = currentLocation.longitude.toString(),
                 onValueChange = { query ->
                     try {
-                        setCoordinates(currentLocation.apply { longitude = query.toDouble() }, false)
+                        setCoordinates(currentLocation.apply { longitude = query.toDouble() })
                     } catch (e: Exception) {
                         Log.i("LatitudeLongitudeInput", "Invalid longitude")
                     }

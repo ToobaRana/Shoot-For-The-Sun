@@ -244,13 +244,11 @@ class TableViewModel : ViewModel() {
         }
     }
 
-    fun setCoordinates(newLocation: Location, setTimeZoneOffset: Boolean) {
+    fun setCoordinates(newLocation: Location) {
         viewModelScope.launch {
-            if(setTimeZoneOffset) {
-                val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLocation)
-                setTimeZoneOffset(locationTimeZoneOffsetResult.offset, locationTimeZoneOffsetResult.timezone_id)
-            }
 
+            val locationTimeZoneOffsetResult = dataSource.fetchLocationTimezoneOffset(newLocation)
+            setTimeZoneOffset(locationTimeZoneOffsetResult.offset, locationTimeZoneOffsetResult.timezone_id)
 
             _tableUIState.update { currentState ->
                 currentState.copy(

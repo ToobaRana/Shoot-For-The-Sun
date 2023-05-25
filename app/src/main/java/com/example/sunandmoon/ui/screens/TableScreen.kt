@@ -99,10 +99,9 @@ fun TableView(
                         loadLocationSearchResults = { query: String ->
                             tableViewModel.loadLocationSearchResults(query)
                         },
-                        setCoordinates = { newLocation, setTimeZoneOffset: Boolean ->
+                        setCoordinates = { newLocation ->
                             tableViewModel.setCoordinates(
-                                newLocation,
-                                setTimeZoneOffset
+                                newLocation
                             )
                         }
                     )

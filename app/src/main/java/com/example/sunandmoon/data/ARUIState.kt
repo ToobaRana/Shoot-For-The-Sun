@@ -7,7 +7,7 @@ data class ARUIState(
     val sunZenith: Double?,
     val sunAzimuth: Double?,
     val chosenDateTime: LocalDateTime,
-    val timeZoneOffset: Double?,
+    val timeZoneOffset: Double,
     val location: Location?,
 
     val editARSettingsIsOpened: Boolean = false,

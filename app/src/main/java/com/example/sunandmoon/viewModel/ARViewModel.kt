@@ -9,6 +9,7 @@ import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.util.fetchLocation
+import com.example.sunandmoon.util.getTimeZoneOffset
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +34,7 @@ class ARViewModel  @Inject constructor(
             sunZenith = null,
             sunAzimuth = null,
             chosenDateTime = LocalDateTime.now(),
-            timeZoneOffset = null,
+            timeZoneOffset = getTimeZoneOffset(),
             location = null,
         )
     )
@@ -47,8 +48,8 @@ class ARViewModel  @Inject constructor(
         //setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
     }
 
-    private fun setSunPosition(location: Location, timeZoneOffset: Double) {
-        val sunPosition = calculateSunPosition(_arUIState.value.chosenDateTime, timeZoneOffset, location)
+    private fun setSunPosition(location: Location) {
+        val sunPosition = calculateSunPosition(_arUIState.value.chosenDateTime, _arUIState.value.timeZoneOffset, location)
         Log.i("matte", sunPosition.second.toString())
         _arUIState.update { currentState ->
             currentState.copy(
@@ -66,13 +67,8 @@ class ARViewModel  @Inject constructor(
         }
     }
 
-    fun setCoordinates(newLocation: Location, setTimeZoneOffset: Boolean) {
+    fun setCoordinates(newLocation: Location) {
         viewModelScope.launch {
-            if (setTimeZoneOffset) {
-                val locationTimeZoneOffsetResult =
-                    dataSource.fetchLocationTimezoneOffset(newLocation)
-                setTimeZoneOffset(locationTimeZoneOffsetResult.offset.toDouble())
-            }
 
             _arUIState.update { currentState ->
                 currentState.copy(
@@ -80,20 +76,16 @@ class ARViewModel  @Inject constructor(
                 )
             }
 
-            val timeZoneOffset = _arUIState.value.timeZoneOffset
-            if(timeZoneOffset != null) {
-                setSunPosition(newLocation, timeZoneOffset)
-            }
+            setSunPosition(newLocation)
         }
     }
 
     //calls fetchLocation method with provider client, then updates latitude and longitude in uiState with return value
     fun getAndSetCurrentPosition() {
         viewModelScope.launch() {
-            fetchLocation(fusedLocationProviderClient) { location: Location, setTimeZoneOffset: Boolean ->
+            fetchLocation(fusedLocationProviderClient) { location: Location ->
                 setCoordinates(
-                    location,
-                    setTimeZoneOffset
+                    location
                 )
             }
         }
@@ -121,9 +113,8 @@ class ARViewModel  @Inject constructor(
         }
 
         val location = _arUIState.value.location
-        val timeZoneOffset = _arUIState.value.timeZoneOffset
-        if(location != null && timeZoneOffset != null) {
-            setSunPosition(location, timeZoneOffset)
+        if(location != null) {
+            setSunPosition(location)
         }
     }
 
@@ -163,9 +154,8 @@ class ARViewModel  @Inject constructor(
             }
 
             val location = _arUIState.value.location
-            val timeZoneOffset = _arUIState.value.timeZoneOffset
-            if(location != null && timeZoneOffset != null) {
-                setSunPosition(location, timeZoneOffset)
+            if(location != null) {
+                setSunPosition(location)
             }
         }
 
@@ -196,8 +186,7 @@ class ARViewModel  @Inject constructor(
 
     private fun updateTimeToChosenSunPosition(){
         val timeZoneOffset = _arUIState.value.timeZoneOffset
-        val location = _arUIState.value.location
-        if(timeZoneOffset == null || location == null) return
+        val location = _arUIState.value.location ?: return
 
         val sunTimes = getSunRiseNoonFall(
             localDateTime = _arUIState.value.chosenDateTime,

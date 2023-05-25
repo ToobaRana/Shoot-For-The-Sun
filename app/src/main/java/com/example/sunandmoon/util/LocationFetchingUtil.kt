@@ -6,14 +6,14 @@ import com.google.android.gms.location.FusedLocationProviderClient
 
 fun fetchLocation(
     fusedLocationClient: FusedLocationProviderClient,
-    setCoordinates: (location: Location, setTimeZoneOffset: Boolean) -> Unit
+    setCoordinates: (location: Location) -> Unit
 ) {
     try {
         Log.i("ararar", "fetch location attempt")
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             Log.i("ararar", "fetch location success")
             if (location != null) {
-                setCoordinates(location, true)
+                setCoordinates(location)
             } else {
                 Log.d("Location", "Last known location is not available")
                 // Handle the case where location is null

@@ -58,6 +58,8 @@ fun CreateShootScreen(
     }
     if (createShootUIState.currentShootBeingEditedId == null && shootToEditId != null) {
         createShootViewModel.setCurrentShootBeingEditedId(shootToEditId)
+    } else if(shootToEditId == null && !createShootUIState.hasGottenCurrentPosition) {
+        createShootViewModel.getCurrentPosition()
     }
 
     val networkIsAvailable = isNetworkAvailable(context = LocalContext.current)
@@ -134,10 +136,9 @@ fun CreateShootScreen(
                             createShootUIState.locationSearchResults,
                             { query: String, format: Boolean -> createShootViewModel.setLocationSearchQuery(query, format) },
                             { query: String -> createShootViewModel.loadLocationSearchResults(query) },
-                            { location: Location, setTimeZoneOffset: Boolean ->
+                            { location: Location ->
                                 createShootViewModel.setCoordinates(
-                                    location,
-                                    setTimeZoneOffset
+                                    location
                                 )
                             },
                         )
@@ -145,11 +146,8 @@ fun CreateShootScreen(
                     else {
                         LatitudeLongitudeInput(
                             modifier,
-                            Location("").apply {
-                                latitude =  createShootUIState.latitude
-                                longitude = createShootUIState.longitude
-                            },
-                            {location: Location, setTimeZoneOffset: Boolean ->  createShootViewModel.setCoordinates(location, setTimeZoneOffset)}
+                            createShootUIState.location,
+                            {location: Location ->  createShootViewModel.setCoordinates(location)}
                         )
                     }
                 }
