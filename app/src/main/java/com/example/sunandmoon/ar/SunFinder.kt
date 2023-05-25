@@ -50,7 +50,7 @@ fun SunFinder(
     // the sun
     SunCircle(modifier, sensorStatus, xPos1, yPos1, RedColor, sunZenith)
     // the "other" sun
-    SunCircle(modifier, sensorStatus, xPos2, yPos2, CheckmarkColor, sunZenith)
+    SunCircle(modifier, sensorStatus, xPos2, yPos2, RedColor, sunZenith)
 
     SunFinderArrow(modifier, xPos1, yPos1, xPos2, yPos2, sensorStatus)
 }
