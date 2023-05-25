@@ -77,21 +77,21 @@ fun OrderByDropdown(modifier: Modifier, shootSelectionUIState: ShootSelectionUIS
                         shootSelectionViewModel.setProductionOrderBy(ProductionOrderBy.START_DATE_TIME)
                         shootSelectionViewModel.openCloseOrderByDropdown()
                     },
-                    text = { Text(stringResource(id = R.string.StartDate), color = MaterialTheme.colorScheme.primary) },
+                    text = { Text(stringResource(id = R.string.StartDate), color = MaterialTheme.colorScheme.primary, fontFamily = FontFamily(Font(R.font.nunito_bold))) },
                 )
                 DropdownMenuItem(
                     onClick = {
                         shootSelectionViewModel.setProductionOrderBy(ProductionOrderBy.END_DATE_TIME)
                         shootSelectionViewModel.openCloseOrderByDropdown()
                     },
-                    text = { Text(stringResource(id = R.string.EndDate), color = MaterialTheme.colorScheme.primary) }
+                    text = { Text(stringResource(id = R.string.EndDate), color = MaterialTheme.colorScheme.primary, fontFamily = FontFamily(Font(R.font.nunito_bold))) }
                 )
                 DropdownMenuItem(
                     onClick = {
                         shootSelectionViewModel.setProductionOrderBy(ProductionOrderBy.NAME)
                         shootSelectionViewModel.openCloseOrderByDropdown()
                     },
-                    text = { Text(stringResource(id = R.string.Name), color = MaterialTheme.colorScheme.primary) }
+                    text = { Text(stringResource(id = R.string.Name), color = MaterialTheme.colorScheme.primary, fontFamily = FontFamily(Font(R.font.nunito_bold))) }
                 )
             }
             else {
@@ -100,28 +100,28 @@ fun OrderByDropdown(modifier: Modifier, shootSelectionUIState: ShootSelectionUIS
                         shootSelectionViewModel.setShootOrderBy(ShootOrderBy.DATE_TIME)
                         shootSelectionViewModel.openCloseOrderByDropdown()
                     },
-                    text = { Text(stringResource(id = R.string.StartDate), color = MaterialTheme.colorScheme.primary) },
+                    text = { Text(stringResource(id = R.string.StartDate), color = MaterialTheme.colorScheme.primary, fontFamily = FontFamily(Font(R.font.nunito_bold))) },
                 )
                 DropdownMenuItem(
                     onClick = {
                         shootSelectionViewModel.setShootOrderBy(ShootOrderBy.NAME)
                         shootSelectionViewModel.openCloseOrderByDropdown()
                     },
-                    text = { Text(stringResource(id = R.string.Name), color = MaterialTheme.colorScheme.primary) }
+                    text = { Text(stringResource(id = R.string.Name), color = MaterialTheme.colorScheme.primary, fontFamily = FontFamily(Font(R.font.nunito_bold))) }
                 )
                 DropdownMenuItem(
                     onClick = {
                         shootSelectionViewModel.setShootOrderBy(ShootOrderBy.LATITUDE)
                         shootSelectionViewModel.openCloseOrderByDropdown()
                     },
-                    text = { Text(stringResource(id = R.string.Latitude), color = MaterialTheme.colorScheme.primary) }
+                    text = { Text(stringResource(id = R.string.Latitude), color = MaterialTheme.colorScheme.primary, fontFamily = FontFamily(Font(R.font.nunito_bold))) }
                 )
                 DropdownMenuItem(
                     onClick = {
                         shootSelectionViewModel.setShootOrderBy(ShootOrderBy.LONGITUDE)
                         shootSelectionViewModel.openCloseOrderByDropdown()
                     },
-                    text = { Text(stringResource(id = R.string.Longitude), color = MaterialTheme.colorScheme.primary) }
+                    text = { Text(stringResource(id = R.string.Longitude), color = MaterialTheme.colorScheme.primary, fontFamily = FontFamily(Font(R.font.nunito_bold))) }
                 )
             }
         }
