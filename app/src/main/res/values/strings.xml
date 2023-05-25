@@ -31,6 +31,8 @@
     <string name="AddNew">Add new</string>
     <string name="OrderBy">Order by</string>
 
+    <string name="WindCompass">Wind Compass</string>
+
     <string name="EmptyAddProduction">Empty…\n\n(Add a production)</string>
     <string name="EmptyAddShoot">Empty…\n\n(Add a shoot)</string>
     <string name="EmptyAddShootToProduction">Empty…\n\n(Add a shoot to this production)</string>

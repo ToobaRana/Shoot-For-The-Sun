@@ -4,9 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
@@ -14,7 +17,7 @@ import com.example.sunandmoon.ui.theme.WeatherBlueColor
 import java.time.LocalTime
 
 @Composable
-fun WindCard(modifier: Modifier, time: LocalTime, windSpeed : Double?, WindDirection : Double?) {
+fun WindCard(modifier: Modifier, time: LocalTime, windSpeed : Double?, windDirection : Double?) {
 
     ElevatedCard(
         modifier = modifier
@@ -52,22 +55,31 @@ fun WindCard(modifier: Modifier, time: LocalTime, windSpeed : Double?, WindDirec
                         painter = painterResource(id = R.drawable.wind),
                         "Wind Image",
                         modifier
-                            .size(60.dp).padding(top = 5.dp),
+                            .size(60.dp)
+                            .padding(top = 5.dp),
                         WeatherBlueColor
                     )
                     Text(text = windSpeed.toString() + " m/s", fontSize = 20.sp, modifier = modifier.padding(start = 5.dp))
                 }
                 
                 Spacer(modifier = modifier.size(30.dp))
-
-
-                //pic of wind compass
-                Icon(
-                    painter = painterResource(id = R.drawable.windcompass),
-                    "Wind Image",
-                    modifier.size(1800.dp)
-                )
-
+                if(windDirection != null) {
+                    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.wind_compass),
+                            stringResource(id = R.string.WindCompass),
+                            modifier.fillMaxSize()
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.wind_arrow),
+                            stringResource(id = R.string.WindCompass),
+                            modifier
+                                .fillMaxSize(0.2f)
+                                .padding(start = 2.dp, bottom = 1.dp)
+                                .rotate(-windDirection.toFloat())
+                        )
+                    }
+                }
             }
         }
     }

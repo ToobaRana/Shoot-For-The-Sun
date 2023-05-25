@@ -106,11 +106,11 @@ class CreateShootViewModel  @Inject constructor(
 
     fun setCoordinates(location: Location) {
         viewModelScope.launch {
-            /*if (setTimeZoneOffset) {
-                val locationTimeZoneOffsetResult =
-                    dataSource.fetchLocationTimezoneOffset(location)
-                setTimeZoneOffset(locationTimeZoneOffsetResult.offset)
-            }*/
+
+            val locationTimeZoneOffsetResult =
+                dataSource.fetchLocationTimezoneOffset(location)
+            setTimeZoneOffset(locationTimeZoneOffsetResult.offset)
+
             _createShootUIState.update { currentState ->
                 currentState.copy(
                     location = location
@@ -140,6 +140,14 @@ class CreateShootViewModel  @Inject constructor(
                 setLocationQuery(location)
             }
 
+        }
+    }
+
+    private fun setTimeZoneOffset(timeZoneOffset: Double) {
+        _createShootUIState.update { currentState ->
+            currentState.copy(
+                timeZoneOffset = timeZoneOffset
+            )
         }
     }
 

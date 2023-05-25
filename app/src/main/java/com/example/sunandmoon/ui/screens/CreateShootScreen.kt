@@ -31,6 +31,7 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.CheckPermissions
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
+import com.example.sunandmoon.ui.components.buttonComponents.GoBackButton
 import com.example.sunandmoon.ui.components.userInputComponents.LatitudeLongitudeInput
 import com.example.sunandmoon.ui.components.userInputComponents.PreferredWeatherComponent
 import com.example.sunandmoon.ui.components.userInputComponents.SunPositionTime
@@ -66,6 +67,9 @@ fun CreateShootScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        topBar = {
+                 GoBackButton(modifier, MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary, navigateBack)
+        },
         content = { innerPadding ->
             val focusManager = LocalFocusManager.current
 
@@ -301,7 +305,10 @@ fun CreateShootScreen(
 
                 item {
                     Button(
-                        modifier = modifier.padding(30.dp).width(200.dp).height(50.dp),
+                        modifier = modifier
+                            .padding(30.dp)
+                            .width(200.dp)
+                            .height(50.dp),
                         onClick = {
                         //save stuff
                         createShootViewModel.saveShoot()
