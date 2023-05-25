@@ -9,6 +9,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import kotlin.math.abs
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -23,12 +24,13 @@ val beijing = mock(Location::class.java)
 
 
 val testDate1 = LocalDateTime.of(2023, 3, 10, 12, 0)
-val testDate2 = LocalDateTime.of(2023, 5, 1, 12, 0)
-val testDate3 = LocalDateTime.of(2015, 1, 14, 8, 0)
-val testDate4 = LocalDateTime.of(2029, 12, 31, 23, 0)
-val testDate5 = LocalDateTime.of(2024, 7, 4, 1, 0)
+val testDate2 = LocalDateTime.of(2023, 5, 1, 14, 0)
+val testDate3 = LocalDateTime.of(2015, 1, 14, 8, 45)
+val testDate4 = LocalDateTime.of(2029, 12, 31, 18, 30)
+val testDate5 = LocalDateTime.of(2024, 7, 4, 3, 1)
 
-class UnitTests {
+// contains 5 unit tests
+class CalculationsUnitTests {
 
     @Before
     fun createLocations() {
@@ -258,15 +260,86 @@ class UnitTests {
         ))
 
     }
+
+    @Test
+    fun testAzimuthCalculations() {
+
+        val uioExpectedAzimuthDate1 = 172.4
+        val brasiliaExpectedAzimuthDate2 = 317.06
+        val capeTownExpectedAzimuthDate3 = 94.31
+        val sanFranciscoExpectedAzimuthDate4 = 253.76
+        val beijingExpectedAzimuthDate5 = 38.72
+
+        assert(checkIfAzimuthIsWithinAcceptedPrecision(
+            uioExpectedAzimuthDate1,
+            calculateSunPosition(testDate1, 1.0, uio).first
+        ))
+        assert(checkIfAzimuthIsWithinAcceptedPrecision(
+            brasiliaExpectedAzimuthDate2,
+            calculateSunPosition(testDate2, -3.0, brasilia).first
+        ))
+        assert(checkIfAzimuthIsWithinAcceptedPrecision(
+            capeTownExpectedAzimuthDate3,
+            calculateSunPosition(testDate3, 2.0, capeTown).first
+        ))
+        assert(checkIfAzimuthIsWithinAcceptedPrecision(
+            sanFranciscoExpectedAzimuthDate4,
+            calculateSunPosition(testDate4, -8.0, sanFrancisco).first
+        ))
+        assert(checkIfAzimuthIsWithinAcceptedPrecision(
+            beijingExpectedAzimuthDate5,
+            calculateSunPosition(testDate5, 8.0, beijing).first
+        ))
+    }
+
+    @Test
+    fun testZenithCalculations() {
+
+        val uioExpectedZenithDate1 = 25.75
+        val brasiliaExpectedZenithDate2 = 48.65
+        val capeTownExpectedZenithDate3 = 34.05
+        val sanFranciscoExpectedZenithDate4 = -17.02
+        val beijingExpectedZenithDate5 = -16.7
+
+        assert(checkIfZenithIsWithinAcceptedPrecision(
+            uioExpectedZenithDate1,
+            calculateSunPosition(testDate1, 1.0, uio).second
+        ))
+        assert(checkIfZenithIsWithinAcceptedPrecision(
+            brasiliaExpectedZenithDate2,
+            calculateSunPosition(testDate2, -3.0, brasilia).second
+        ))
+        assert(checkIfZenithIsWithinAcceptedPrecision(
+            capeTownExpectedZenithDate3,
+            calculateSunPosition(testDate3, 2.0, capeTown).second
+        ))
+        assert(checkIfZenithIsWithinAcceptedPrecision(
+            sanFranciscoExpectedZenithDate4,
+            calculateSunPosition(testDate4, -8.0, sanFrancisco).second
+        ))
+        assert(checkIfZenithIsWithinAcceptedPrecision(
+            beijingExpectedZenithDate5,
+            calculateSunPosition(testDate5, 8.0, beijing).second
+        ))
+    }
 }
 
 fun checkIfInMaxAllowedMinuteMargin(expectedTime: LocalTime, timeToTest: LocalTime): Boolean {
-
-    println(expectedTime)
-    println(timeToTest)
-
     val minutesMargin: Long = 2
     if(expectedTime.isAfter(timeToTest.plusMinutes(minutesMargin))) return false
     if(expectedTime.isBefore(timeToTest.minusMinutes(minutesMargin))) return false
     return true
+}
+
+fun checkIfAzimuthIsWithinAcceptedPrecision(expectedAzimuth: Double, azimuthToTest: Double): Boolean {
+    val degreesOfAcceptedDeviation = 0.2
+    if (abs(expectedAzimuth - azimuthToTest) < degreesOfAcceptedDeviation) return true
+    if(360 - abs(expectedAzimuth - azimuthToTest) < degreesOfAcceptedDeviation) return true
+    return false
+}
+
+fun checkIfZenithIsWithinAcceptedPrecision(expectedZenith: Double, zenithToTest: Double): Boolean {
+    val degreesOfAcceptedDeviation = 0.3
+    if (abs(expectedZenith - zenithToTest) < degreesOfAcceptedDeviation) return true
+    return false
 }

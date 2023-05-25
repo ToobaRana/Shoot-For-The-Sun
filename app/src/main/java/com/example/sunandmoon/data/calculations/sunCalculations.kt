@@ -77,21 +77,6 @@ fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, loc
     Log.i("matte", "sunriseTimeLocalTime: $sunsetTimeLocalTime")
     Log.i("matte", "_______________________________________________________")
 
-    println("_______________________________________________________")
-    println(localDateTime.toString())
-    println("timeZoneOffset $timeZoneOffset")
-    println("latitude: $latitude")
-    println("longitude: $longitude")
-    Log.i("matte", "eqtime: $eqtime")
-    Log.i("matte", "decl radian: $decl, decl degrees: ${decl.toDegree()}")
-    Log.i("matte", "haSunrise: $haSunrise")
-    Log.i("matte", "haSunset: $haSunset")
-    Log.i("matte", "sunriseTimeLocalTime: $sunriseTimeLocalTime")
-    Log.i("matte", "solarNoonTimeLocalTime: $solarNoonTimeLocalTime")
-    Log.i("matte", "sunriseTimeLocalTime: $sunsetTimeLocalTime")
-    Log.i("matte", "_______________________________________________________")
-
-
     return listOf(roundToNearestMinute(sunriseTimeLocalTime), roundToNearestMinute(solarNoonTimeLocalTime), roundToNearestMinute(sunsetTimeLocalTime))
 }
 
