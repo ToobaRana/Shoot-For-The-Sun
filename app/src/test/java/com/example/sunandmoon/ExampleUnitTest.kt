@@ -4,17 +4,34 @@ import android.location.Location
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.Before
 import java.time.LocalDateTime
 import java.time.LocalTime
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+val locationMock = mock(Location::class.java)
+val locationMock2 = mock(Location::class.java)
+// Configure the behavior of the mock
+
 class ExampleUnitTest {
+
     @Test
     fun addition_isCorrect() {
+        `when`(locationMock.latitude).thenReturn(10.0)
+        `when`(locationMock2.latitude).thenReturn(7.0)
+        `when`(locationMock.longitude).thenReturn(59.0)
+
+
+// Test your code that uses the mocked Location object
+        println(locationMock.latitude)
+        println(locationMock.longitude)// Output: 10.0
+
         assertEquals(4, 2 + 2)
         val location = Location("").apply {
             latitude = 10.0
@@ -23,6 +40,7 @@ class ExampleUnitTest {
         println(location.latitude)
     }
 }
+
 
 
 val brasilia = Location("").apply {

@@ -72,6 +72,8 @@ dependencies {
 
     implementation("androidx.activity:activity-ktx:1.6.1")
 
+
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.6.1'
@@ -181,6 +183,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.6.0-alpha02'
 
     androidTestImplementation "org.mockito:mockito-core:1.9.5"
+    testImplementation 'org.mockito:mockito-core:1.9.5'
 }
 
 // Allow references to generated code
