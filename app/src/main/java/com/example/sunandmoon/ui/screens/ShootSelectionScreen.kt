@@ -38,6 +38,7 @@ import com.example.sunandmoon.ui.components.buttonComponents.OrderByDropdown
 import com.example.sunandmoon.ui.components.infoComponents.PreferredWeatherDialog
 import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
 import com.example.sunandmoon.ui.components.infoComponents.ShootCard
+import com.example.sunandmoon.ui.components.userInputComponents.ProductionCreation
 import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages
 
@@ -183,7 +184,7 @@ fun ShootSelectionScreen(
     }
 
     if (shootSelectionUIState.newProductionName != null) {
-        productionCreation(
+        ProductionCreation(
             modifier,
             createProduction = { name: String ->
                 shootSelectionViewModel.saveProduction(name)
@@ -194,115 +195,4 @@ fun ShootSelectionScreen(
             shootSelectionUIState.newProductionName!!
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun productionCreation(
-    modifier: Modifier,
-    createProduction: (name: String) -> Unit,
-    setProductionName: (name: String?) -> Unit,
-    productionName: String
-) {
-    val focusManager = LocalFocusManager.current
-    Box(
-        modifier
-            .fillMaxSize()
-            .background(Color(0x88000000))
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    focusManager.clearFocus()
-
-                })
-
-            },
-
-        contentAlignment = Alignment.Center
-    ) {
-
-        Card(
-            modifier = modifier
-                .wrapContentSize()
-                .width(320.dp)
-
-                //.size(height = 200.dp, width = 320.dp)
-                .clickable(enabled = false) { println("ja") },
-            colors = CardDefaults.cardColors(
-
-                containerColor = MaterialTheme.colorScheme.background,
-
-                )
-
-        ) {
-            Column(
-                modifier = modifier
-                    .wrapContentSize()
-                    .padding(15.dp),
-                verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Text("Create new production", color = MaterialTheme.colorScheme.onSurface)
-                TextField(
-                    placeholder = { Text("My Production") },
-                    modifier = modifier.clickable {},
-                    value = productionName,
-                    onValueChange = { newName: String ->
-                        if (newName.length <= 70) {
-                            setProductionName(newName)
-                        }
-
-                    },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    leadingIcon = {
-                        Icon(
-                            painterResource(R.drawable.edit_icon),
-                            "Edit text pencil icon",
-                            Modifier,
-                            MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        //cursorColor = MaterialTheme.colorScheme.primary,
-                        textColor = MaterialTheme.colorScheme.onSurface,
-                        containerColor = MaterialTheme.colorScheme.background,
-                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                        placeholderColor = MaterialTheme.colorScheme.secondary
-                    ),
-                    textStyle = TextStyle(fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito)))
-                )
-
-                val defaultProductionName = stringResource(R.string.defaultProductionName)
-                Button(
-                    onClick = {
-                        if (productionName.isBlank()) {
-                            createProduction(defaultProductionName)
-                        } else {
-                            createProduction(productionName)
-                        }
-                        //save stuff
-
-                        setProductionName(null)
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-
-                {
-                    Text(text = stringResource(id = R.string.SaveButton), fontFamily = FontFamily(Font(R.font.nunito)))
-                }
-
-
-            }
-
-        }
-
-    }
-
-
 }

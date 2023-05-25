@@ -109,12 +109,31 @@ class ShootSelectionViewModel @Inject constructor(
     fun saveProduction(name: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                productionDao.insert(StorableProduction(
-                    uid = 0,
-                    name = name,
-                    startDateTime = null,
-                    endDateTime = null
-                ))
+                val selectedProduction = _shootSelectionUIState.value.selectedProduction
+                if(selectedProduction == null) {
+                    productionDao.insert(StorableProduction(
+                        uid = 0,
+                        name = name,
+                        startDateTime = null,
+                        endDateTime = null
+                    ))
+                } else {
+                    val id = selectedProduction.id
+                    if(id != null) {
+                        productionDao.update(StorableProduction(
+                            uid = id,
+                            name = name,
+                            startDateTime = selectedProduction.duration.first,
+                            endDateTime = selectedProduction.duration.second
+                        ))
+
+                        _shootSelectionUIState.update { currentState ->
+                            currentState.copy(
+                                selectedProduction = selectedProduction.copy(name = name)
+                            )
+                        }
+                    }
+                }
                 getAllProductions()
             }
         }

@@ -32,8 +32,8 @@ fun ProductionShootSelectionTopPart(
     shootSelectionUIState: ShootSelectionUIState,
     goToAboutScreen: () -> Unit
 ) {
-    val pageTitleTexts = listOf("Your productions", "Solo shoots", "My production")
-    var titleTextToUse: String = pageTitleTexts[currentPageIndex]
+    val pageTitleTexts = listOf(R.string.YourProductions, R.string.Solos_shoots, R.string.defaultProductionName)
+    var titleTextToUse: String = stringResource(id = pageTitleTexts[currentPageIndex])
     if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal) {
         titleTextToUse = shootSelectionUIState.selectedProduction?.name ?: "My production"
     }
@@ -55,7 +55,9 @@ fun ProductionShootSelectionTopPart(
                     MaterialTheme.colorScheme.primary,
                     MaterialTheme.colorScheme.secondary,
                     { shootSelectionViewModel.goOutOfProduction() },
-                    { /* TODO */ },
+                    {
+                        shootSelectionViewModel.setProductionName(shootSelectionUIState.selectedProduction?.name)
+                    },
                     { shootSelectionViewModel.deleteProduction() })
             }
             else {
@@ -73,7 +75,7 @@ fun ProductionShootSelectionTopPart(
             )
             TextField(
                 value = "",
-                placeholder = { Text("Search...", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
+                placeholder = { Text(stringResource(id = R.string.Search), color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
                 onValueChange = { query ->
                 },
                 singleLine = true,
@@ -83,7 +85,7 @@ fun ProductionShootSelectionTopPart(
                 leadingIcon = {
                     Icon(
                         painterResource(R.drawable.search),
-                        "location search field icon",
+                        stringResource(id = R.string.LocationSearchFieldIcon),
                         modifier,
                         MaterialTheme.colorScheme.primary
                     )

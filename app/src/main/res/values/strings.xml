@@ -80,6 +80,12 @@
 
     <string name="OK">OK</string>
 
+    <string name="LocationSearchFieldIcon">location search field icon</string>
+    <string name="Search">Search…</string>
+
+    <string name="YourProductions">Your productions</string>
+    <string name="Solos_shoots">Solo shoots</string>
+
     <!--<string-array name="TeamMembers">
         <item>Adrian Skansen</item>
         <item>Amalie Ingela Aaser</item>
