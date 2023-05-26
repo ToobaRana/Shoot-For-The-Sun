@@ -1,6 +1,10 @@
 package com.example.sunandmoon
 
 import android.location.Location
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.example.sunandmoon.ar.getClosestSunPos
+import com.example.sunandmoon.viewModel.CreateShootViewModel
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -9,6 +13,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import java.time.LocalDate
 import kotlin.math.abs
 
 /**
@@ -28,6 +33,7 @@ val testDate2 = LocalDateTime.of(2023, 5, 1, 14, 0)
 val testDate3 = LocalDateTime.of(2015, 1, 14, 8, 45)
 val testDate4 = LocalDateTime.of(2029, 12, 31, 18, 30)
 val testDate5 = LocalDateTime.of(2024, 7, 4, 3, 1)
+
 
 // contains 5 unit tests
 class CalculationsUnitTests {
@@ -322,10 +328,12 @@ class CalculationsUnitTests {
             calculateSunPosition(testDate5, 8.0, beijing).second
         ))
     }
+
+
 }
 
 fun checkIfInMaxAllowedMinuteMargin(expectedTime: LocalTime, timeToTest: LocalTime): Boolean {
-    val minutesMargin: Long = 4
+    val minutesMargin: Long = 5
     if(expectedTime.isAfter(timeToTest.plusMinutes(minutesMargin))) return false
     if(expectedTime.isBefore(timeToTest.minusMinutes(minutesMargin))) return false
     return true

@@ -137,7 +137,12 @@ class TableViewModel : ViewModel() {
 
     private fun getSameDaysInYear(date: LocalDate): List<LocalDate> {
 
-        val daysInMonth = listOf(31, 28, 31, 30, 31, 30, 31, 31 ,30, 31, 30, 31)
+        val daysInMonth =
+            if (date.isLeapYear){
+                listOf(31, 29, 31, 30, 31, 30, 31, 31 ,30, 31, 30, 31)
+            } else {
+                listOf(31, 28, 31, 30, 31, 30, 31, 31 ,30, 31, 30, 31)
+            }
         val year = date.year
         val sameDays = mutableListOf<LocalDate>()
 
@@ -159,8 +164,13 @@ class TableViewModel : ViewModel() {
         return sameDays.sorted()
     }
     private fun getSameDaysInYearFromJanuary(date: LocalDate): List<LocalDate> {
+        val daysInMonth =
+        if (date.isLeapYear){
+            listOf(31, 29, 31, 30, 31, 30, 31, 31 ,30, 31, 30, 31)
+        } else {
+            listOf(31, 28, 31, 30, 31, 30, 31, 31 ,30, 31, 30, 31)
+        }
 
-        val daysInMonth = listOf(31, 28, 31, 30, 31, 30, 31, 31 ,30, 31, 30, 31)
 
         val year = date.year
         val sameDays = mutableListOf<LocalDate>()

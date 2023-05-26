@@ -153,4 +153,5 @@ class ShootInfoViewModel @Inject constructor(
         }
     }
 
+
 }

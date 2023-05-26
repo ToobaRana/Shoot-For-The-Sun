@@ -242,12 +242,12 @@ fun CalendarComponentDisplay(
             ) {
                 DrawWeekdays(weekdays)
             }
-            val daysBeforeFirst = weekdays.indexOf(
-                getDayOfFirst(
-                    month = (chosenDate.monthValue),
-                    year = currentYear
-                )
+            var dayOfFirst = getDayOfFirst(
+                month = (chosenDate.monthValue),
+                year = currentYear
             )
+            if (dayOfFirst == "Invalid") dayOfFirst = "Monday"
+            val daysBeforeFirst = weekdays.indexOf(dayOfFirst)
             val calenderDayHeight =
                 (chosenDate.toLocalDate().lengthOfMonth() + daysBeforeFirst - 1) / 7
 
@@ -393,7 +393,7 @@ fun MonthDropDown(
 
 //returns which day the first of any month or year falls on
 fun getDayOfFirst(month: Int, year: Int): String {
-
+    if (year<0 || month<0) return "Invalid"
 
     val date = LocalDate.of(year, month, 1)
 
@@ -403,7 +403,7 @@ fun getDayOfFirst(month: Int, year: Int): String {
 
 }
 
-//masking dates for getDayOfFirst-call
+
 
 @Composable
 fun DrawDayBox(modifier: Modifier, day: Int, chosenDay: Int, updateDay: () -> Unit) {

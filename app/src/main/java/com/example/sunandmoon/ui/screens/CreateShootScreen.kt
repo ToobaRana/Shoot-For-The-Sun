@@ -245,7 +245,6 @@ fun CreateShootScreen(
                             color = MaterialTheme.colorScheme.primary,
                             fontFamily = FontFamily(Font(R.font.nunito_bold))
 
-
                         )
                     }
 
