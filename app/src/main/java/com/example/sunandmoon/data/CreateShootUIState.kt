@@ -4,6 +4,7 @@ import android.location.Location
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import java.time.LocalDateTime
 
+
 enum class PreferableWeather {
     CLEAR_SKY,
     CLOUDY,

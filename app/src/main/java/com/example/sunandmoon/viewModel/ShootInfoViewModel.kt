@@ -9,7 +9,7 @@ import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.storableShootToNormalShoot
-import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.data.calculations.getSunRiseNoonFall
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

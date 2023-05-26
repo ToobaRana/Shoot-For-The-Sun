@@ -4,10 +4,10 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sunandmoon.calculateSunPosition
+import com.example.sunandmoon.data.calculations.calculateSunPosition
 import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.data.DataSource
-import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.data.calculations.getSunRiseNoonFall
 import com.example.sunandmoon.util.fetchLocation
 import com.example.sunandmoon.util.getTimeZoneOffset
 import com.google.android.gms.location.FusedLocationProviderClient

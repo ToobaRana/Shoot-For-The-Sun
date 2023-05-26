@@ -5,7 +5,6 @@ import com.example.sunandmoon.data.dataUtil.Shoot
 data class ShootInfoUIState(
 
     val shoot: Shoot? = null,
-
     val sunriseTime: String = "not calculated",
     val solarNoonTime: String = "not calculated",
     val sunsetTime: String = "not calculated",

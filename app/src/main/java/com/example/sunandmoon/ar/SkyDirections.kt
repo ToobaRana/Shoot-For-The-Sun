@@ -12,8 +12,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 
+
+//draws all sky directions using the compass for direction to show the user which cardinal direction they are facing
 @Composable
-fun SkyDirections(modifier: Modifier, sensorStatus: FloatArray, current: Context) {
+fun SkyDirections(modifier: Modifier, sensorStatus: FloatArray) {
     val context: Context = LocalContext.current
 
     val northTextPos: List<Dp> = getARPos(sensorStatus, context, Math.toRadians(0.0), Math.toRadians(0.0))
@@ -44,6 +46,7 @@ fun SkyDirections(modifier: Modifier, sensorStatus: FloatArray, current: Context
     SkyDirection(modifier, sensorStatus, northWestTextPos, "NW")
 }
 
+//draws a single sky-direction-box using the offset its given as parameter
 @Composable
 fun SkyDirection(modifier: Modifier, sensorStatus: FloatArray, pos: List<Dp>, directionText: String) {
     // the text showing a sky direction

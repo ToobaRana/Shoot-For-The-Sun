@@ -9,6 +9,7 @@ enum class ProductionOrderBy(val value: String) {
     END_DATE_TIME("end_date_time")
 }
 
+//interface for manipulating productions in local database
 @Dao
 interface ProductionDao {
     // should sort by either start_date_time, end_date_time or name
@@ -23,19 +24,23 @@ interface ProductionDao {
             "ELSE start_date_time " +
             "END ASC")
     fun getAll(orderBy: String, searchQuery: String): List<StorableProduction>
-
+    //loads a production using
     @Query("SELECT * FROM production WHERE uid = :productionId")
     fun loadById(productionId: Int): StorableProduction
 
+    //inserts a storable shoot in the database
     @Insert
     fun insert(vararg users: StorableProduction)
 
+    //used to delete a production
     @Delete
     fun delete(user: StorableProduction)
 
+    //used to update a production
     @Update
     fun update(production: StorableProduction)
 
+    //used to update date-span of production
     @Query("UPDATE production " +
             "SET start_date_time = (" +
             "    SELECT MIN(strftime('%Y-%m-%dT%H:%M:%fZ', date_time))" +

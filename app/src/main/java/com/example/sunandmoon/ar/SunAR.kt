@@ -2,34 +2,22 @@ package com.example.sunandmoon.ar
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraManager
-import android.net.Uri
-import android.provider.Settings
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.camera.CameraPreview
-import com.example.sunandmoon.util.Permission
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.buttonComponents.OpenARSettingsButton
@@ -37,9 +25,12 @@ import com.example.sunandmoon.ui.components.infoComponents.CalibrateMagnetometer
 import com.example.sunandmoon.ui.components.infoComponents.GiveLocationPermissionPleaseDialogue
 import com.example.sunandmoon.ui.components.infoComponents.MissingSensorsDialgoue
 import com.example.sunandmoon.ui.components.userInputComponents.EditARSettings
+import com.example.sunandmoon.util.Permission
 import com.example.sunandmoon.viewModel.ARViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 
+//The main component of the AR-functionality that makes everything come together
 @Composable
 fun SunAR(
     modifier: Modifier,
@@ -49,7 +40,7 @@ fun SunAR(
 ) {
     val arUIState by arViewModel.arUIState.collectAsState()
 
-    Surface() {
+    Surface {
         CameraContent(Modifier.fillMaxSize())
     }
 
@@ -72,7 +63,7 @@ fun SunAR(
         val sensorManager: SensorManager =
             localContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        var rotationVectorSensor: Sensor =
+        val rotationVectorSensor: Sensor =
             sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
 
         val rotationVectorSensorEventListener = object : SensorEventListener {
@@ -135,7 +126,7 @@ fun SunAR(
 
     SunARUI(modifier, sensorStatus, navigateToNextBottomBar, arUIState)
 }
-
+//draws the rest of the ui-components for the AR-screen (bottom bar, top-bar and editSettings)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SunARUI(
@@ -166,9 +157,8 @@ fun SunARUI(
                  OpenARSettingsButton(
                      modifier,
                      MaterialTheme.colorScheme.primary,
-                     MaterialTheme.colorScheme.onPrimary,
-                     { arViewModel.openCloseARSettings() }
-                 )
+                     MaterialTheme.colorScheme.onPrimary
+                 ) { arViewModel.openCloseARSettings() }
              }
         },
         bottomBar = { NavigationComposable(modifier = modifier, page = 1, navigateToNextBottomBar = navigateToNextBottomBar)}
@@ -184,11 +174,11 @@ fun SunARUI(
 }
 
 
-
+//tells the user if camera permissions are not given to the app, and requests them if necessary
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraContent(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
+
     Permission(
         permission = Manifest.permission.CAMERA,
         rationale = "To use AR-mode, you need to give the app permission to use your camera.",

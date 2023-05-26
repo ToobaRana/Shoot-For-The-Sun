@@ -3,11 +3,11 @@ package com.example.sunandmoon.ar
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
-import android.util.Log
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.atan
 
+//returns the modifier-offset used to show the location of the sun
 fun getARPos(
     sensorStatus: FloatArray,
     currentContext: Context,
@@ -36,6 +36,7 @@ fun getARPos(
     return listOf(xPos, yPos)
 }
 
+//converts the distance of the sun to device-independent pixels
 fun mmToDp(mm: Double, currentContext: Context): Dp {
     val displayMetrics = currentContext.resources.displayMetrics
     val dpi = displayMetrics.densityDpi.toDouble()
@@ -46,6 +47,7 @@ fun mmToDp(mm: Double, currentContext: Context): Dp {
     return dp.dp
 }
 
+//uses context to find the dimensions of the device, and returns a list containing the values as floats
 fun getScreenWidthHeightInMm(currentContext: Context): List<Float> {
     val displayMetrics = currentContext.resources.displayMetrics
     val widthPx = displayMetrics.widthPixels
@@ -56,6 +58,7 @@ fun getScreenWidthHeightInMm(currentContext: Context): List<Float> {
     return listOf(widthMm, heightMm)
 }
 
+//returns the Angle of view for the sun(FOV) as a list of doubles
 fun getCameraFOV(currentContext: Context): List<Double> {
     val cameraManager = currentContext.getSystemService(Context.CAMERA_SERVICE) as CameraManager
     val cameraId = cameraManager.cameraIdList[0] // Rear-facing camera
@@ -78,6 +81,7 @@ fun getCameraFOV(currentContext: Context): List<Double> {
     return listOf(horizontalFOV, verticalFOV)
 }
 
+//used to get fov for along a specified axis/dimension of the device and returns it as double
 fun getFov(sensorDimension: Float, focalLength: Float): Double{
     return 2.0 * atan((sensorDimension / (2.0 * focalLength))) * 180.0 / Math.PI
 }

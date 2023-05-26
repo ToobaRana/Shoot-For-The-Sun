@@ -3,13 +3,11 @@ package com.example.sunandmoon.data
 //import android.R
 
 import android.location.Location
-import android.util.Log
 import com.example.sunandmoon.BuildConfig
 import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
 import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
 import com.example.sunandmoon.model.LocationTimeZoneOffsetResultModel.LocationTimeZoneOffsetResult
 import com.example.sunandmoon.model.SunriseModel.Sunrise3
-import com.google.android.gms.location.FusedLocationProviderClient
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -18,15 +16,15 @@ import io.ktor.serialization.gson.*
 import org.json.JSONObject
 
 
-class DataSource() {
+class DataSource {
 
-    val baseURLMet: String = "https://api.met.no/weatherapi/sunrise/3.0/"
-    val baseURLNominatimSearch: String = "https://nominatim.openstreetmap.org/search"
-    val baseURLNominatimReverse: String = "https://nominatim.openstreetmap.org/reverse"
-    val baseURLWheretheiss: String = "https://api.wheretheiss.at/v1/coordinates/"
-    val baseURLLocationForecast : String = "https://api.met.no/weatherapi/locationforecast/2.0/complete"
+    private val baseURLMet: String = "https://api.met.no/weatherapi/sunrise/3.0/"
+    private val baseURLNominatimSearch: String = "https://nominatim.openstreetmap.org/search"
+    private val baseURLNominatimReverse: String = "https://nominatim.openstreetmap.org/reverse"
+    private val baseURLWheretheiss: String = "https://api.wheretheiss.at/v1/coordinates/"
+    private val baseURLLocationForecast : String = "https://api.met.no/weatherapi/locationforecast/2.0/complete"
 
-    private val client = HttpClient() {
+    private val client = HttpClient {
 
         install(ContentNegotiation)
         {
@@ -37,7 +35,7 @@ class DataSource() {
     val API_KEY = BuildConfig.API_KEY
 
 
-
+    //example: "https://api.met.no/weatherapi/sunrise/3.0/sun?lat=60.10&lon=9.58&date=2015-01-14&offset=+01:00"
     suspend fun fetchSunrise3Data(sunOrMoon: String, lat: Double, lon: Double, date: String, offset: String): Sunrise3 {
         val endPoint = "$baseURLMet$sunOrMoon?lat=$lat&lon=$lon&date=$date&offset=$offset"
 
@@ -53,12 +51,11 @@ class DataSource() {
     }
 
     // example: https://nominatim.openstreetmap.org/search?q=oslo&format=json&addressdetails=1&limit=10
-    suspend fun fetchLocationSearchResults(query: String, limit: Int): List<LocationSearchResults>{
-        val endPoint = "$baseURLNominatimSearch?q=$query&format=json&addressdetails=1&limit=$limit&accept-language=en"
-
-        val apiResults: List<LocationSearchResults> = client.get(endPoint).body()
-
-        return apiResults
+    suspend fun fetchLocationSearchResults(query: String, limit: Int): List<LocationSearchResults> {
+        val endPoint =
+            "$baseURLNominatimSearch?q=$query&format=json&addressdetails=1&limit=$limit&accept-language=en"
+        //returns api-results
+        return client.get(endPoint).body()
     }
 
     // example: https://nominatim.openstreetmap.org/reverse?lat=59.961266&lon=10.7813993&format=json&zoom=18
@@ -69,17 +66,15 @@ class DataSource() {
 
         val apiResult: String = client.get(endPoint).body()
         val jObject = JSONObject(apiResult)
-
+        //returns api-results
         return jObject.get("display_name") as String
     }
 
     // example: https://api.wheretheiss.at/v1/coordinates/59.943965,10.7178129
     suspend fun fetchLocationTimezoneOffset(location: Location): LocationTimeZoneOffsetResult {
         val endPoint = "$baseURLWheretheiss${location.latitude},${location.longitude}"
-
-        val apiResults: LocationTimeZoneOffsetResult = client.get(endPoint).body()
-
-        return apiResults
+        //returns api-results:
+        return client.get(endPoint).body()
     }
 
     //example
@@ -87,7 +82,7 @@ class DataSource() {
     suspend fun fetchWeatherAPI(lat : String, lon : String) : LocationForecast{
         val endPoint = "$baseURLLocationForecast?lat=$lat&lon=$lon"
 
-        var apiResults : LocationForecast
+        val apiResults : LocationForecast
         try {
             apiResults = client.get(endPoint){
                 headers {

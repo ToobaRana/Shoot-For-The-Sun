@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
+//Draws the circle used for showing the user where the sun is at the specified time and date
 @Composable
 fun SunCircle(
     modifier: Modifier,

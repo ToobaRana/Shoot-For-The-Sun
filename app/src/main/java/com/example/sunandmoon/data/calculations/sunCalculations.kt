@@ -1,25 +1,9 @@
-package com.example.sunandmoon
+package com.example.sunandmoon.data.calculations
 
 import android.location.Location
 import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 import kotlin.math.*
 
@@ -29,6 +13,7 @@ import kotlin.math.*
 //https://gml.noaa.gov/grad/solcalc/
 //https://gml.noaa.gov/grad/solcalc/calcdetails.html
 
+//defines the type of a variable for keeping track easily
 typealias Degree = Double
 typealias Radian = Double
 fun Degree.toRadian(): Radian = this / 180 * Math.PI
@@ -96,6 +81,7 @@ fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, loc
     return listOf(roundToNearestMinute(sunriseTimeLocalTime), roundToNearestMinute(solarNoonTimeLocalTime), roundToNearestMinute(sunsetTimeLocalTime))
 }
 
+//returns hour decimal variable in double
 fun calculateHourDecimal(localDateTime: LocalDateTime, timeZoneOffset: Double): Double {
     val hour: Double = localDateTime.hour.toDouble()
     val minutes: Double = localDateTime.minute.toDouble()
@@ -104,6 +90,7 @@ fun calculateHourDecimal(localDateTime: LocalDateTime, timeZoneOffset: Double): 
     return hour + minutes / 60 + seconds / 60 / 60 + timeZoneOffset
 }
 
+//return fraction of year variable in radians
 fun calculateFractionOfYear(localDateTime: LocalDateTime, timeZoneOffset: Double, dayOfYear: Double): Radian {
     val hourDecimal: Double = calculateHourDecimal(localDateTime, timeZoneOffset)
     val isLeapYear: Boolean = (localDateTime.toLocalDate().year % 4) == 0
@@ -138,7 +125,7 @@ fun calculateDeclinationAngle(localDateTime: LocalDateTime): Radian {
 
     // radians
     //val decl: Radian = 0.006918 - 0.399912 * cos(y) + 0.070257 * sin(y) - 0.006758 * cos(2 * y) + 0.000907 * sin(2 * y) - 0.002697 * cos(3 * y) + 0.00148 * sin(3 * y)
-    return (90-(Math.toDegrees(acos(sin(Math.toRadians(-23.44)* Math.cos(Math.toRadians((360/365.24)*(dayOfYear+10)+360/Math.PI*0.0167*sin(Math.toRadians((360/365.24)*(dayOfYear-2)))))))))).toRadian()
+    return (90-(Math.toDegrees(acos(sin(Math.toRadians(-23.44)* cos(Math.toRadians((360/365.24)*(dayOfYear+10)+360/Math.PI*0.0167*sin(Math.toRadians((360/365.24)*(dayOfYear-2)))))))))).toRadian()
 }
 
 // for the AR feature. Returns the sun azimuth angle and zenith angles, both in degrees
@@ -191,6 +178,7 @@ fun calculateSunPosition(localDateTime: LocalDateTime, timeZoneOffset: Double, l
 
     return Pair(azimuthAngle, zenithAngle.toDegree())
 }
+
 
 fun roundToNearestMinute(time: LocalTime): LocalTime {
     return time.truncatedTo(ChronoUnit.MINUTES)

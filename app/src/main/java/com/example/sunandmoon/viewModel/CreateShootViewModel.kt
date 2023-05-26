@@ -1,7 +1,5 @@
 package com.example.sunandmoon.viewModel
 
-import android.icu.util.Calendar
-import android.icu.util.TimeZone
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -14,7 +12,7 @@ import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import com.example.sunandmoon.data.localDatabase.storableShootToNormalShoot
-import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.data.calculations.getSunRiseNoonFall
 import com.example.sunandmoon.util.fetchLocation
 import com.example.sunandmoon.util.getTimeZoneOffset
 import com.example.sunandmoon.util.simplifyLocationNameQuery
@@ -30,7 +28,6 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel

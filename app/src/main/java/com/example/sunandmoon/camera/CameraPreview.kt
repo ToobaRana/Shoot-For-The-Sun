@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.launch
 
+//displays the camera on screen
 @Composable
 fun CameraPreview(
     modifier: Modifier = Modifier,

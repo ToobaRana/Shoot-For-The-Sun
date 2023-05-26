@@ -4,6 +4,7 @@ import android.location.Location
 import com.example.sunandmoon.data.PreferableWeather
 import java.time.LocalDateTime
 
+//used for runtime-storage of productions
 data class Shoot(
     val id: Int? = null,
     val name: String = "My Shoot",

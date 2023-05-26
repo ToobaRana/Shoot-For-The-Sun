@@ -13,6 +13,7 @@ import com.example.sunandmoon.R
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
+//draws a arrow pointing to the sun using the position of the sun and the orientation of the phone
 @Composable
 fun SunFinderArrow(
     modifier: Modifier,
@@ -52,6 +53,7 @@ fun SunFinderArrow(
     }
 }
 
+//gets the positions of the direction the sun is closest to/which side the arrow will point to
 fun getClosestSunPos(xPos1: Dp, yPos1: Dp, xPos2: Dp, yPos2: Dp): List<Dp> {
     val sun1Distance = sqrt(xPos1.value * xPos1.value + yPos1.value * yPos1.value)
     val sun2Distance = sqrt(xPos2.value * xPos2.value + yPos2.value * yPos2.value)

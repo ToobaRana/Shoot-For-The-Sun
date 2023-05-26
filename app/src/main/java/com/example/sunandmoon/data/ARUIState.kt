@@ -3,6 +3,7 @@ package com.example.sunandmoon.data
 import android.location.Location
 import java.time.LocalDateTime
 
+
 data class ARUIState(
     val sunZenith: Double?,
     val sunAzimuth: Double?,

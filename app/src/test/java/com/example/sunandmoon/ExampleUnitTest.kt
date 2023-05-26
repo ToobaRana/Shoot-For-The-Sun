@@ -1,6 +1,8 @@
 package com.example.sunandmoon
 
 import android.location.Location
+import com.example.sunandmoon.data.calculations.calculateSunPosition
+import com.example.sunandmoon.data.calculations.getSunRiseNoonFall
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock

@@ -2,25 +2,24 @@ package com.example.sunandmoon.ar
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
-import com.example.sunandmoon.ui.theme.CheckmarkColor
 import com.example.sunandmoon.ui.theme.RedColor
 
+//puts the skydirections arrows, the sun circles and the arrow for finding the sun on the screen
 @Composable
 fun SunFinder(
     modifier: Modifier,
     sensorStatus: FloatArray,
-    sunZenith: Double,
-    sunAzimuth: Double
+    sunZenithParam: Double,
+    sunAzimuthParam: Double
 ) {
 
     if(sensorStatus.size < 2 || sensorStatus[0].isNaN() || sensorStatus[1].isNaN()) return
 
     // sunZenith and sunAzimuth are in degrees
-    val sunZenith: Double = sunZenith //41.19
-    val sunAzimuth: Double = sunAzimuth //137.87
+    val sunZenith: Double = sunZenithParam //41.19
+    val sunAzimuth: Double = sunAzimuthParam //137.87
 
     val sun1ImagePos: List<Dp> = getARPos(sensorStatus, LocalContext.current, Math.toRadians(sunZenith), Math.toRadians(-sunAzimuth))
     val xPos1 = sun1ImagePos[0]
@@ -45,7 +44,7 @@ fun SunFinder(
     //println(sensorStatus[2] * 180.0 / Math.PI)
 
     // sky directions
-    SkyDirections(modifier, sensorStatus, LocalContext.current)
+    SkyDirections(modifier, sensorStatus)
 
     // the sun
     SunCircle(modifier, sensorStatus, xPos1, yPos1, RedColor, sunZenith)

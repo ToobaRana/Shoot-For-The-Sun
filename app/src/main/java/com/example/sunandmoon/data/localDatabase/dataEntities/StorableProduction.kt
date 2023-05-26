@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import java.time.LocalDateTime
 
+//used to fetch and store productions in local database
 @Entity(tableName = "production")
 @TypeConverters(LocalDateTimeConverter::class)
 data class StorableProduction(

@@ -4,6 +4,7 @@ import android.location.Location
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import com.example.sunandmoon.data.dataUtil.Shoot
 
+//converts a single shoot fetched from database to a runtime-storeable shoot and returns it
 fun storableShootToNormalShoot(storableShoot: StorableShoot): Shoot {
     return Shoot(
         id = storableShoot.uid,
@@ -19,9 +20,9 @@ fun storableShootToNormalShoot(storableShoot: StorableShoot): Shoot {
         preferredWeather = storableShoot.preferredWeather
     )
 }
-
+//converts shoots stored during runtime to database-storeable shoots and returns them as a list
 fun storableShootsToNormalShoots(storableShoots: List<StorableShoot>?): List<Shoot> {
-    var shootList = mutableListOf<Shoot>()
+    val shootList = mutableListOf<Shoot>()
 
     if(storableShoots == null) return shootList
 

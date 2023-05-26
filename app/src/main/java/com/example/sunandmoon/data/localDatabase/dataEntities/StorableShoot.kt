@@ -5,6 +5,7 @@ import com.example.sunandmoon.data.PreferableWeather
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+//used to fetch and store shoots in local database
 @Entity(tableName = "shoot")
 @TypeConverters(LocalDateTimeConverter::class, PreferredWeatherConverter::class)
 data class StorableShoot(
@@ -38,14 +39,14 @@ class LocalDateTimeConverter {
 // this class lets us store lists of PreferableWeather in the room database
 class PreferredWeatherConverter {
     @TypeConverter
-    fun fromPreferredWeather(value: List<PreferableWeather>?): String? {
+    fun fromPreferredWeather(value: List<PreferableWeather>?): String {
         if(value == null) return ""
 
         return value.joinToString(",")
     }
 
     @TypeConverter
-    fun toPreferredWeather(value: String?): List<PreferableWeather>? {
+    fun toPreferredWeather(value: String?): List<PreferableWeather> {
         if(value == null || value == "") return listOf()
 
         return value.split(",").map { PreferableWeather.valueOf(it) }

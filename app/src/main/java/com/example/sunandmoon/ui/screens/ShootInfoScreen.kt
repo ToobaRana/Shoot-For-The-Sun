@@ -28,7 +28,15 @@ import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewModel: ShootInfoViewModel = hiltViewModel(), shootId: Int, navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit, navController: NavController, currentScreenRoute: String){
+fun ShootInfoScreen(
+    modifier: Modifier,
+    navigateBack: () -> Unit,
+    shootInfoViewModel: ShootInfoViewModel = hiltViewModel(),
+    shootId: Int,
+    navigateToCreateShootScreen: (parentProductionId: Int?, shootToEditId: Int?) -> Unit,
+    navController: NavController,
+    currentScreenRoute: String
+) {
 
     val shootInfoUIState by shootInfoViewModel.shootInfoUIState.collectAsState()
 
@@ -58,7 +66,8 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
             Column(
                 modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp)) {
+                    .padding(top = 10.dp)
+            ) {
                 GoBackEditDeleteBar(
                     modifier,
                     MaterialTheme.colorScheme.primary,
@@ -72,40 +81,74 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                 )
 
                 //Header for shoot name
-                Text(text = shootInfoUIState.shoot!!.name, modifier = modifier
-                    .fillMaxWidth()
-                    .align(CenterHorizontally), fontSize = 50.sp, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center )
+                Text(
+                    text = shootInfoUIState.shoot!!.name,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .align(CenterHorizontally),
+                    fontSize = 50.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 50.sp
+                )
 
                 //Location for shoot
                 Row(modifier = modifier.align(CenterHorizontally)) {
-                    Icon(painter = painterResource(id = R.drawable.location1), "Location Icon", modifier = modifier
-                        .size(35.dp)
-                        .padding(end = 5.dp), MaterialTheme.colorScheme.primary)
-                    Text(text = shootInfoUIState.shoot!!.locationName, fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
+                    Icon(
+                        painter = painterResource(id = R.drawable.location1),
+                        "Location Icon",
+                        modifier = modifier
+                            .size(35.dp)
+                            .padding(end = 5.dp),
+                        MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = shootInfoUIState.shoot!!.locationName,
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
 
                 Spacer(modifier = modifier.size(40.dp))
 
                 //Calendar and time
-                Row(modifier = modifier.align(CenterHorizontally)){
-                    Icon(painter = painterResource(id = R.drawable.calendar), "Calendar Icon", modifier = modifier
-                        .size(35.dp)
-                        .padding(end = 5.dp), MaterialTheme.colorScheme.primary)
-                    Text(text = "${date.dayOfMonth}. ${date.month.toString().substring(0, 3)} ${date.year}", fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
+                Row(modifier = modifier.align(CenterHorizontally)) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.calendar),
+                        "Calendar Icon",
+                        modifier = modifier
+                            .size(35.dp)
+                            .padding(end = 5.dp),
+                        MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "${date.dayOfMonth}. ${
+                            date.month.toString().substring(0, 3)
+                        } ${date.year}", fontSize = 20.sp, color = MaterialTheme.colorScheme.primary
+                    )
 
                     Spacer(modifier = modifier.size(30.dp))
 
-                    Icon(painter = painterResource(id = R.drawable.clock), "Clock Icon", modifier = modifier
-                        .size(35.dp)
-                        .padding(end = 5.dp), MaterialTheme.colorScheme.primary)
-                    Text(text = time.toString(), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
+                    Icon(
+                        painter = painterResource(id = R.drawable.clock),
+                        "Clock Icon",
+                        modifier = modifier
+                            .size(35.dp)
+                            .padding(end = 5.dp),
+                        MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = time.toString(),
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
 
             }
         },
 
 
-    ) { innerPadding ->
+        ) { innerPadding ->
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
@@ -124,24 +167,32 @@ fun ShootInfoScreen(modifier: Modifier, navigateBack: () -> Unit, shootInfoViewM
                 )
 
                 //if statement added because weatherapi doesnt have data from before todays data and after 10 days
-                if(dateAndTime < LocalDateTime.now().minusHours(1) || dateAndTime >= LocalDateTime.now().plusDays(10)){
+                if (dateAndTime < LocalDateTime.now()
+                        .minusHours(1) || dateAndTime >= LocalDateTime.now().plusDays(10)
+                ) {
                     NoDataCard(modifier, shootInfoUIState.missingNetworkConnection)
-                } else{
-                    if(shootInfoUIState.weatherIcon != null) {
+                } else {
+                    if (shootInfoUIState.weatherIcon != null) {
                         WeatherCard(
-                            modifier = modifier, time, shootInfoUIState.temperature, shootInfoUIState.rainfallInMm, shootInfoUIState.weatherIcon
+                            modifier = modifier,
+                            time,
+                            shootInfoUIState.temperature,
+                            shootInfoUIState.rainfallInMm,
+                            shootInfoUIState.weatherIcon
                         )
                     }
 
                     WindCard(
-                        modifier = modifier, time, shootInfoUIState.windSpeed, shootInfoUIState.windDirection
+                        modifier = modifier,
+                        time,
+                        shootInfoUIState.windSpeed,
+                        shootInfoUIState.windDirection
                     )
 
                     UVCard(
                         modifier = modifier, time, shootInfoUIState.uvIndex
                     )
                 }
-
 
 
             }
