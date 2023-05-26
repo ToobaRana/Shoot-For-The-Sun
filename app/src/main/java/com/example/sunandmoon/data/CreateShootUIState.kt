@@ -25,6 +25,7 @@ data class CreateShootUIState (
     val chosenDateTime: LocalDateTime,
     val editTimeEnabled: Boolean,
     val timeZoneOffset: Double,
+    val timeZoneID: String,
 
     val parentProductionId: Int? = null,
     val currentShootBeingEditedId: Int? = null,

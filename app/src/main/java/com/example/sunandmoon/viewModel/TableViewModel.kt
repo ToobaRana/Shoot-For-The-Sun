@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.getSunRiseNoonFall
+import com.example.sunandmoon.util.findTimeZoneOffsetOfDate
 import com.example.sunandmoon.util.simplifyLocationNameQuery
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,7 +63,7 @@ class TableViewModel : ViewModel() {
             val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
             for (date in sameDaysListFromJanuary.sorted()){
-                val offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
+                val offsetToFindSign = findTimeZoneOffsetOfDate(tableUIState.value.timezone_id, date.toString())
                 val offsetString: String = formatTheOffsetForApi(offsetToFindSign)
 
                 //update UiState
@@ -91,7 +92,7 @@ class TableViewModel : ViewModel() {
             try {
 
                 for (date in sameDaysList.sorted()){
-                    val offsetToFindSignDouble = findOffset(tableUIState.value.timezone_id, date.toString())
+                    val offsetToFindSignDouble = findTimeZoneOffsetOfDate(tableUIState.value.timezone_id, date.toString())
 
                     val offsetString: String = formatTheOffsetForApi(offsetToFindSignDouble)
 
@@ -283,21 +284,6 @@ class TableViewModel : ViewModel() {
     }
 
 
-    //find offset based on the location id and date
-    private fun findOffset(location: String, date: String): Double {
-        val dateTime = LocalDateTime.of(convertStringToLocalDate(date), LocalDateTime.now().toLocalTime())
-        val zoneId = ZoneId.of(location)
-        val zoneOffset = zoneId.rules.getOffset(dateTime)
-
-        val offsetHours = zoneOffset.totalSeconds / 3600
-        val offsetMinutes = (zoneOffset.totalSeconds % 3600) / 60
-
-        val offset = offsetHours + (offsetMinutes.toDouble() / 60)
-        return offset
-
-    }
-
-
     private fun convertToMinutesFunction(minuteParameter: String): String{
         val doubleMinutes = ("0." + minuteParameter).toDouble()
         val minute = doubleMinutes * 60
@@ -305,11 +291,6 @@ class TableViewModel : ViewModel() {
 
 
 
-    }
-
-    private fun convertStringToLocalDate(dateString: String): LocalDate {
-
-        return LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE)
     }
 
     //change format to "+00:00", so the offset is taking care of

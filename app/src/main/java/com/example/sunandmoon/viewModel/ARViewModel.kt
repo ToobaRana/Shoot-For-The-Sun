@@ -9,7 +9,7 @@ import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.util.fetchLocation
-import com.example.sunandmoon.util.getTimeZoneOffset
+import com.example.sunandmoon.util.getCurrentTimeZoneOffset
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +34,7 @@ class ARViewModel  @Inject constructor(
             sunZenith = null,
             sunAzimuth = null,
             chosenDateTime = LocalDateTime.now(),
-            timeZoneOffset = getTimeZoneOffset(),
+            timeZoneOffset = getCurrentTimeZoneOffset(),
             location = null,
         )
     )
