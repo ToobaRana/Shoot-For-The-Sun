@@ -99,7 +99,7 @@ fun SunAR(
                     val rotationMatrix = FloatArray(16)
                     SensorManager.getRotationMatrixFromVector(
                         rotationMatrix, event.values
-                    );
+                    )
 
                     val transformedRotationMatrix = FloatArray(16)
                     SensorManager.remapCoordinateSystem(

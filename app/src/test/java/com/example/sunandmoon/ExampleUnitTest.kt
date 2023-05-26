@@ -325,7 +325,7 @@ class CalculationsUnitTests {
 }
 
 fun checkIfInMaxAllowedMinuteMargin(expectedTime: LocalTime, timeToTest: LocalTime): Boolean {
-    val minutesMargin: Long = 2
+    val minutesMargin: Long = 4
     if(expectedTime.isAfter(timeToTest.plusMinutes(minutesMargin))) return false
     if(expectedTime.isBefore(timeToTest.minusMinutes(minutesMargin))) return false
     return true

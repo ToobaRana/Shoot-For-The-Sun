@@ -44,11 +44,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-fun bottomBarNavigation(index: Int, navController: NavController) {
-    when (index) {
-        0 -> navController.popBackStack("shootSelectionScreen", false)
-        1 -> navController.navigate("ARScreen")
-        2 -> navController.navigate("tableScreen")
-    }
-}
