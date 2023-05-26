@@ -3,7 +3,6 @@ package com.example.sunandmoon
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.ar.getClosestSunPos
 import com.example.sunandmoon.ar.getFov
-import org.junit.Before
 import org.junit.Test
 import java.text.DecimalFormat
 
