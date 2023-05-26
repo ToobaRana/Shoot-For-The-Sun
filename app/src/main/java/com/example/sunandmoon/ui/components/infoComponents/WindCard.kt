@@ -52,7 +52,7 @@ fun WindCard(modifier: Modifier, time: LocalTime, windSpeed : Double?, windDirec
                     //The wind description
                     Icon(
                         painter = painterResource(id = R.drawable.wind),
-                        "Wind Image",
+                        stringResource(id = R.string.WindImage),
                         modifier
                             .size(60.dp)
                             .padding(top = 5.dp),

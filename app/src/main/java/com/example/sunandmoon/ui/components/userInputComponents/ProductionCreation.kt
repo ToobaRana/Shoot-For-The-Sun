@@ -70,9 +70,9 @@ fun ProductionCreation(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Text("Create new production", color = MaterialTheme.colorScheme.onSurface)
+                Text(stringResource(id = R.string.CreateNewProduction), color = MaterialTheme.colorScheme.onSurface)
                 TextField(
-                    placeholder = { Text("My Production") },
+                    placeholder = { Text(stringResource(id = R.string.defaultProductionName)) },
                     modifier = modifier.clickable {},
                     value = productionName,
                     onValueChange = { newName: String ->
@@ -88,7 +88,7 @@ fun ProductionCreation(
                     leadingIcon = {
                         Icon(
                             painterResource(R.drawable.edit_icon),
-                            "Edit text pencil icon",
+                            stringResource(id = R.string.EditTextPencilIcon),
                             Modifier,
                             MaterialTheme.colorScheme.primary
                         )

@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.sunandmoon.viewModel.ShootInfoViewModel
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -115,7 +116,7 @@ fun ShootInfoScreen(
                 Row(modifier = modifier.align(CenterHorizontally)) {
                     Icon(
                         painter = painterResource(id = R.drawable.calendar),
-                        "Calendar Icon",
+                        stringResource(id = R.string.CalendarIcon),
                         modifier = modifier
                             .size(35.dp)
                             .padding(end = 5.dp),
@@ -131,7 +132,7 @@ fun ShootInfoScreen(
 
                     Icon(
                         painter = painterResource(id = R.drawable.clock),
-                        "Clock Icon",
+                        stringResource(id = R.string.ClockIcon),
                         modifier = modifier
                             .size(35.dp)
                             .padding(end = 5.dp),

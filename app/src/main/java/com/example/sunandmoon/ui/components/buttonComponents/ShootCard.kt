@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,11 +61,12 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
 
                 Icon(
                     painterResource(weatherCheckerIcon),
-                    "Weather checker icon",
+                    stringResource(id = R.string.WeatherCheckerIcon),
                     modifier
                         .align(CenterVertically)
                         .padding(8.dp, 0.dp)
-                        .size(40.dp).clickable{
+                        .size(40.dp)
+                        .clickable {
                             openPreferredWeatherDialog()
                         },
                     iconColor

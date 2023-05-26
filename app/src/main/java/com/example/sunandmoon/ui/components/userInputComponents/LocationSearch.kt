@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
@@ -44,10 +45,12 @@ fun LocationSearch(
             onValueChange = { query ->
                 setLocationSearchQuery(query, false)
             },
-            label = { Text("Search location", fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito_bold))) },
-            placeholder = { Text("Enter location", fontSize = 18.sp) },
+            label = { Text(stringResource(id = R.string.SearchLocation), fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.nunito_bold))) },
+            placeholder = { Text(stringResource(id = R.string.EnterLocation), fontSize = 18.sp) },
             singleLine = true,
-            modifier = modifier.fillMaxWidth(0.8f).align(Alignment.CenterHorizontally),
+            modifier = modifier
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search
             ),
@@ -62,7 +65,7 @@ fun LocationSearch(
                 }
             ),
             leadingIcon = {
-                Icon(painterResource(R.drawable.searchlocation), "location search field icon", Modifier, MaterialTheme.colorScheme.primary)
+                Icon(painterResource(R.drawable.searchlocation), stringResource(id = R.string.LocationSearchFieldIcon), Modifier, MaterialTheme.colorScheme.primary)
             },
             colors = TextFieldDefaults.textFieldColors(
                 //cursorColor = MaterialTheme.colorScheme.primary,
@@ -88,7 +91,9 @@ fun LocationSearch(
                             .fillMaxWidth()
                             .clickable {
                                 isDropdownExpanded = false
-                                setCoordinates(Location("").apply { latitude = item.lat.toDouble(); longitude = item.lon.toDouble() })
+                                setCoordinates(Location("").apply {
+                                    latitude = item.lat.toDouble(); longitude = item.lon.toDouble()
+                                })
                                 setLocationSearchQuery(item.display_name, true)
                             }
                             .padding(vertical = 8.dp, horizontal = 16.dp)

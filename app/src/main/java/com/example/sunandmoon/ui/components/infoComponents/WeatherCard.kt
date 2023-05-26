@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
@@ -46,7 +47,7 @@ fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rai
                 if(weatherIcon != null){
                     Image(
                         painter = painterResource(weatherIcon),
-                        "Weather Condition Image",
+                        stringResource(id = R.string.WeatherConditionImage),
                         modifier.size(80.dp),
                     )
                 }
@@ -63,7 +64,7 @@ fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rai
                         //The temperature
                         Icon(
                             painter = painterResource(id = R.drawable.thermometer),
-                            "Thermometer Image",
+                            stringResource(id = R.string.ThermometerImage),
                             modifier.size(35.dp),
                             RedColor
                         )
@@ -77,7 +78,7 @@ fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rai
                         //Rainfall
                         Icon(
                             painter = painterResource(id = R.drawable.raindrops),
-                            "Raindrops Image",
+                            stringResource(id = R.string.RaindropsImage),
                             modifier.size(35.dp),
                             WeatherBlueColor
                         )

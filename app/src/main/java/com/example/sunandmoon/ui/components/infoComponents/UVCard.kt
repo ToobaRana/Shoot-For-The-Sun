@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,7 +68,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
                 //UV icon that symbolises how intense the UV-rays are
                 Icon(
                     painter = painterResource(id = R.drawable.sun),
-                    "UV-Intensity Based Image",
+                    stringResource(id = R.string.UVIntensityImage),
                     modifier.size(80.dp),
                     uvColor
                 )
@@ -78,7 +79,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
                 Column{
 
                     //UV info
-                    Text(text = "UV-index: " + uvIndex.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(id = R.string.UVIndex) + ": " + uvIndex.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier.size(10.dp))
                     Text(text = uvDescription, fontSize = 18.sp)
                 }

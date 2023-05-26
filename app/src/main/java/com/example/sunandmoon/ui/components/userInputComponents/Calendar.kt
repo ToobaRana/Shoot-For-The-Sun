@@ -94,7 +94,7 @@ fun CalendarComponent(
             leadingIcon = {
                 Icon(
                     painterResource(R.drawable.calendar),
-                    "Calendar symbol",
+                    stringResource(id = R.string.CalendarSymbol),
                     modifier,
                     MaterialTheme.colorScheme.primary
                 )
@@ -196,7 +196,7 @@ fun CalendarComponentDisplay(
 
                         placeholder = { Text(text = "0") },
 
-                        label = { Text("Year", fontFamily = FontFamily(Font(R.font.nunito_bold))) },
+                        label = { Text(stringResource(id = R.string.Year), fontFamily = FontFamily(Font(R.font.nunito_bold))) },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done
@@ -267,7 +267,10 @@ fun CalendarComponentDisplay(
                         }
                         for (y in daysBeforeFirst until numWeekdays) {
                             val day = (y + 1 - daysBeforeFirst)
-                            DrawDayBox(modifier.weight(1f).height(50.dp), day, chosenDate.dayOfMonth) { updateDay(day) }
+                            DrawDayBox(
+                                modifier
+                                    .weight(1f)
+                                    .height(50.dp), day, chosenDate.dayOfMonth) { updateDay(day) }
                         }
                     } else {
                         for (y in 0 until numWeekdays) {
@@ -283,7 +286,10 @@ fun CalendarComponentDisplay(
                                 )
 
                             } else {
-                                DrawDayBox(modifier.weight(1f).height(50.dp), day, chosenDate.dayOfMonth) { updateDay(day) }
+                                DrawDayBox(
+                                    modifier
+                                        .weight(1f)
+                                        .height(50.dp), day, chosenDate.dayOfMonth) { updateDay(day) }
                             }
 
                         }
@@ -295,7 +301,9 @@ fun CalendarComponentDisplay(
 
             }
             Spacer(modifier.size(25.dp))
-            Row(modifier = modifier.fillMaxWidth().padding(bottom = 10.dp), horizontalArrangement = Arrangement.Center){
+            Row(modifier = modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp), horizontalArrangement = Arrangement.Center){
                 Button(modifier = modifier,onClick = {hideCalendar()},colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary) ) {
                     Text(text = stringResource(id = R.string.Confirm), fontFamily = FontFamily(Font(R.font.nunito_bold)))
                 }
@@ -337,7 +345,7 @@ fun MonthDropDown(
             readOnly = true,
             value = months[currentMonth - 1],
             onValueChange = { expanded = !expanded },
-            label = { Text("Month", fontFamily = FontFamily(Font(R.font.nunito_bold))) },
+            label = { Text(stringResource(id = R.string.Month), fontFamily = FontFamily(Font(R.font.nunito_bold))) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = TextFieldDefaults.textFieldColors(
                 //cursorColor = MaterialTheme.colorScheme.primary,
@@ -394,10 +402,7 @@ fun getDayOfFirst(month: Int, year: Int): String {
 
     val date = LocalDate.of(year, month, 1)
 
-    Log.i("calendar", "ehm: " + date.dayOfWeek.getDisplayName(TextStyle.FULL,  Locale.ENGLISH))
-
     return date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
-
 }
 
 

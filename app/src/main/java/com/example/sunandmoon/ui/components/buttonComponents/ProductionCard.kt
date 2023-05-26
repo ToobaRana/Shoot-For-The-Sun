@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
@@ -42,7 +43,7 @@ fun ProductionCard(
             ) {
                 Icon(
                     painterResource(R.drawable.folder),
-                    "Folder icon",
+                    stringResource(id = R.string.FolderIcon),
                     modifier
                         .align(CenterVertically)
                         .padding(8.dp, 0.dp)
@@ -60,7 +61,7 @@ fun ProductionCard(
 
             Divider(thickness = 2.dp, color = MaterialTheme.colorScheme.background)
 
-            var dateIntervalText = "Empty"
+            var dateIntervalText = stringResource(id = R.string.Empty)
             if (production.duration.first != null && production.duration.second != null) {
                 val startDate: LocalDateTime = production.duration.first!!
                 val endDate: LocalDateTime = production.duration.second!!
