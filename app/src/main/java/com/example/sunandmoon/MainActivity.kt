@@ -1,23 +1,13 @@
 package com.example.sunandmoon
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.sunandmoon.ar.SunAR
 import com.example.sunandmoon.navigation.MultipleScreenNavigator
-import com.example.sunandmoon.ui.screens.*
 import com.example.sunandmoon.ui.theme.SunAndMoonTheme
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.AndroidEntryPoint
 
 //import com.example.sunandmoon.di.DaggerAppComponent
