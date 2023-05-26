@@ -9,12 +9,15 @@ fun fetchLocation(
     setCoordinates: (location: Location) -> Unit
 ) {
     try {
+        //Log.i("ararar", "locationAvailability " + fusedLocationClient.locationAvailability.result.toString())
         Log.i("ararar", "fetch location attempt")
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             Log.i("ararar", "fetch location success")
             if (location != null) {
+                Log.i("ararar", "lets goo")
                 setCoordinates(location)
             } else {
+                Log.i("ararar", "Last known location is not available")
                 Log.d("Location", "Last known location is not available")
                 // Handle the case where location is null
                 // You can perform additional actions or set default coordinates here

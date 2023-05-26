@@ -27,8 +27,6 @@ class ARViewModel  @Inject constructor(
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel() {
 
-    private val dataSource = DataSource()
-
     private val _arUIState = MutableStateFlow(
         ARUIState(
             sunZenith = null,
@@ -75,6 +73,8 @@ class ARViewModel  @Inject constructor(
                     location = newLocation
                 )
             }
+
+            Log.i("ararar", "new location " + newLocation.toString())
 
             if (newLocation != null) {
                 setSunPosition(newLocation)
