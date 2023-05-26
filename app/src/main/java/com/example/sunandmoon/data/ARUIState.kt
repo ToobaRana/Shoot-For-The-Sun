@@ -15,4 +15,6 @@ data class ARUIState(
     val chosenSunPositionIndex: Int = 0,
 
     val hasShownCalibrateMagnetMessage: Boolean = false,
+    val hasShownPleaseGiveLocationPermissionMessage: Boolean = false,
+    val hasShownMissingSensorsMessage: Boolean = false
 )

@@ -34,6 +34,8 @@ import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.buttonComponents.OpenARSettingsButton
 import com.example.sunandmoon.ui.components.infoComponents.CalibrateMagnetometerDialogue
+import com.example.sunandmoon.ui.components.infoComponents.GiveLocationPermissionPleaseDialogue
+import com.example.sunandmoon.ui.components.infoComponents.MissingSensorsDialgoue
 import com.example.sunandmoon.ui.components.userInputComponents.EditARSettings
 import com.example.sunandmoon.viewModel.ARViewModel
 
@@ -125,8 +127,13 @@ fun SunAR(
             SensorManager.SENSOR_DELAY_GAME
         )
     }
+    else {
+        if(!arUIState.hasShownMissingSensorsMessage) {
+            MissingSensorsDialgoue(modifier)
+        }
+    }
 
-    SunARUI(modifier, sensorStatus, hasMagnetometer, navigateToNextBottomBar, arUIState)
+    SunARUI(modifier, sensorStatus, navigateToNextBottomBar, arUIState)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,7 +141,6 @@ fun SunAR(
 fun SunARUI(
     modifier: Modifier,
     sensorStatus: MutableState<FloatArray>,
-    hasMagnetometer: Boolean,
     navigateToNextBottomBar: (index: Int) -> Unit,
     arUIState: ARUIState,
     arViewModel: ARViewModel = viewModel()
@@ -142,7 +148,10 @@ fun SunARUI(
     // for the AR functionality
     val sunZenith = arUIState.sunZenith
     val sunAzimuth = arUIState.sunAzimuth
-    if(sunZenith != null && sunAzimuth != null) {
+    if(arUIState.location == null && !arUIState.hasShownPleaseGiveLocationPermissionMessage) {
+        GiveLocationPermissionPleaseDialogue(modifier)
+    }
+    else if(sunZenith != null && sunAzimuth != null) {
         if(!arUIState.hasShownCalibrateMagnetMessage) {
             CalibrateMagnetometerDialogue(modifier)
         }

@@ -67,7 +67,7 @@ class ARViewModel  @Inject constructor(
         }
     }
 
-    fun setCoordinates(newLocation: Location) {
+    fun setCoordinates(newLocation: Location?) {
         viewModelScope.launch {
 
             _arUIState.update { currentState ->
@@ -76,14 +76,16 @@ class ARViewModel  @Inject constructor(
                 )
             }
 
-            setSunPosition(newLocation)
+            if (newLocation != null) {
+                setSunPosition(newLocation)
+            }
         }
     }
 
     //calls fetchLocation method with provider client, then updates latitude and longitude in uiState with return value
     fun getAndSetCurrentPosition() {
         viewModelScope.launch() {
-            fetchLocation(fusedLocationProviderClient) { location: Location ->
+            fetchLocation(fusedLocationProviderClient) { location: Location? ->
                 setCoordinates(
                     location
                 )
@@ -206,6 +208,26 @@ class ARViewModel  @Inject constructor(
             _arUIState.update { currentState ->
                 currentState.copy(
                     hasShownCalibrateMagnetMessage = bool
+                )
+            }
+        }
+    }
+
+    fun setHasShownPleaseGiveLocationPermissionMessage(bool: Boolean){
+        viewModelScope.launch {
+            _arUIState.update { currentState ->
+                currentState.copy(
+                    hasShownPleaseGiveLocationPermissionMessage = bool
+                )
+            }
+        }
+    }
+
+    fun setMissingSensorsMessage(bool: Boolean){
+        viewModelScope.launch {
+            _arUIState.update { currentState ->
+                currentState.copy(
+                    hasShownMissingSensorsMessage = bool
                 )
             }
         }
