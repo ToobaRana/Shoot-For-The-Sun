@@ -62,18 +62,17 @@ class TableViewModel : ViewModel() {
             val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
             for (date in sameDaysListFromJanuary.sorted()){
-                val offsetToFindSignDouble = findOffset(tableUIState.value.timezone_id, date.toString())
-                val offsetString: String = formatTheOffset(offsetToFindSignDouble)
+                val offsetToFindSign = findOffset(tableUIState.value.timezone_id, date.toString())
+                val offsetString: String = formatTheOffsetForApi(offsetToFindSign)
 
                 //update UiState
                 setTimeZoneStringApi(offsetString)
                 timeZoneListTableScreen.add(offsetString)
 
                 val stringDate = date.toString() + " 12:00"
-
                 val dateTime = LocalDateTime.parse(stringDate, formatter)
 
-                val calculationSunTime = getSunRiseNoonFall(dateTime, offsetToFindSignDouble, tableUIState.value.location)
+                val calculationSunTime = getSunRiseNoonFall(dateTime, offsetToFindSign, tableUIState.value.location)
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     calculationsDateTableList.add(calculationSunTime[0].format(timeFormatter))
@@ -94,7 +93,7 @@ class TableViewModel : ViewModel() {
                 for (date in sameDaysList.sorted()){
                     val offsetToFindSignDouble = findOffset(tableUIState.value.timezone_id, date.toString())
 
-                    val offsetString: String = formatTheOffset(offsetToFindSignDouble)
+                    val offsetString: String = formatTheOffsetForApi(offsetToFindSignDouble)
 
                     if (tableUIState.value.chosenSunType == "Sunrise"){
                         val sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
@@ -283,6 +282,8 @@ class TableViewModel : ViewModel() {
         loadTableSunInformation()
     }
 
+
+    //find offset based on the location id and date
     private fun findOffset(location: String, date: String): Double {
         val dateTime = LocalDateTime.of(convertStringToLocalDate(date), LocalDateTime.now().toLocalTime())
         val zoneId = ZoneId.of(location)
@@ -310,16 +311,18 @@ class TableViewModel : ViewModel() {
 
         return LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE)
     }
-    fun formatTheOffset(offsetToFindSignDouble: Double): String{
+
+    //change format to "+00:00", so the offset is taking care of
+    private fun formatTheOffsetForApi(offsetToFindSign: Double): String{
         val offsetString: String
-        val offsetList = offsetToFindSignDouble.toString().split(".")
+        val offsetList = offsetToFindSign.toString().split(".")
         val hours = offsetList[0]
         val hoursWithOutSign = hours.split("")[2]
         val minutes = offsetList[1]
 
         val convertToMinutes = convertToMinutesFunction(minutes)
 
-        if (offsetToFindSignDouble in -9.9..9.9) {
+        if (offsetToFindSign in -9.9..9.9) {
 
             //if it is hours and minutes
             if (convertToMinutes == "0") {
@@ -338,7 +341,7 @@ class TableViewModel : ViewModel() {
             //not minutes, only hours
             else{
                 //if negative
-                offsetString = if(offsetToFindSignDouble.toString().split("")[1] == "-") {
+                offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
                     "-0" + hours + ":" + convertToMinutes
                 }
                 //not negative
@@ -349,10 +352,10 @@ class TableViewModel : ViewModel() {
             }
 
             //same as above, but checks for values over 10 og under -10
-        } else if (offsetToFindSignDouble in 10.0..25.0 || offsetToFindSignDouble in -25.0..-10.0) {
+        } else if (offsetToFindSign in 10.0..25.0 || offsetToFindSign in -25.0..-10.0) {
 
             if (convertToMinutes == "0") {
-                offsetString = if (offsetToFindSignDouble.toString().split("")[1] == "-") {
+                offsetString = if (offsetToFindSign.toString().split("")[1] == "-") {
                     "-" + hours + ":00"
                 }
 
@@ -362,7 +365,7 @@ class TableViewModel : ViewModel() {
             }
 
             else{
-                offsetString = if(offsetToFindSignDouble.toString().split("")[1] == "-") {
+                offsetString = if(offsetToFindSign.toString().split("")[1] == "-") {
                     "-" + hours + ":" + convertToMinutes
                 }
                 else{

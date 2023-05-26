@@ -159,6 +159,8 @@ fun TableView(
 
                     } }
 
+                    //going through the apiDateTableList from UiState
+                    //date is consisted of both the sun time and date from API
                     items(tableUIState.apiDateTableList) { date ->
                         if (date != null){
 
