@@ -55,9 +55,25 @@ fun getSunRiseNoonFall(localDateTime: LocalDateTime, timeZoneOffset: Double, loc
 
 
     //val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-    val sunriseTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((sunriseTime) * 60 + 3600 * timeZoneOffset).toLong())
-    val sunsetTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((sunsetTime) * 60 + 3600 * timeZoneOffset).toLong())
-    val solarNoonTimeLocalTime: LocalTime = LocalTime.ofSecondOfDay(((solarNoonTime) * 60 + 3600 * timeZoneOffset).toLong())
+
+    // the try-cathes are to take care of when the sun never raises or sets
+    // (for some parts of the year far north or south)
+    val sunriseTimeLocalTime = try{
+        LocalTime.ofSecondOfDay(((sunriseTime) * 60 + 3600 * timeZoneOffset).toLong())
+    } catch (_: Exception) {
+        LocalTime.of(0,0)
+    }
+    val sunsetTimeLocalTime = try{
+        LocalTime.ofSecondOfDay(((sunsetTime) * 60 + 3600 * timeZoneOffset).toLong())
+    } catch (_: Exception) {
+        LocalTime.of(0,0)
+    }
+    val solarNoonTimeLocalTime = try{
+        LocalTime.ofSecondOfDay(((solarNoonTime) * 60 + 3600 * timeZoneOffset).toLong())
+    } catch (_: Exception) {
+        LocalTime.of(0,0)
+    }
+
 
     /*val sunriseTimeLocalTimeRounded = roundToNearestMinute(sunriseTimeLocalTime.format(formatter))
     val sunsetTimeLocalTimeRounded = roundToNearestMinute(solarNoonTimeLocalTime.format(formatter))

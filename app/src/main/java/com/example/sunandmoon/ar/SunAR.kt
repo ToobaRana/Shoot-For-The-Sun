@@ -126,7 +126,7 @@ fun SunAR(
         )
     }
 
-    SunARUI(Modifier, sensorStatus, hasMagnetometer, navigateToNextBottomBar, arUIState)
+    SunARUI(modifier, sensorStatus, hasMagnetometer, navigateToNextBottomBar, arUIState)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -255,7 +255,8 @@ class CreateShootViewModel  @Inject constructor(
                         locationSearchQuery = shoot.locationName,
                         location = shoot.location,
                         chosenDateTime = shoot.dateTime,
-                        preferredWeather = shoot.preferredWeather
+                        preferredWeather = shoot.preferredWeather,
+                        timeZoneOffset = shoot.timeZoneOffset
                     )
                 }
             }
