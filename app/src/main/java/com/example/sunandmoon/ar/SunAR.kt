@@ -139,8 +139,8 @@ fun SunARUI(
     // for the AR functionality
     val sunZenith = arUIState.sunZenith
     val sunAzimuth = arUIState.sunAzimuth
-    if(arUIState.location == null && !arUIState.hasShownPleaseGiveLocationPermissionMessage) {
-        GiveLocationPermissionPleaseDialogue(modifier)
+    if(arUIState.location == null) {
+        GiveLocationPermissionPleaseDialogue(modifier) { navigateToNextBottomBar(0) }
     }
     else if(sunZenith != null && sunAzimuth != null) {
         if(!arUIState.hasShownCalibrateMagnetMessage) {

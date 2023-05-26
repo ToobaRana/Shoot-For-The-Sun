@@ -19,11 +19,11 @@ import com.example.sunandmoon.viewModel.ARViewModel
 
 
 @Composable
-fun GiveLocationPermissionPleaseDialogue(modifier: Modifier, arViewModel: ARViewModel = viewModel()) {
+fun GiveLocationPermissionPleaseDialogue(modifier: Modifier, goBack: ()->Unit) {
     AlertDialog(
         containerColor = MaterialTheme.colorScheme.primary,
         onDismissRequest = {
-            arViewModel.setHasShownPleaseGiveLocationPermissionMessage(true)
+            goBack()
         },
         text = {
             Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -42,7 +42,7 @@ fun GiveLocationPermissionPleaseDialogue(modifier: Modifier, arViewModel: ARView
             }
         },
         confirmButton = {
-            Button(onClick = { arViewModel.setHasShownPleaseGiveLocationPermissionMessage(true) }) {
+            Button(onClick = { goBack() }) {
                 Text(text = stringResource(id = R.string.OK), fontFamily = FontFamily(Font(R.font.nunito_bold)))
             }
         }
