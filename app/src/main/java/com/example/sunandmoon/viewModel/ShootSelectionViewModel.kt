@@ -60,7 +60,7 @@ class ShootSelectionViewModel @Inject constructor(
         getAllSoloShoots()
     }
 
-
+    //gets all productions from database
     fun getAllProductions() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -89,6 +89,7 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
+    //gets all soloshoots from api
     fun getAllSoloShoots() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -106,6 +107,7 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
+    //saves production with new id assigned by StoreableProduction
     fun saveProduction(name: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -139,6 +141,7 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
+    //deletes production with the id in uiState
     fun deleteProduction() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -154,6 +157,7 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
+    //changes page index between productions and solo shoots
     fun changeCurrentPageIndex() {
         _shootSelectionUIState.update { currentState ->
             val newPageIndex = (
@@ -169,6 +173,7 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
+    //gets all shoots in production by using id
     fun getShootsInProduction(production: Production) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -186,6 +191,7 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
+    //navigates into production
     fun goIntoProduction(production: Production) {
         _shootSelectionUIState.update { currentState ->
             currentState.copy(
@@ -196,6 +202,7 @@ class ShootSelectionViewModel @Inject constructor(
         getShootsInProduction(production)
     }
 
+    //exits production
     fun goOutOfProduction() {
         _shootSelectionUIState.update { currentState ->
             currentState.copy(
@@ -204,6 +211,7 @@ class ShootSelectionViewModel @Inject constructor(
             )
         }
     }
+    //sets production name in uiState
     fun setProductionName(name: String?){
         _shootSelectionUIState.update { currentState ->
             currentState.copy(
@@ -213,6 +221,7 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
+    //sets preferred weather dialogue in uistate
     fun setShowPreferredWeatherDialog(shootToShowPreferredWeatherDialogFor: Shoot?){
         _shootSelectionUIState.update { currentState ->
             currentState.copy(
@@ -221,7 +230,8 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
-    fun checkIfWeatherMatchesPreferences(shoots: List<Shoot>, selectionPage: SelectionPages) {
+    //checks if weather matches preferences in
+    private fun checkIfWeatherMatchesPreferences(shoots: List<Shoot>, selectionPage: SelectionPages) {
         viewModelScope.launch(Dispatchers.IO) {
 
             val updatedShoots = shoots.toMutableList()
@@ -292,6 +302,7 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
+    //gets weather icons of shoot
     fun getWeatherIconOfShoot(shoot: Shoot): Pair<Int?, String?>? {
         retrievedWeatherData.forEach {
             if(shoot.location.distanceTo(it.key) <= 1000) {
@@ -304,6 +315,7 @@ class ShootSelectionViewModel @Inject constructor(
         return null
     }
 
+    //opens or closes order by dropdown
     fun openCloseOrderByDropdown() {
         _shootSelectionUIState.update { currentState ->
             currentState.copy(
@@ -312,6 +324,7 @@ class ShootSelectionViewModel @Inject constructor(
         }
     }
 
+    //sets order by for production
     fun setProductionOrderBy(productionOrderBy: ProductionOrderBy) {
         Log.i("productionOrderBy", productionOrderBy.name)
         _shootSelectionUIState.update { currentState ->
@@ -322,6 +335,7 @@ class ShootSelectionViewModel @Inject constructor(
         getAllProductions()
     }
 
+    //sets order by for shoots
     fun setShootOrderBy(shootOrderBy: ShootOrderBy) {
         _shootSelectionUIState.update { currentState ->
             currentState.copy(
@@ -335,6 +349,7 @@ class ShootSelectionViewModel @Inject constructor(
         if(selectedProduction != null) getShootsInProduction(selectedProduction)
     }
 
+    //sets search query in uiState
     fun setSearchQuery(query: String) {
         _shootSelectionUIState.update { currentState ->
             currentState.copy(

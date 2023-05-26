@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.TableUIState
 import com.example.sunandmoon.data.calculations.getSunRiseNoonFall
+import com.example.sunandmoon.util.findTimeZoneOffsetOfDate
 import com.example.sunandmoon.util.simplifyLocationNameQuery
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,9 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import com.example.sunandmoon.util.findTimeZoneOffsetOfDate
 
 class TableViewModel : ViewModel() {
 
@@ -48,6 +47,7 @@ class TableViewModel : ViewModel() {
         loadTableSunInformation()
     }
 
+    //loads sun information for table
     fun loadTableSunInformation(){
         viewModelScope.launch {
 
@@ -135,6 +135,7 @@ class TableViewModel : ViewModel() {
         }
     }
 
+    // gets all days of chosenDate in a year and returns a list of 12 dates
     private fun getSameDaysInYear(date: LocalDate): List<LocalDate> {
 
         val daysInMonth =
@@ -163,6 +164,7 @@ class TableViewModel : ViewModel() {
 
         return sameDays.sorted()
     }
+    //returns 12 days in a year from january
     private fun getSameDaysInYearFromJanuary(date: LocalDate): List<LocalDate> {
         val daysInMonth =
         if (date.isLeapYear){
@@ -186,7 +188,7 @@ class TableViewModel : ViewModel() {
         return sameDays.sorted()
     }
 
-
+    //sets sun type in uiState
     fun setSunType(sunType: String){
         _tableUIState.update{ currentState ->
             currentState.copy(
@@ -194,6 +196,7 @@ class TableViewModel : ViewModel() {
             )
         }
     }
+    //sets time zone for api in uistate
     private fun setTimeZoneStringApi(offsetStringForApi: String){
         _tableUIState.update { currentState ->
             currentState.copy(
@@ -203,6 +206,7 @@ class TableViewModel : ViewModel() {
         }
     }
 
+    //sets location search query
     fun setLocationSearchQuery(inputQuery: String, format: Boolean) {
         var queryToStore = inputQuery
         if(format) queryToStore = simplifyLocationNameQuery(queryToStore)
@@ -213,7 +217,8 @@ class TableViewModel : ViewModel() {
         }
     }
 
-    fun setSameDaysFromJanuaryList(setSameDaysFromJanuaryList: List<LocalDate>) {
+    //sets same days from
+    private fun setSameDaysFromJanuaryList(setSameDaysFromJanuaryList: List<LocalDate>) {
         _tableUIState.update { currentState ->
             currentState.copy(
                 setSameDaysFromJanuaryList = setSameDaysFromJanuaryList
@@ -221,6 +226,7 @@ class TableViewModel : ViewModel() {
         }
     }
 
+    //fetches location search results and updates it into uistate
     fun loadLocationSearchResults(query: String) {
         viewModelScope.launch {
             try {
@@ -243,6 +249,7 @@ class TableViewModel : ViewModel() {
     }
 
 
+    //updates time zone offset in uiState
     private fun setTimeZoneOffset(timeZoneOffset: Double, timezone_id: String) {
         _tableUIState.update { currentState ->
             currentState.copy(
@@ -252,6 +259,7 @@ class TableViewModel : ViewModel() {
         }
     }
 
+    //updates coordinates in uiState
     fun setCoordinates(newLocation: Location) {
         viewModelScope.launch {
 
@@ -266,11 +274,12 @@ class TableViewModel : ViewModel() {
             loadTableSunInformation()
         }
     }
+    //updates day for chosenDateTime
     fun updateDay(day: Int){
         setNewDate(_tableUIState.value.chosenDate.year, _tableUIState.value.chosenDate.monthValue, day)
 
     }
-
+    //updates month for chosenDateTime
     fun updateMonth(month: Int, maxDate: Int){
         var day = _tableUIState.value.chosenDate.dayOfMonth
         if (maxDate < day){
@@ -279,10 +288,12 @@ class TableViewModel : ViewModel() {
         setNewDate(_tableUIState.value.chosenDate.year, month, day)
     }
 
+    //updates year for chosenDateTime
     fun updateYear(year: Int){
         setNewDate(year, _tableUIState.value.chosenDate.monthValue, _tableUIState.value.chosenDate.dayOfMonth)
     }
 
+    //updates date for chosenDateTime
     private fun setNewDate(year: Int, month: Int, day: Int){
         _tableUIState.update { currentState ->
             currentState.copy(
@@ -293,7 +304,7 @@ class TableViewModel : ViewModel() {
         loadTableSunInformation()
     }
 
-
+    //converts string to minutes
     private fun convertToMinutesFunction(minuteParameter: String): String{
         val doubleMinutes = ("0." + minuteParameter).toDouble()
         val minute = doubleMinutes * 60
