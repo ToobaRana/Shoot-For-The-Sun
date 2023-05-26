@@ -15,8 +15,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sunandmoon.R
 import com.example.sunandmoon.camera.CameraPreview
 import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.ui.components.NavigationComposable
@@ -144,7 +146,6 @@ fun SunARUI(
         GiveLocationPermissionPleaseDialogue(modifier) { navigateToNextBottomBar(0) }
     }
     else if(sunZenith != null && sunAzimuth != null) {
-        Log.i("ararar", "aaa-10")
         if(!arUIState.hasShownCalibrateMagnetMessage) {
             CalibrateMagnetometerDialogue(modifier)
         }
@@ -155,7 +156,10 @@ fun SunARUI(
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-             Row(modifier.fillMaxWidth().background(Color.Transparent), horizontalArrangement = Arrangement.End) {
+             Row(
+                 modifier
+                     .fillMaxWidth()
+                     .background(Color.Transparent), horizontalArrangement = Arrangement.End) {
                  OpenARSettingsButton(
                      modifier,
                      MaterialTheme.colorScheme.primary,
@@ -183,10 +187,10 @@ fun CameraContent(modifier: Modifier = Modifier) {
 
     Permission(
         permission = Manifest.permission.CAMERA,
-        rationale = "To use AR-mode, you need to give the app permission to use your camera.",
+        rationale = stringResource(id = R.string.GiveCameraPermissionForAR),
         permissionNotAvailableContent = {
             Column(modifier) {
-                Text("Missing Camera Permission!")
+                Text(stringResource(id = R.string.MissingCameraPermission))
             }
         }
     ) {

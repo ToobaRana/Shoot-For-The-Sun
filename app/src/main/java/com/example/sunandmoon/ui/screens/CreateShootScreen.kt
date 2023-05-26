@@ -95,14 +95,14 @@ fun CreateShootScreen(
                         onValueChange = { name ->
                             createShootViewModel.updateShootName(name)
                         },
-                        placeholder = { Text("My Shoot") },
+                        placeholder = { Text(stringResource(id = R.string.MyShoot)) },
                         modifier = modifier
                             .fillMaxWidth(0.8f)
                             .padding(5.dp, top = 20.dp),
                         leadingIcon = {
                             Icon(
                                 painterResource(R.drawable.edit_icon),
-                                "Edit text pencil icon",
+                                stringResource(id = R.string.EditTextPencilIcon),
                                 modifier,
                                 MaterialTheme.colorScheme.primary
                             )

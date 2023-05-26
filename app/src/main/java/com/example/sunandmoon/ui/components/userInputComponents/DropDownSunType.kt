@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -34,7 +35,8 @@ fun dropdownMenuSunType(tableViewModel: TableViewModel = viewModel(), modifier: 
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
-            label = { Text("Type", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp, fontFamily = FontFamily(
+            label = { Text(
+                stringResource(id = R.string.Type), color = MaterialTheme.colorScheme.primary, fontSize = 18.sp, fontFamily = FontFamily(
                 Font(R.font.nunito_bold)
             )) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },

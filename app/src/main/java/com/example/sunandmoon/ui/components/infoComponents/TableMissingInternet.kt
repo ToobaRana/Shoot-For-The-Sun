@@ -73,7 +73,7 @@ fun TableMissingInternet(
                     Button(onClick = {
                         tableViewModel.loadTableSunInformation()
                     }) {
-                        Text(text = "Try Again")
+                        Text(text = stringResource(id = R.string.TryAgain))
                     }
                 }
                 Spacer(modifier = modifier.size(80.dp))

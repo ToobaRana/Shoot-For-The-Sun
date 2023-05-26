@@ -86,6 +86,17 @@
 
     <string name="LocationSearchFieldIcon">location search field icon</string>
     <string name="Search">Search…</string>
+    <string name="SearchLocation">Search location</string>
+    <string name="EnterLocation">Enter location</string>
+
+    <string name="CreateNewProduction">CreateNewProduction</string>
+    <string name="EditTextPencilIcon">Edit text pencil icon</string>
+
+    <string name="MyShoot">My Shoot</string>
+
+    <string name="CalendarIcon">Calendar Icon</string>
+
+    <string name="ClockIcon">Clock Icon</string>
 
     <string name="YourProductions">Your productions</string>
     <string name="Solos_shoots">Solo shoots</string>
@@ -113,6 +124,32 @@
     <string name ="Productions">Productions</string>
     <string name ="SoloShoots">Solo Shoots</string>
     <string name ="DateFormat">yyyy-MM-dd</string>
+
+    <string name ="GiveCameraPermissionForAR">To use AR-mode, you need to give the app permission to use your camera</string>
+    <string name ="MissingCameraPermission">Missing Camera Permission!</string>
+
+    <string name ="AboutButton">About button</string>
+
+    <string name ="SunImage">Sun Image</string>
+
+    <string name ="DeleteButton">Delete button</string>
+    <string name ="FolderIcon">Folder icon</string>
+    <string name ="Empty">Empty</string>
+    <string name ="WeatherCheckerIcon">Weather checker icon</string>
+
+    <string name ="TryAgain">Try Again</string>
+
+    <string name ="UVIntensityImage">UV-Intensity Image</string>
+    <string name ="UVIndex">UV-index</string>
+    <string name ="WeatherConditionImage">Weather Condition Image</string>
+    <string name ="ThermometerImage">Thermometer Image</string>
+    <string name ="RaindropsImage">Raindrops Image</string>
+    <string name ="WindImage">Wind Image</string>
+
+    <string name ="CalendarSymbol">Calendar symbol</string>
+    <string name ="Year">Year</string>
+    <string name ="Month">Month</string>
+    <string name ="Type">Type</string>
 
 
     <string-array name="suntype">

@@ -34,7 +34,7 @@ fun ProductionShootSelectionTopPart(
     val pageTitleTexts = listOf(R.string.YourProductions, R.string.Solos_shoots, R.string.defaultProductionName)
     var titleTextToUse: String = stringResource(id = pageTitleTexts[currentPageIndex])
     if (currentPageIndex == SelectionPages.PRODUCTION_SHOOTS.ordinal) {
-        titleTextToUse = shootSelectionUIState.selectedProduction?.name ?: "My production"
+        titleTextToUse = shootSelectionUIState.selectedProduction?.name ?: stringResource(id = R.string.defaultProductionName)
     }
 
     Box {
