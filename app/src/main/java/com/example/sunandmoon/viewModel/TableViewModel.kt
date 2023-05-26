@@ -16,7 +16,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import com.example.sunandmoon.getSunRiseNoonFall
 import com.example.sunandmoon.util.findTimeZoneOffsetOfDate
 
 class TableViewModel : ViewModel() {
