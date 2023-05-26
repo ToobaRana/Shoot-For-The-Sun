@@ -1,7 +1,6 @@
 package com.example.sunandmoon.viewModel
 
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
@@ -13,13 +12,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 class TableViewModel : ViewModel() {
 
@@ -54,7 +50,7 @@ class TableViewModel : ViewModel() {
     fun loadTableSunInformation(){
         viewModelScope.launch {
 
-            val apiDateTableList = mutableListOf<String>()
+            val apiDateTableList = mutableListOf<String?>()
             val calculationsDateTableList = mutableListOf<String>()
             val timeZoneListTableScreen = mutableListOf<String>()
 
@@ -67,19 +63,17 @@ class TableViewModel : ViewModel() {
 
             for (date in sameDaysListFromJanuary.sorted()){
                 val offsetToFindSignDouble = findOffset(tableUIState.value.timezone_id, date.toString())
-                var offsetString: String = formatTheOffset(offsetToFindSignDouble)
+                val offsetString: String = formatTheOffset(offsetToFindSignDouble)
 
                 //update UiState
                 setTimeZoneStringApi(offsetString)
                 timeZoneListTableScreen.add(offsetString)
 
                 val stringDate = date.toString() + " 12:00"
-                Log.d("stringDate", stringDate)
 
                 val dateTime = LocalDateTime.parse(stringDate, formatter)
 
                 val calculationSunTime = getSunRiseNoonFall(dateTime, offsetToFindSignDouble, tableUIState.value.location)
-                Log.d("offsetToFindSign", offsetToFindSignDouble.toString())
 
                 if (tableUIState.value.chosenSunType == "Sunrise"){
                     calculationsDateTableList.add(calculationSunTime[0].format(timeFormatter))
@@ -104,12 +98,16 @@ class TableViewModel : ViewModel() {
 
                     if (tableUIState.value.chosenSunType == "Sunrise"){
                         val sunRiseTime = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.sunrise.time
+
                         apiDateTableList.add(sunRiseTime)
+
                     }
 
                     if (tableUIState.value.chosenSunType == "SolarNoon"){
                         val solarNoon = dataSource.fetchSunrise3Data("sun", tableUIState.value.location.latitude, tableUIState.value.location.longitude, date.toString(), offsetString).properties.solarnoon.time
+
                         apiDateTableList.add(solarNoon)
+
                     }
 
                     if (tableUIState.value.chosenSunType == "Sunset"){
@@ -299,10 +297,10 @@ class TableViewModel : ViewModel() {
     }
 
 
-    private fun convertToMinutesFunction(minutes: String): String{
-        val doubleMinutes = ("0." + minutes).toDouble()
-        val minutes = doubleMinutes * 60
-        return minutes.toString().split(".")[0]
+    private fun convertToMinutesFunction(minuteParameter: String): String{
+        val doubleMinutes = ("0." + minuteParameter).toDouble()
+        val minute = doubleMinutes * 60
+        return minute.toString().split(".")[0]
 
 
 
@@ -313,13 +311,13 @@ class TableViewModel : ViewModel() {
         return LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE)
     }
     fun formatTheOffset(offsetToFindSignDouble: Double): String{
-        var offsetString: String
+        val offsetString: String
         val offsetList = offsetToFindSignDouble.toString().split(".")
         val hours = offsetList[0]
         val hoursWithOutSign = hours.split("")[2]
         val minutes = offsetList[1]
 
-        var convertToMinutes = convertToMinutesFunction(minutes)
+        val convertToMinutes = convertToMinutesFunction(minutes)
 
         if (offsetToFindSignDouble in -9.9..9.9) {
 

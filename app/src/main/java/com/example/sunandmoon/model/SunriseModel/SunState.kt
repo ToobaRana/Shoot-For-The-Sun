@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SunState(
-    val time : String,
+    val time : String?,
     val azimuth : Float
 )

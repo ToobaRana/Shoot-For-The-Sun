@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class TableUIState(
-    val apiDateTableList: List<String>,
+    val apiDateTableList: List<String?>,
     val calculationsDateTableList: List<String>,
 
     val locationSearchQuery: String,
@@ -14,7 +14,6 @@ data class TableUIState(
     val location: Location,
 
     val chosenDate: LocalDateTime,
-
     val chosenSunType: String,
 
     val timeZoneOffset: Double,

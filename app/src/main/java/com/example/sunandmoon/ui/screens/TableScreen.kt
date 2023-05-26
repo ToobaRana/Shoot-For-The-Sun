@@ -25,9 +25,7 @@ import com.example.sunandmoon.ui.components.TableCard
 import com.example.sunandmoon.ui.components.infoComponents.TableMissingInternet
 import com.example.sunandmoon.ui.components.userInputComponents.dropdownMenuSunType
 import com.example.sunandmoon.viewModel.TableViewModel
-import okhttp3.internal.format
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
@@ -77,8 +75,7 @@ fun TableView(
             )
         },
 
-        content = { innerPadding ->
-            innerPadding
+        content = { innerPadding -> innerPadding
             Column(
                 modifier.padding(top = 120.dp),
                 verticalArrangement = Arrangement.Center,
@@ -163,6 +160,7 @@ fun TableView(
                     } }
 
                     items(tableUIState.apiDateTableList) { date ->
+                        if (date != null){
 
                         val elementInTableUiStateList = date.split("T")
                         val sunriseTimeListWithOffset = elementInTableUiStateList[1].split("-", "+")
@@ -171,7 +169,7 @@ fun TableView(
                         val monthInt = day.split("-")[1].toInt()
 
                         val dateObject: LocalDate = LocalDate.parse(day, DateTimeFormatter.ofPattern(stringResource(R.string.DateFormat)))
-                        var dag = "${dateObject.dayOfMonth}. ${dateObject.month.toString().substring(0, 3)} ${dateObject.year}"
+                        val dag = "${dateObject.dayOfMonth}. ${dateObject.month.toString().substring(0, 3)} ${dateObject.year}"
 
                         TableCard(
                             apiSunTime = sunriseTime,
@@ -186,6 +184,9 @@ fun TableView(
                         Spacer(modifier = modifier.height(1.dp))
 
                     }
+
+                    }
+
                 }
 
             }
