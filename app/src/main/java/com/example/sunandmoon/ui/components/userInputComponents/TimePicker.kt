@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.isDigitsOnly
+
 import com.example.sunandmoon.R
 import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
 import java.time.LocalTime
@@ -104,7 +104,7 @@ fun TimepickerComponent(
 fun validateNumber(value: String, min: Int, max: Int): Int? {
 
     if (value == "") return 0
-    if (value.isDigitsOnly()) {
+    if (Regex("""^\d+$""").matches(value)) {
         return value.toInt().coerceIn(min, max)
     }
     return null

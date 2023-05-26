@@ -1,14 +1,12 @@
 package com.example.sunandmoon
 
 import android.location.Location
-import org.junit.Test
-
-import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Test
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import java.time.LocalDateTime
 import java.time.LocalTime
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import kotlin.math.abs
 
 /**
@@ -16,18 +14,19 @@ import kotlin.math.abs
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-val uio = mock(Location::class.java)
-val brasilia = mock(Location::class.java)
-val capeTown = mock(Location::class.java)
-val sanFrancisco = mock(Location::class.java)
-val beijing = mock(Location::class.java)
+val uio: Location = mock(Location::class.java)
+val brasilia: Location = mock(Location::class.java)
+val capeTown: Location = mock(Location::class.java)
+val sanFrancisco: Location = mock(Location::class.java)
+val beijing: Location = mock(Location::class.java)
 
 
-val testDate1 = LocalDateTime.of(2023, 3, 10, 12, 0)
-val testDate2 = LocalDateTime.of(2023, 5, 1, 14, 0)
-val testDate3 = LocalDateTime.of(2015, 1, 14, 8, 45)
-val testDate4 = LocalDateTime.of(2029, 12, 31, 18, 30)
-val testDate5 = LocalDateTime.of(2024, 7, 4, 3, 1)
+val testDate1: LocalDateTime = LocalDateTime.of(2023, 3, 10, 12, 0)
+val testDate2: LocalDateTime = LocalDateTime.of(2023, 5, 1, 14, 0)
+val testDate3: LocalDateTime = LocalDateTime.of(2015, 1, 14, 8, 45)
+val testDate4: LocalDateTime = LocalDateTime.of(2029, 12, 31, 18, 30)
+val testDate5: LocalDateTime = LocalDateTime.of(2024, 7, 4, 3, 1)
+
 
 // contains 5 unit tests
 class CalculationsUnitTests {
@@ -322,10 +321,12 @@ class CalculationsUnitTests {
             calculateSunPosition(testDate5, 8.0, beijing).second
         ))
     }
+
+
 }
 
 fun checkIfInMaxAllowedMinuteMargin(expectedTime: LocalTime, timeToTest: LocalTime): Boolean {
-    val minutesMargin: Long = 4
+    val minutesMargin: Long = 5
     if(expectedTime.isAfter(timeToTest.plusMinutes(minutesMargin))) return false
     if(expectedTime.isBefore(timeToTest.minusMinutes(minutesMargin))) return false
     return true

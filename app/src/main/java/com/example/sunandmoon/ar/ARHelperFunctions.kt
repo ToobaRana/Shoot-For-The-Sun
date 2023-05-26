@@ -3,8 +3,10 @@ package com.example.sunandmoon.ar
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
+import android.util.Log
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.math.atan
 
 fun getARPos(
     sensorStatus: FloatArray,
@@ -66,11 +68,16 @@ fun getCameraFOV(currentContext: Context): List<Double> {
     // Get the available focal lengths of the camera lens
     val focalLengths = characteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)
 
+
     if(sensorSize == null || focalLengths == null) return listOf(-1.0,-1.0)
 
     // Calculate the FOV in degrees
-    val horizontalFOV = 2.0 * Math.atan((sensorSize.width / (2.0 * focalLengths[0])).toDouble()) * 180.0 / Math.PI
-    val verticalFOV = 2.0 * Math.atan((sensorSize.height / (2.0 * focalLengths[0])).toDouble()) * 180.0 / Math.PI
+    val horizontalFOV = getFov(sensorSize.width, focalLengths[0])
+    val verticalFOV = getFov(sensorSize.height, focalLengths[0])
 
     return listOf(horizontalFOV, verticalFOV)
+}
+
+fun getFov(sensorDimension: Float, focalLength: Float): Double{
+    return 2.0 * atan((sensorDimension / (2.0 * focalLength))) * 180.0 / Math.PI
 }

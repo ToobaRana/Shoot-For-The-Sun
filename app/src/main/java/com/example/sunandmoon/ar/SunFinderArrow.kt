@@ -24,12 +24,12 @@ fun SunFinderArrow(
 ) {
     // checks that the sun is far enough away from the center of the screen
     // (we do not want the arrow to show when the sun is close enough to the center of the screen)
-    val sun1Distance = sqrt(xPos1.value * xPos1.value + yPos1.value * yPos1.value)
-    val sun2Distance = sqrt(xPos2.value * xPos2.value + yPos2.value * yPos2.value)
-    val closestSunPos = if(sun1Distance < sun2Distance) listOf<Dp>(xPos1,yPos1) else listOf<Dp>(xPos2,yPos2)
+
+    val closestSunPos = getClosestSunPos(xPos1, yPos1, xPos2, yPos2)
+    val distanceToClosestSun = sqrt(closestSunPos[0].value * closestSunPos[0].value + closestSunPos[1].value * closestSunPos[1].value)
     val arrowDistanceThreshold = 100
     // an if-statement inside of an if-statement. This is kotlin. This is incredible
-    if( (if(sun1Distance < sun2Distance) sun1Distance else sun2Distance) > arrowDistanceThreshold) {
+    if(distanceToClosestSun > arrowDistanceThreshold) {
         // arrow pointing towards the sun
         Box(
             modifier = modifier
@@ -50,4 +50,10 @@ fun SunFinderArrow(
                 .height(70.dp))
         }
     }
+}
+
+fun getClosestSunPos(xPos1: Dp, yPos1: Dp, xPos2: Dp, yPos2: Dp): List<Dp> {
+    val sun1Distance = sqrt(xPos1.value * xPos1.value + yPos1.value * yPos1.value)
+    val sun2Distance = sqrt(xPos2.value * xPos2.value + yPos2.value * yPos2.value)
+    return if (sun1Distance < sun2Distance) listOf(xPos1, yPos1) else listOf(xPos2, yPos2)
 }
