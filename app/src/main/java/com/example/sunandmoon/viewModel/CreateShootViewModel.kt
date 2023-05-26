@@ -14,7 +14,8 @@ import com.example.sunandmoon.data.localDatabase.dataEntities.StorableShoot
 import com.example.sunandmoon.data.localDatabase.storableShootToNormalShoot
 import com.example.sunandmoon.data.calculations.getSunRiseNoonFall
 import com.example.sunandmoon.util.fetchLocation
-import com.example.sunandmoon.util.getTimeZoneOffset
+import com.example.sunandmoon.util.findTimeZoneOffsetOfDate
+import com.example.sunandmoon.util.getCurrentTimeZoneOffset
 import com.example.sunandmoon.util.simplifyLocationNameQuery
 import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +29,8 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,9 +55,10 @@ class CreateShootViewModel  @Inject constructor(
             },
             hasGottenCurrentPosition = false,
             chosenDateTime = LocalDateTime.now().withSecond(0).withNano(0),
-            timeZoneOffset = getTimeZoneOffset(),
+            timeZoneOffset = getCurrentTimeZoneOffset(),
             editTimeEnabled = true,
-            chosenSunPositionIndex = 0
+            chosenSunPositionIndex = 0,
+            timeZoneID = "Europe/Oslo"
         )
     )
 
@@ -106,7 +110,8 @@ class CreateShootViewModel  @Inject constructor(
 
             val locationTimeZoneOffsetResult =
                 dataSource.fetchLocationTimezoneOffset(location)
-            setTimeZoneOffset(locationTimeZoneOffsetResult.offset)
+            val actualTimeZoneOffset = findTimeZoneOffsetOfDate(locationTimeZoneOffsetResult.timezone_id, _createShootUIState.value.chosenDateTime.toLocalDate().toString())
+            setTimeZoneOffset(actualTimeZoneOffset, locationTimeZoneOffsetResult.timezone_id)
 
             _createShootUIState.update { currentState ->
                 currentState.copy(
@@ -140,10 +145,11 @@ class CreateShootViewModel  @Inject constructor(
         }
     }
 
-    private fun setTimeZoneOffset(timeZoneOffset: Double) {
+    private fun setTimeZoneOffset(timeZoneOffset: Double, timeZoneID: String) {
         _createShootUIState.update { currentState ->
             currentState.copy(
-                timeZoneOffset = timeZoneOffset
+                timeZoneOffset = timeZoneOffset,
+                timeZoneID = timeZoneID
             )
         }
     }
@@ -154,6 +160,10 @@ class CreateShootViewModel  @Inject constructor(
                 chosenDateTime = LocalDateTime.of(LocalDate.of(year, month, day), _createShootUIState.value.chosenDateTime.toLocalTime())
             )
         }
+
+        val actualTimeZoneOffset = findTimeZoneOffsetOfDate(_createShootUIState.value.timeZoneID, _createShootUIState.value.chosenDateTime.toLocalDate().toString())
+        setTimeZoneOffset(actualTimeZoneOffset, _createShootUIState.value.timeZoneID)
+
         if(_createShootUIState.value.chosenSunPositionIndex != 0) {
             updateTimeToChosenSunPosition()
         }
