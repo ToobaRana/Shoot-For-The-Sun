@@ -123,7 +123,7 @@ fun SunAR(
             MissingSensorsDialogue(modifier)
         }
     }
-
+    Log.i("ararar", "aaa-11")
     SunARUI(modifier, sensorStatus, navigateToNextBottomBar, arUIState)
 }
 //draws the rest of the ui-components for the AR-screen (bottom bar, top-bar and editSettings)
@@ -139,10 +139,12 @@ fun SunARUI(
     // for the AR functionality
     val sunZenith = arUIState.sunZenith
     val sunAzimuth = arUIState.sunAzimuth
-    if(arUIState.location == null && !arUIState.hasShownPleaseGiveLocationPermissionMessage) {
-        GiveLocationPermissionPleaseDialogue(modifier)
+    Log.i("ararar", sunZenith.toString())
+    if(arUIState.location == null) {
+        GiveLocationPermissionPleaseDialogue(modifier) { navigateToNextBottomBar(0) }
     }
     else if(sunZenith != null && sunAzimuth != null) {
+        Log.i("ararar", "aaa-10")
         if(!arUIState.hasShownCalibrateMagnetMessage) {
             CalibrateMagnetometerDialogue(modifier)
         }
