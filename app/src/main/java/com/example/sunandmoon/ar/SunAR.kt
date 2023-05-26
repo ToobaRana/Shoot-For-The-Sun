@@ -23,7 +23,7 @@ import com.example.sunandmoon.ui.components.NavigationComposable
 import com.example.sunandmoon.ui.components.buttonComponents.OpenARSettingsButton
 import com.example.sunandmoon.ui.components.infoComponents.CalibrateMagnetometerDialogue
 import com.example.sunandmoon.ui.components.infoComponents.GiveLocationPermissionPleaseDialogue
-import com.example.sunandmoon.ui.components.infoComponents.MissingSensorsDialgoue
+import com.example.sunandmoon.ui.components.infoComponents.MissingSensorsDialogue
 import com.example.sunandmoon.ui.components.userInputComponents.EditARSettings
 import com.example.sunandmoon.util.Permission
 import com.example.sunandmoon.viewModel.ARViewModel
@@ -120,7 +120,7 @@ fun SunAR(
     }
     else {
         if(!arUIState.hasShownMissingSensorsMessage) {
-            MissingSensorsDialgoue(modifier)
+            MissingSensorsDialogue(modifier)
         }
     }
 

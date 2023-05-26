@@ -1,13 +1,11 @@
 package com.example.sunandmoon.ui.components.infoComponents
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -15,6 +13,7 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.theme.*
 import java.time.LocalTime
 
+//used for displaying uv-info in shootInfoScreen
 @Composable
 fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
     val uvColor = when(uvIndex?.toInt()){
@@ -76,8 +75,7 @@ fun UVCard(modifier: Modifier, time: LocalTime, uvIndex : Double?) {
 
                 Spacer(modifier.size(30.dp))
 
-                Column(
-                ) {
+                Column{
 
                     //UV info
                     Text(text = "UV-index: " + uvIndex.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 
+//used for manual input of latitude and longitude in offline-mode
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LatitudeLongitudeInput(

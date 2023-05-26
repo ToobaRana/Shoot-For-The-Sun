@@ -17,8 +17,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.viewModel.ARViewModel
 
+//alerts the user that they are missing sensors needed for ar (magnetometer and accelerometer)
 @Composable
-fun MissingSensorsDialgoue(modifier: Modifier, arViewModel: ARViewModel = viewModel()) {
+fun MissingSensorsDialogue(modifier: Modifier, arViewModel: ARViewModel = viewModel()) {
     AlertDialog(
         containerColor = MaterialTheme.colorScheme.primary,
         onDismissRequest = {

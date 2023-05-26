@@ -9,6 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
 
+//used for navigation between screens
 @Composable
 fun NavigationComposable(modifier: Modifier, page: Int, navigateToNextBottomBar: (index: Int) -> Unit){
     val icons = listOf(R.drawable.home, R.drawable.ar, R.drawable.table)

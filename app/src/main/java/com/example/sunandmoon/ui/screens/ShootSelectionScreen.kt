@@ -136,9 +136,8 @@ fun ShootSelectionScreen(
                                 ShootCard(
                                     modifier,
                                     shoot,
-                                    navigateToShootInfoScreen,
-                                    { shootSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
-                                )
+                                    navigateToShootInfoScreen
+                                ) { shootSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
                             }
                         }
                         else -> {
@@ -146,9 +145,8 @@ fun ShootSelectionScreen(
                                 ShootCard(
                                     modifier,
                                     shoot,
-                                    navigateToShootInfoScreen,
-                                    { shootSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
-                                )
+                                    navigateToShootInfoScreen
+                                ) { shootSelectionViewModel.setShowPreferredWeatherDialog(shoot) }
                             }
                         }
                     }

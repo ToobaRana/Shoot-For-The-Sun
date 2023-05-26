@@ -1,4 +1,4 @@
-package com.example.sunandmoon.ui.screens
+package com.example.sunandmoon.ui.components.userInputComponents
 
 import android.location.Location
 import androidx.compose.foundation.clickable
@@ -19,7 +19,7 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.model.locationSearchResultsModel.LocationSearchResults
 
 //https://nominatim.openstreetmap.org/ui/search.html
-
+//used to search in location-api
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationSearch(
@@ -76,7 +76,7 @@ fun LocationSearch(
 
         if (isDropdownExpanded) {
             DropdownMenu(
-                expanded = isDropdownExpanded,
+                expanded = true,
                 onDismissRequest = { isDropdownExpanded = false },
                 modifier = modifier.width(IntrinsicSize.Max)
             ) {

@@ -1,25 +1,28 @@
 package com.example.sunandmoon.ui.components.infoComponents
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.PreferableWeather
 import com.example.sunandmoon.data.dataUtil.Shoot
 import com.example.sunandmoon.ui.theme.CheckmarkColor
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import com.example.sunandmoon.ui.theme.RedColor
 import com.example.sunandmoon.viewModel.ShootSelectionViewModel
-import androidx.compose.ui.res.stringResource
 
+//used to draw the dialogue-box telling a user if the weather matches their choice
 @Composable
 fun PreferredWeatherDialogue(modifier: Modifier, shootSelectionViewModel: ShootSelectionViewModel, shoot: Shoot) {
     val weatherIconAndContentDescription = shootSelectionViewModel.getWeatherIconOfShoot(shoot) //weatherIcons[weatherIconSplit[0]]?.get(if(isDay) 0 else 1)
@@ -79,6 +82,7 @@ fun PreferredWeatherDialogue(modifier: Modifier, shootSelectionViewModel: ShootS
     )
 }
 
+//used for showing if weather matches choice
 @Composable
 fun PreferredWeatherOverview(modifier: Modifier, preferableWeathers: List<PreferableWeather>) {
     LazyVerticalGrid(
@@ -95,7 +99,7 @@ fun PreferredWeatherOverview(modifier: Modifier, preferableWeathers: List<Prefer
             span = {
                 // to make the last item centered
                 if(preferableWeathers.size % 3 != 0 && preferableWeathers.size % 3 != 2){
-                    var value = if(preferableWeathers.lastIndex == it) 3 else 1
+                    val value = if(preferableWeathers.lastIndex == it) 3 else 1
                     GridItemSpan(value)
                 }
                 else {
@@ -103,7 +107,7 @@ fun PreferredWeatherOverview(modifier: Modifier, preferableWeathers: List<Prefer
                 }
             }
         ) {
-            var weatherIconId = when (preferableWeathers[it]) {
+            val weatherIconId = when (preferableWeathers[it]) {
                 PreferableWeather.CLEAR_SKY -> R.drawable.clearsun
                 PreferableWeather.FAIR -> R.drawable.fairsun
                 PreferableWeather.CLOUDY -> R.drawable.cloudy
@@ -111,7 +115,7 @@ fun PreferredWeatherOverview(modifier: Modifier, preferableWeathers: List<Prefer
                 PreferableWeather.RAIN -> R.drawable.rain
                 PreferableWeather.SNOW -> R.drawable.snow
             }
-            var weatherContentDescription = when (preferableWeathers[it]) {
+            val weatherContentDescription = when (preferableWeathers[it]) {
                 PreferableWeather.CLEAR_SKY -> R.string.ClearSky
                 PreferableWeather.FAIR -> R.string.Fair
                 PreferableWeather.CLOUDY -> R.string.Cloudy

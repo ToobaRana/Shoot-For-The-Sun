@@ -1,35 +1,17 @@
 package com.example.sunandmoon.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 
 // Not used
-private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFD9D9D9),
-    secondary = Color(0xFF222831),
-    tertiary = Color(0xFF211F1F),
 
-    background = Color(0xFF3D3E3F),
-    surface = Color(0xFF262727),
-    onPrimary = Color(0xFF3D3E3F),
-    onSecondary = Color(0xFF3D3E3F),
-    onTertiary = Color(0xFFD9D9D9),
-    onBackground = Color(0xFF3D3E3F),
-    onSurface = Color(0xFFD9D9D9),
-)
 
 private val LightColorScheme = lightColorScheme(
     primary = SecondaryColor,
@@ -49,7 +31,7 @@ private val LightColorScheme = lightColorScheme(
 fun SunAndMoonTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    
     content: @Composable () -> Unit
 ) {
     val colorScheme = LightColorScheme /*when {

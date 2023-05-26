@@ -10,8 +10,7 @@ fun getCurrentTimeZoneOffset(): Double {
     val calendar = Calendar.getInstance()
     val timeZone = calendar.timeZone
     val offsetInMillis = timeZone.getOffset(calendar.timeInMillis)
-    val offsetInHours = offsetInMillis.toDouble() / (1000 * 60 * 60)
-    return offsetInHours
+    return offsetInMillis.toDouble() / (1000 * 60 * 60)
 }
 
 //find offset based on the location id and date

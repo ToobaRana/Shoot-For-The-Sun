@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.components.buttonComponents.HyperlinkText
 
-
+//card to display info about the app
 @Composable
 fun AboutCard(modifier: Modifier) {
 

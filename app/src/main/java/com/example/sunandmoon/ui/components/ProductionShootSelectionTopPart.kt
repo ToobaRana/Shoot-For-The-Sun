@@ -13,15 +13,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.ShootSelectionUIState
-import com.example.sunandmoon.data.localDatabase.dao.ProductionOrderBy
-import com.example.sunandmoon.data.localDatabase.dao.ShootOrderBy
 import com.example.sunandmoon.ui.components.buttonComponents.AboutButton
 import com.example.sunandmoon.ui.components.buttonComponents.AddNewOrderByButtons
 import com.example.sunandmoon.ui.components.buttonComponents.GoBackEditDeleteBar
 import com.example.sunandmoon.ui.components.buttonComponents.PagePickerProductionsShoots
-import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages
+import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 
+//top-bar used in production selection and shoot selection. user can search, go back, and create stuff
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductionShootSelectionTopPart(
@@ -38,7 +37,7 @@ fun ProductionShootSelectionTopPart(
         titleTextToUse = shootSelectionUIState.selectedProduction?.name ?: "My production"
     }
 
-    Box() {
+    Box {
         if(currentPageIndex != SelectionPages.PRODUCTION_SHOOTS.ordinal) {
             AboutButton(
                 modifier,

@@ -1,19 +1,5 @@
 package com.example.sunandmoon.ui.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sunandmoon.CheckPermissions
-import com.example.sunandmoon.ui.components.CalendarComponentDisplay
-import com.example.sunandmoon.viewModel.ShootInfoViewModel
-import com.google.android.gms.location.FusedLocationProviderClient
-
 //test for fetching last known location
 /*@Composable
 fun currentLocationTest(

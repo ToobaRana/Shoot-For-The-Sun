@@ -17,7 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.viewModel.ARViewModel
 
-
+//alerts the user that location is required via a popup
 @Composable
 fun GiveLocationPermissionPleaseDialogue(modifier: Modifier, arViewModel: ARViewModel = viewModel()) {
     AlertDialog(

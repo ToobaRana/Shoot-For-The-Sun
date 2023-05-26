@@ -1,9 +1,8 @@
-package com.example.sunandmoon.ui.components
+package com.example.sunandmoon.ui.components.userInputComponents
 
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -17,8 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -115,7 +112,7 @@ fun CalendarComponent(
 
 
 }
-
+//main component of calendar. Used for card and setup
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarComponentDisplay(
@@ -308,7 +305,7 @@ fun CalendarComponentDisplay(
 
     }
 }
-
+//draws weekdays (first 3 letters) on calendar
 @Composable
 fun DrawWeekdays(weekdays: Array<String>) {
     for (y in 0 until numWeekdays) {
@@ -405,6 +402,7 @@ fun getDayOfFirst(month: Int, year: Int): String {
 
 
 
+//draws days as boxes on calendar
 @Composable
 fun DrawDayBox(modifier: Modifier, day: Int, chosenDay: Int, updateDay: () -> Unit) {
     val brush = Brush.horizontalGradient(
@@ -422,7 +420,7 @@ fun DrawDayBox(modifier: Modifier, day: Int, chosenDay: Int, updateDay: () -> Un
         modifier = usedModifier
             //.size(50.dp)
             .padding(1.dp)
-            .clickable() { updateDay() },
+            .clickable { updateDay() },
         contentAlignment = Alignment.Center
     ) {
         Text(

@@ -21,10 +21,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.ARUIState
 import com.example.sunandmoon.model.locationForecastModel.TimePickerColors
-import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.viewModel.ARViewModel
 import java.time.LocalTime
-
+//used to edit time and date in ar-screen
 @Composable
 fun EditARSettings(
     modifier: Modifier,

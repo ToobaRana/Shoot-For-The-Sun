@@ -19,10 +19,11 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.TableUIState
-import com.example.sunandmoon.ui.components.CalendarComponent
+import com.example.sunandmoon.ui.components.userInputComponents.CalendarComponent
 import com.example.sunandmoon.ui.components.NavigationComposable
-import com.example.sunandmoon.ui.components.TableCard
+import com.example.sunandmoon.ui.components.infoComponents.TableCard
 import com.example.sunandmoon.ui.components.infoComponents.TableMissingInternet
+import com.example.sunandmoon.ui.components.userInputComponents.LocationSearch
 import com.example.sunandmoon.ui.components.userInputComponents.dropdownMenuSunType
 import com.example.sunandmoon.viewModel.TableViewModel
 import java.time.LocalDate
@@ -75,7 +76,7 @@ fun TableView(
             )
         },
 
-        content = { innerPadding -> innerPadding
+        content = { innerPadding -> innerPadding //for removing error
             Column(
                 modifier.padding(top = 120.dp),
                 verticalArrangement = Arrangement.Center,

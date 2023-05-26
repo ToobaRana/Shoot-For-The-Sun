@@ -1,6 +1,6 @@
 package com.example.sunandmoon
 
-import com.example.sunandmoon.ui.components.getDayOfFirst
+import com.example.sunandmoon.ui.components.userInputComponents.getDayOfFirst
 import org.junit.Test
 
 class CalendarUnitTest{

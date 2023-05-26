@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 
-
+//used to create a new Production. Provides a popup for user
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductionCreation(

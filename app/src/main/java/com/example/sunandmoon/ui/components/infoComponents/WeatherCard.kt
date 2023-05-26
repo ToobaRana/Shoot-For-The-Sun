@@ -1,26 +1,18 @@
 package com.example.sunandmoon.ui.components.infoComponents
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 import com.example.sunandmoon.ui.theme.RedColor
-import com.example.sunandmoon.ui.theme.SunColor
 import com.example.sunandmoon.ui.theme.WeatherBlueColor
-import com.example.sunandmoon.util.weatherIcons
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.Dictionary
-
+//card for displaying temperature and weather in shootInfoScreen
 @Composable
 fun WeatherCard(modifier: Modifier, time : LocalTime, temperature : Double?, rainfall : Double?, weatherIcon : Int?){
 

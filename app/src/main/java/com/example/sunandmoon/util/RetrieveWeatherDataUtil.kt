@@ -13,7 +13,7 @@ fun getCorrectTimeObject(dateAndTime: LocalDateTime, weatherData: LocationForeca
 
     var formattedDateAndTime: String = dateTimeObjectForApiUse.format(formatter)
     val correctTimeObject =  weatherData?.properties?.timeseries?.
-    firstOrNull({ it.time.toString() == formattedDateAndTime })
+    firstOrNull { it.time == formattedDateAndTime }
 
     if(correctTimeObject != null) return correctTimeObject
 
@@ -21,7 +21,7 @@ fun getCorrectTimeObject(dateAndTime: LocalDateTime, weatherData: LocationForeca
     dateTimeObjectForApiUse = dateTimeObjectForApiUse.minusHours((dateTimeObjectForApiUse.hour % 6).toLong())
     formattedDateAndTime = dateTimeObjectForApiUse.format(formatter)
     return weatherData?.properties?.timeseries?.
-    firstOrNull({ it.time.toString() == formattedDateAndTime })
+    firstOrNull { it.time == formattedDateAndTime }
 }
 
 fun getWeatherIcon(weatherIconCode: String?): Int? {

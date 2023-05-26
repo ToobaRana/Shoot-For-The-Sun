@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.data.PreferableWeather
-import com.example.sunandmoon.ui.components.buttonComponents.CreateShootSunPositionCard
 import com.example.sunandmoon.ui.components.buttonComponents.PreferredWeatherCard
 import com.example.sunandmoon.ui.theme.GreyColor
 import com.example.sunandmoon.viewModel.CreateShootViewModel
 
+//for choosing preferred weather in create shoot
 @Composable
 fun PreferredWeatherComponent(
     modifier: Modifier,

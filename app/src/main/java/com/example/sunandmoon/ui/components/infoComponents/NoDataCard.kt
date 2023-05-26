@@ -6,8 +6,6 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,9 +14,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
 
+
+//card for displaying that no data is available
 @Composable
 fun NoDataCard(modifier : Modifier, missingNetworkConnection: Boolean){
-    var cardText : String =
+    val cardText : String =
         if(missingNetworkConnection) stringResource(R.string.NoInternet)
         else stringResource(R.string.NoData)
 
