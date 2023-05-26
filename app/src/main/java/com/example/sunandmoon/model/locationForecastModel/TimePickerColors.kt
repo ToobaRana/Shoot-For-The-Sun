@@ -1,4 +1,4 @@
-package com.example.sunandmoon.model.LocationForecastModel
+package com.example.sunandmoon.model.locationForecastModel
 
 
 import androidx.compose.ui.graphics.Color

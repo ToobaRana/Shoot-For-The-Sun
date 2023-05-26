@@ -1,8 +1,5 @@
-package com.example.sunandmoon.model.LocationSearchResultsModel
+package com.example.sunandmoon.model.locationSearchResultsModel
 
-import com.example.sunandmoon.model.SunriseModel.Geometry
-import com.example.sunandmoon.model.SunriseModel.Properties
-import com.example.sunandmoon.model.SunriseModel.When
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 

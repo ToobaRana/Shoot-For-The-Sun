@@ -14,14 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
-import com.example.sunandmoon.R
-import com.example.sunandmoon.ui.theme.SunColor
-import androidx.compose.foundation.Image
 import com.example.sunandmoon.ui.theme.RedColor
 
+//used for drawing sunrise sunset and solar noon buttons for updating timepicker according to given prompt
 @Composable
 fun CreateShootSunPositionCard(
     modifier: Modifier,

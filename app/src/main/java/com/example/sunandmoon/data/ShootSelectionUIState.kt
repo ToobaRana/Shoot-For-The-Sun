@@ -4,7 +4,7 @@ import com.example.sunandmoon.data.localDatabase.dao.ProductionOrderBy
 import com.example.sunandmoon.data.localDatabase.dao.ShootOrderBy
 import com.example.sunandmoon.data.dataUtil.Production
 import com.example.sunandmoon.data.dataUtil.Shoot
-import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
+import com.example.sunandmoon.model.locationForecastModel.LocationForecast
 import com.example.sunandmoon.viewModel.SelectionPages
 
 // currentPageIndex is 0 if on "productions" page or 1 if on "all shoots" page

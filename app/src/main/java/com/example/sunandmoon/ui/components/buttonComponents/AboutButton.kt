@@ -9,6 +9,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
 
+//button for navigating to app-info-screen
 @Composable
 fun AboutButton(
     modifier: Modifier,

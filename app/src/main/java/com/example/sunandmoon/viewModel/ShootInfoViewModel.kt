@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
+import com.example.sunandmoon.model.locationForecastModel.LocationForecast
 import com.example.sunandmoon.util.getCorrectTimeObject
 import com.example.sunandmoon.util.getWeatherIcon
 import java.time.format.DateTimeFormatter

@@ -57,7 +57,7 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
                 shootToEditId = shootToEditId
             )
         }
-        composable("tableScreen"){ backStackEntry ->
+        composable("tableScreen"){
             TableScreen(
                 modifier = modifier,
                 navigateToNextBottomBar = { index: Int ->
@@ -65,7 +65,7 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
                 }
             )
         }
-        composable("ARScreen"){ backStackEntry ->
+        composable("ARScreen"){
             SunAR(
                 modifier = modifier,
                 navigateToNextBottomBar = { index: Int ->
@@ -83,6 +83,7 @@ fun MultipleScreenNavigator(modifier: Modifier, packageManager: PackageManager) 
     }
 }
 
+//bottom bar used for navigating between shootsselection, arscreen and tablescreen
 fun bottomBarNavigation(index: Int, navController: NavController) {
     when (index) {
         0 -> navController.popBackStack("shootSelectionScreen", false)

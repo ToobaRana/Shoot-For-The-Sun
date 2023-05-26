@@ -1,4 +1,4 @@
-package com.example.sunandmoon.model.SunriseModel
+package com.example.sunandmoon.model.sunriseModel
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -20,7 +20,7 @@ import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootOrderBy
 import com.example.sunandmoon.data.localDatabase.dataEntities.StorableProduction
 import com.example.sunandmoon.data.localDatabase.storableShootsToNormalShoots
-import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
+import com.example.sunandmoon.model.locationForecastModel.LocationForecast
 import com.example.sunandmoon.util.getCorrectTimeObject
 import com.example.sunandmoon.util.getWeatherIcon
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
 import com.example.sunandmoon.ui.theme.RedColor
 
+//displays buttons for choosing preferred weather.
 @Composable
 fun PreferredWeatherCard(
     modifier: Modifier,

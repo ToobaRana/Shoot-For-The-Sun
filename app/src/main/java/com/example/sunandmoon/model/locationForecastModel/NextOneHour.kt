@@ -1,4 +1,4 @@
-package com.example.sunandmoon.model.LocationForecastModel
+package com.example.sunandmoon.model.locationForecastModel
 
 data class NextOneHour(
     val summary : Summary,

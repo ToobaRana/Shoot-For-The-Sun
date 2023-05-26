@@ -1,9 +1,7 @@
 package com.example.sunandmoon.ui.screens
 
 
-import android.content.Context
 import android.location.Location
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,13 +21,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sunandmoon.R
 import com.example.sunandmoon.CheckPermissions
-import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
+import com.example.sunandmoon.model.locationForecastModel.TimePickerColors
 import com.example.sunandmoon.ui.components.CalendarComponent
 import com.example.sunandmoon.ui.components.buttonComponents.GoBackButton
 import com.example.sunandmoon.ui.components.userInputComponents.LatitudeLongitudeInput

@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.TextUnit
 import com.example.sunandmoon.R
 
+//used to add a clickable link to the screen
 @Composable
 fun HyperlinkText(
     modifier: Modifier = Modifier,

@@ -4,10 +4,10 @@ package com.example.sunandmoon.data
 
 import android.location.Location
 import com.example.sunandmoon.BuildConfig
-import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
-import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
-import com.example.sunandmoon.model.LocationTimeZoneOffsetResultModel.LocationTimeZoneOffsetResult
-import com.example.sunandmoon.model.SunriseModel.Sunrise3
+import com.example.sunandmoon.model.locationForecastModel.LocationForecast
+import com.example.sunandmoon.model.locationSearchResultsModel.LocationSearchResults
+import com.example.sunandmoon.model.locationTimeZoneOffsetResultModel.LocationTimeZoneOffsetResult
+import com.example.sunandmoon.model.sunriseModel.Sunrise3
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -32,7 +32,7 @@ class DataSource {
         }
     }
 
-    val API_KEY = BuildConfig.API_KEY
+    private val API_KEY = BuildConfig.API_KEY //could be changed to lowercase, but looks cooler uppercase
 
 
     //example: "https://api.met.no/weatherapi/sunrise/3.0/sun?lat=60.10&lon=9.58&date=2015-01-14&offset=+01:00"
