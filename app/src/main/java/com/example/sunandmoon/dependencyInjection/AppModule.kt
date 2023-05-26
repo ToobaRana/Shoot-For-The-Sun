@@ -1,8 +1,6 @@
 package com.example.sunandmoon.dependencyInjection
 
 import android.app.Application
-import android.content.Context
-import android.util.Log
 import androidx.room.Room
 import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.google.android.gms.location.FusedLocationProviderClient

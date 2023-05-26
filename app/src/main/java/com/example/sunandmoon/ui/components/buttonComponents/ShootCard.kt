@@ -1,4 +1,4 @@
-package com.example.sunandmoon.ui.components.infoComponents
+package com.example.sunandmoon.ui.components.buttonComponents
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -16,6 +17,7 @@ import com.example.sunandmoon.data.dataUtil.Shoot
 import com.example.sunandmoon.ui.theme.CheckmarkColor
 import com.example.sunandmoon.ui.theme.RedColor
 
+//used for displaying shoots on cards in all shoots and in my shoots
 @Composable
 fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -> Unit, openPreferredWeatherDialog: () -> Unit) {
     ElevatedCard(
@@ -37,7 +39,7 @@ fun ShootCard(modifier: Modifier, shoot: Shoot, navigateToNext: (shootId: Int) -
                     .fillMaxWidth()
                     .height(IntrinsicSize.Min)
             ) {
-                var iconColor = MaterialTheme.colorScheme.onPrimary
+                val iconColor: Color
                 val weatherCheckerIcon: Int?
 
                 if(shoot.weatherMatchesPreferences != null) {

@@ -1,4 +1,4 @@
-package com.example.sunandmoon.model.LocationTimeZoneOffsetResultModel
+package com.example.sunandmoon.model.locationTimeZoneOffsetResultModel
 
 import kotlinx.serialization.Serializable
 

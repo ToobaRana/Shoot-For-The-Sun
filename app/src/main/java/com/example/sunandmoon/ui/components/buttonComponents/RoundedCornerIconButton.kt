@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+//used for square rounded corner buttons in the app
 @Composable
 fun RoundedCornerIconButton(
     modifier: Modifier,

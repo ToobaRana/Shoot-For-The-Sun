@@ -10,15 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sunandmoon.R
-import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
+import com.example.sunandmoon.model.locationSearchResultsModel.LocationSearchResults
 
 //https://nominatim.openstreetmap.org/ui/search.html
 

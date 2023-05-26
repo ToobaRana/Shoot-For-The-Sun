@@ -1,7 +1,7 @@
 package com.example.sunandmoon.data
 
 import android.location.Location
-import com.example.sunandmoon.model.LocationSearchResultsModel.LocationSearchResults
+import com.example.sunandmoon.model.locationSearchResultsModel.LocationSearchResults
 import java.time.LocalDateTime
 
 

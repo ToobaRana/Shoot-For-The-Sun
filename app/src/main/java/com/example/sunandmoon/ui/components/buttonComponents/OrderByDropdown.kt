@@ -1,17 +1,13 @@
 package com.example.sunandmoon.ui.components.buttonComponents
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -26,8 +22,8 @@ import com.example.sunandmoon.data.localDatabase.dao.ProductionOrderBy
 import com.example.sunandmoon.data.localDatabase.dao.ShootOrderBy
 import com.example.sunandmoon.viewModel.SelectionPages
 import com.example.sunandmoon.viewModel.ShootSelectionViewModel
-import java.time.LocalDate
 
+//shows order by dropdown for sorting
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderByDropdown(modifier: Modifier, shootSelectionUIState: ShootSelectionUIState, shootSelectionViewModel: ShootSelectionViewModel = hiltViewModel()) {
@@ -127,47 +123,3 @@ fun OrderByDropdown(modifier: Modifier, shootSelectionUIState: ShootSelectionUIS
         }
     }
 }
-    /*Column(modifier.fillMaxWidth()) {
-        if(shootSelectionUIState.currentPageIndex == SelectionPages.PRODUCTIONS.ordinal) {
-            OrderByChoiceButton(modifier, stringResource(id = R.string.StartDate)) {
-                shootSelectionViewModel.setProductionOrderBy(
-                    ProductionOrderBy.START_DATE_TIME
-                )
-            }
-            OrderByChoiceButton(modifier, stringResource(id = R.string.EndDate)) {
-                shootSelectionViewModel.setProductionOrderBy(
-                    ProductionOrderBy.END_DATE_TIME
-                )
-            }
-            OrderByChoiceButton(modifier, stringResource(id = R.string.Name)) {
-                shootSelectionViewModel.setProductionOrderBy(
-                    ProductionOrderBy.NAME
-                )
-            }
-        }
-        else {
-            Button(modifier = modifier.fillMaxWidth(), onClick = { shootSelectionViewModel.setShootOrderBy(ShootOrderBy.DATE_TIME) }) {
-                Text(text = stringResource(id = R.string.StartDate))
-            }
-            Button(modifier = modifier.fillMaxWidth(), onClick = { shootSelectionViewModel.setShootOrderBy(ShootOrderBy.NAME) }) {
-                Text(text = stringResource(id = R.string.Name))
-            }
-            Button(modifier = modifier.fillMaxWidth(), onClick = { shootSelectionViewModel.setShootOrderBy(ShootOrderBy.LATITUDE) }) {
-                Text(text = stringResource(id = R.string.Latitude))
-            }
-            Button(modifier = modifier.fillMaxWidth(), onClick = { shootSelectionViewModel.setShootOrderBy(ShootOrderBy.LONGITUDE) }) {
-                Text(text = stringResource(id = R.string.Longitude))
-            }
-        }
-    }*/
-
-/*@Composable
-fun OrderByChoiceButton(modifier: Modifier, text: String, onClick: ()->Unit) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        onClick = onClick,
-        shape = RectangleShape
-    ) {
-        Text(text = text)
-    }
-}*/

@@ -1,8 +1,8 @@
 package com.example.sunandmoon.util
 
 import android.util.Log
-import com.example.sunandmoon.model.LocationForecastModel.LocationForecast
-import com.example.sunandmoon.model.LocationForecastModel.Timeseries
+import com.example.sunandmoon.model.locationForecastModel.LocationForecast
+import com.example.sunandmoon.model.locationForecastModel.Timeseries
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -12,7 +12,7 @@ fun getCorrectTimeObject(dateAndTime: LocalDateTime, weatherData: LocationForeca
     var dateTimeObjectForApiUse: LocalDateTime = dateAndTime.withMinute(0).withSecond(0).withNano(0)
 
     var formattedDateAndTime: String = dateTimeObjectForApiUse.format(formatter)
-    var correctTimeObject =  weatherData?.properties?.timeseries?.
+    val correctTimeObject =  weatherData?.properties?.timeseries?.
     firstOrNull({ it.time.toString() == formattedDateAndTime })
 
     if(correctTimeObject != null) return correctTimeObject

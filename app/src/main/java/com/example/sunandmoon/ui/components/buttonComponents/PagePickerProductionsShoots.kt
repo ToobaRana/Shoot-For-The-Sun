@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages
 
+//used to switch between showing individual shoots and productions in main screen
 @Composable
 fun PagePickerProductionsShoots(
     modifier: Modifier,

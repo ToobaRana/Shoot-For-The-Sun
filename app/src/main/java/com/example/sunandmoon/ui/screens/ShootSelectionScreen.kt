@@ -22,7 +22,7 @@ import com.example.sunandmoon.ui.components.ProductionShootSelectionTopPart
 import com.example.sunandmoon.ui.components.infoComponents.PreferredWeatherDialogue
 
 import com.example.sunandmoon.ui.components.infoComponents.ProductionCard
-import com.example.sunandmoon.ui.components.infoComponents.ShootCard
+import com.example.sunandmoon.ui.components.buttonComponents.ShootCard
 import com.example.sunandmoon.ui.components.userInputComponents.ProductionCreation
 import com.example.sunandmoon.viewModel.ShootSelectionViewModel
 import com.example.sunandmoon.viewModel.SelectionPages

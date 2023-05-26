@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.example.sunandmoon.R
 
 
+//opens ar settings for changing position and time
 @Composable
 fun OpenARSettingsButton(
     modifier: Modifier,

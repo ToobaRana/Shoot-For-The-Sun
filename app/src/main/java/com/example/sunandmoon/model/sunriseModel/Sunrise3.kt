@@ -1,4 +1,4 @@
-package com.example.sunandmoon.model.SunriseModel
+package com.example.sunandmoon.model.sunriseModel
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable

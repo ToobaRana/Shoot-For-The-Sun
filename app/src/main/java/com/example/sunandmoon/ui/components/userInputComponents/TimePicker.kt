@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.example.sunandmoon.R
-import com.example.sunandmoon.model.LocationForecastModel.TimePickerColors
+import com.example.sunandmoon.model.locationForecastModel.TimePickerColors
 import java.time.LocalTime
 
 //Composable for choosing time for user

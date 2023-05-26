@@ -14,6 +14,7 @@ import com.example.sunandmoon.R
 import com.example.sunandmoon.data.dataUtil.Production
 import java.time.LocalDateTime
 
+//used for displaying productions in main screen in production-section
 @Composable
 fun ProductionCard(
     modifier: Modifier,
