@@ -5,29 +5,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ShootInfoUIState
+import com.example.sunandmoon.data.calculations.getSunRiseNoonFall
 import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ShootDao
 import com.example.sunandmoon.data.localDatabase.storableShootToNormalShoot
-import com.example.sunandmoon.data.calculations.getSunRiseNoonFall
+import com.example.sunandmoon.model.locationForecastModel.LocationForecast
+import com.example.sunandmoon.util.getCorrectTimeObject
+import com.example.sunandmoon.util.getWeatherIcon
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import com.example.sunandmoon.model.locationForecastModel.LocationForecast
-import com.example.sunandmoon.util.getCorrectTimeObject
-import com.example.sunandmoon.util.getWeatherIcon
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 
 @HiltViewModel
 class ShootInfoViewModel @Inject constructor(
-    private val database: AppDatabase
+    database: AppDatabase
 ) : ViewModel() {
 
     private val dataSource = DataSource()
@@ -45,12 +45,9 @@ class ShootInfoViewModel @Inject constructor(
 
     val shootInfoUIState: StateFlow<ShootInfoUIState> = _shootInfoUIState.asStateFlow()
 
-    init {
-        //val sunTimes = getSunRiseNoonFall(shootInfoUIState.value.shoot.date, shootInfoUIState.value.shoot.timeZoneOffset, shootInfoUIState.value.shoot.location.latitude, shootInfoUIState.value.shoot.location.longitude)
-        //setSolarTimes(sunTimes[0], sunTimes[1], sunTimes[2])
-    }
 
-    fun setSolarTimes(sunriseTime: String, solarNoonTime: String, sunsetTime: String) {
+    //sets solar times for uiState
+    private fun setSolarTimes(sunriseTime: String, solarNoonTime: String, sunsetTime: String) {
         _shootInfoUIState.update { currentState ->
             currentState.copy(
                 sunriseTime = sunriseTime,
@@ -60,6 +57,7 @@ class ShootInfoViewModel @Inject constructor(
         }
     }
 
+    //fetches shoot from database by id
     fun getShoot(shootId: Int) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -80,7 +78,7 @@ class ShootInfoViewModel @Inject constructor(
 
     }
 
-
+    //loads location forecast if there is a network connection
     fun loadLocationForecast(){
         viewModelScope.launch(Dispatchers.IO) {
             var weatherData: LocationForecast? = null
@@ -100,7 +98,8 @@ class ShootInfoViewModel @Inject constructor(
         }
     }
 
-    fun retrieveUsefulWeatherData(weatherData: LocationForecast) {
+    //retrieves weather data needed for shootInfo
+    private fun retrieveUsefulWeatherData(weatherData: LocationForecast) {
         val dateAndTime = _shootInfoUIState.value.shoot!!.dateTime
 
         val correctTimeObject = getCorrectTimeObject(dateAndTime, weatherData)
@@ -128,6 +127,7 @@ class ShootInfoViewModel @Inject constructor(
         }
     }
 
+    //deletes shoot with id defined in uiState
     fun deleteShoot() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -146,6 +146,7 @@ class ShootInfoViewModel @Inject constructor(
         }
     }
 
+    //refreshes shoot by id in uiState
     fun refreshShoot() {
         val idToRefresh: Int? = _shootInfoUIState.value.shoot?.id
         if(idToRefresh != null) {

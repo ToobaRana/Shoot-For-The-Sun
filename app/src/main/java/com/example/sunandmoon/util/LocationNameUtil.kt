@@ -1,5 +1,6 @@
 package com.example.sunandmoon.util
 
+//simplifies Location name for display
 fun simplifyLocationNameQuery(query: String): String {
     var queryToStore = query
     val splitQuery = queryToStore.split(", ")

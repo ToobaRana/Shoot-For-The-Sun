@@ -8,6 +8,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
 
+//checks for cameraPermission in app
 @ExperimentalPermissionsApi
 @Composable
 fun Permission(

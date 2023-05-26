@@ -9,10 +9,6 @@ import com.example.sunandmoon.data.DataSource
 import com.example.sunandmoon.data.ShootSelectionUIState
 import com.example.sunandmoon.data.dataUtil.Production
 import com.example.sunandmoon.data.dataUtil.Shoot
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import com.example.sunandmoon.data.localDatabase.AppDatabase
 import com.example.sunandmoon.data.localDatabase.dao.ProductionDao
 import com.example.sunandmoon.data.localDatabase.dao.ProductionOrderBy
@@ -25,6 +21,10 @@ import com.example.sunandmoon.util.getCorrectTimeObject
 import com.example.sunandmoon.util.getWeatherIcon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
@@ -36,7 +36,7 @@ enum class SelectionPages {
 
 @HiltViewModel
 class ShootSelectionViewModel @Inject constructor(
-    private val database: AppDatabase
+    database: AppDatabase
 ) : ViewModel() {
 
     private val dataSource = DataSource()
@@ -65,7 +65,7 @@ class ShootSelectionViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val allProductions = productionDao.getAll(_shootSelectionUIState.value.productionOrderBy.value, "%" + _shootSelectionUIState.value.searchQuery + "%")
-                var productionList = mutableListOf<Production>()
+                val productionList = mutableListOf<Production>()
                 allProductions.forEach() { storableProduction ->
                     productionList.add(
                         Production(

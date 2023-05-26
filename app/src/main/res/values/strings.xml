@@ -91,7 +91,7 @@
     <string name="Solos_shoots">Solo shoots</string>
 
     <string name="CalibrateMagnetometer">Please calibrate your magnetometer by rotating your device in all directions. Check whether your magnetometer is calibrated correctly by using the compass directions shown in the AR view</string>
-    <string name="PleaseGiveLocationPermission">Getting your location could take a couple of seconds. If it is taking longer than this, please go into your device settings, and give this app permission to get your current position, for you to use AR-mode. If you have given permission, check your internet connection</string>
+    <string name="PleaseGiveLocationPermission">Getting your location could take a couple of seconds. If it is taking longer than this, please go into your device settings, and give this app permission to get your current position, for you to use AR-mode. If you have given permission, check if the google maps app is able to get your location, then return to this app. This should resolve the issue</string>
     <string name="MissingSensors">Your device are missing required sensors for using AR-mode. A magnetometer, accelerometer and gyroscope is required</string>
 
     <!--<string-array name="TeamMembers">

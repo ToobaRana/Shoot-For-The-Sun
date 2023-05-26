@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+//gets timezoneOffset for location
 fun getCurrentTimeZoneOffset(): Double {
     val calendar = Calendar.getInstance()
     val timeZone = calendar.timeZone

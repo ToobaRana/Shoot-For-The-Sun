@@ -6,6 +6,7 @@ import com.example.sunandmoon.model.locationForecastModel.Timeseries
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+//
 fun getCorrectTimeObject(dateAndTime: LocalDateTime, weatherData: LocationForecast?): Timeseries? {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
@@ -28,7 +29,7 @@ fun getWeatherIcon(weatherIconCode: String?): Int? {
     if(weatherIconCode == null) return null
 
     val weatherIconSplit: List<String> = weatherIconCode.split("_")
-    Log.i("wheaterIcon", weatherIconCode)
+    Log.i("weatherIcon", weatherIconCode)
     val isDay: Boolean = weatherIconSplit.size < 2 || weatherIconSplit[1] == "day"
     return weatherIcons[weatherIconSplit[0]]?.get(if(isDay) 0 else 1)
 }
